@@ -227,7 +227,7 @@ class ZampieriDt:
       self.train = self.dataset['train']
       self.test = self.dataset['test']
 
-    def download(self, split='train'):
+    def download(self, split='train', csv_datasets_folder='./'):
       dataset_name = 'strombergnlp/offenseval_2020'
       subsets = ["gr"]
       df_dict = huggingface_download(self.resource_id, csv_datasets_folder, dataset_name, self.splits, subsets=subsets)
@@ -442,7 +442,7 @@ class PapaloukasDt:
       self.splits = {"train", "validation", "test"}
       self.dataset = self.download()
 
-    def download(self):
+    def download(self, csv_datasets_folder='./'):
       df_dict = huggingface_download(self.resource_id, csv_datasets_folder, self.dataset_name, self.splits, subsets=self.subsets)
 
       df_splits = {}
