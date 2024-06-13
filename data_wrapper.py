@@ -74,7 +74,7 @@ def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
   # Install Git (if not already installed) and configure sparse checkout
   # !sudo apt-get install git -y
   run_git_command(f'git init repo_{resource_id}')
-  os.chdir(resource_id)
+  os.chdir(down_folder)
   run_git_command(f'git remote add -f origin {repo_url}')
   run_git_command(f'git config core.sparseCheckout true')
 
