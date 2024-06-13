@@ -14,18 +14,23 @@ import matplotlib.pyplot as plt
 # !pip install datasets
 from datasets import load_dataset
 import xml.etree.ElementTree as ET
+# !pip install wget
+import wget
+# !pip install zenodo-get
+import zenodo_get
+import subprocess
+
 
 def wget_download(resource_id, url):
   os.makedirs(str(resource_id), exist_ok=True)
-  # Use wget to download the file
-  !wget -P {resource_id} {url}
+  # Use wget to download the file (as in >> !wget -P {resource_id} {url})
+  wget.download(url=url, out=resource_id)
 
 
 def zenodo_download(resource_id, zenodo_url):
   os.makedirs(str(resource_id), exist_ok=True)
-  %cd {resource_id}/
-  !zenodo_get {zenodo_url}
-  %cd ../
+  # as in >> !zenodo_get {zenodo_url}
+  zenodo_get.zenodo_get(zenodo_url, output=resource_id)
 
 
 def huggingface_download(resource_id, to_folder, dataset_name, splits, subsets=[None]):
@@ -58,6 +63,9 @@ def huggingface_download(resource_id, to_folder, dataset_name, splits, subsets=[
 
   return df_dict
 
+def run_git_command(command, cwd=None):
+    result = subprocess.run(command, shell=True, cwd=cwd, check=True, text=True, capture_output=True)
+    return result.stdout.strip()
 
 def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
   """
@@ -65,17 +73,17 @@ def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
   """
   # Install Git (if not already installed) and configure sparse checkout
   # !sudo apt-get install git -y
-  !git init repo_{resource_id}
+  run_git_command(f'git init repo_{resource_id}')
   %cd repo_{resource_id}
-  !git remote add -f origin {repo_url}
-  !git config core.sparseCheckout true
+  run_git_command(f'git remote add -f origin {repo_url}')
+  run_git_command(f'git config core.sparseCheckout true')
 
   # Define the folder to download
   with open('.git/info/sparse-checkout', 'w') as f:
       f.write(down_folder + '\n')
 
   # Pull the specific folder from the repository
-  !git pull origin {branch}  # Pull from the specified branch
+  run_git_command(f'git pull origin {branch}')
 
   # Verify if the folder has been downloaded
   if os.path.exists(down_folder):
@@ -86,9 +94,6 @@ def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
   # Move back to the root directory
   %cd ..
 
-  # Optional: Move the downloaded folder to the root directory and clean up
-  !mv repo_{resource_id}/{down_folder} ./{resource_id} || echo "Folder not found: repo_{resource_id}/{down_folder}"
-  !rm -rf repo_{resource_id}
 
 class BarzokasDt:
 
