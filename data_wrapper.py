@@ -15,6 +15,81 @@ import matplotlib.pyplot as plt
 from datasets import load_dataset
 import xml.etree.ElementTree as ET
 
+def wget_download(resource_id, url):
+  os.makedirs(str(resource_id), exist_ok=True)
+  # Use wget to download the file
+  !wget -P {resource_id} {url}
+
+
+def zenodo_download(resource_id, zenodo_url):
+  os.makedirs(str(resource_id), exist_ok=True)
+  %cd {resource_id}/
+  !zenodo_get {zenodo_url}
+  %cd ../
+
+
+def huggingface_download(resource_id, to_folder, dataset_name, splits, subsets=[None]):
+  """
+  Download the data from HuggingFace
+  """
+  # Create the directory if it does not exist
+  os.makedirs(str(resource_id), exist_ok=True)
+  df_dict = {}
+  for subset in subsets:
+    # Load the dataset
+    dataset = load_dataset(dataset_name, subset)
+
+    for split in splits:
+      # Convert the dataset to a Pandas DataFrame
+      df_hg = pd.DataFrame(dataset[split])
+      if resource_id == '250': #The Papaloukas dataset
+        df_hg = df_hg.rename(columns={'label': subset})
+
+      if len(subsets) > 1:
+        df_dict[f"{split}_{subset}"] = df_hg
+      else:
+        df_dict[f"{split}"] = df_hg
+
+      # Save the DataFrame to a CSV file
+      if subset is not None:
+        df_hg.to_csv(f'{to_folder}/{resource_id}_{subset}_{split}.csv', index=False)
+      else:
+        df_hg.to_csv(f'{to_folder}/{resource_id}_{split}.csv', index=False)
+
+  return df_dict
+
+
+def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
+  """
+  Download folder containing the data from github repository
+  """
+  # Install Git (if not already installed) and configure sparse checkout
+  # !sudo apt-get install git -y
+  !git init repo_{resource_id}
+  %cd repo_{resource_id}
+  !git remote add -f origin {repo_url}
+  !git config core.sparseCheckout true
+
+  # Define the folder to download
+  with open('.git/info/sparse-checkout', 'w') as f:
+      f.write(down_folder + '\n')
+
+  # Pull the specific folder from the repository
+  !git pull origin {branch}  # Pull from the specified branch
+
+  # Verify if the folder has been downloaded
+  if os.path.exists(down_folder):
+      print(f"Successfully downloaded {down_folder}")
+  else:
+      print(f"Failed to download {down_folder}. Please check the folder path and branch name.")
+
+  # Move back to the root directory
+  %cd ..
+
+  # Optional: Move the downloaded folder to the root directory and clean up
+  !mv repo_{resource_id}/{down_folder} ./{resource_id} || echo "Folder not found: repo_{resource_id}/{down_folder}"
+  !rm -rf repo_{resource_id}
+
 class BarzokasDt:
 
     def __init__(self, datasets, id_=56):
