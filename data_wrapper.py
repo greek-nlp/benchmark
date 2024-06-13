@@ -172,7 +172,7 @@ class KorreDt:
 
   def download(self):
       git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_folder, self.branch)
-      path = f'repo_{self.resource_id}
+      path = f'repo_{self.resource_id}/{self.down_folder}'
       # Merge the two annotators dataframes
       df_annA = pd.read_excel(f'{path}/GNC_annotator_A.xlsx')
       df_annA.columns = ["label_annA", "original_text_annA", "corrected_text_annA", "error_description_annA", "error_type_annA", "fluency_annA"]
