@@ -528,21 +528,50 @@ class DritsaDt:
 
 
 class AntonakakiDt:
-    def __init__(self, datasets, id_=428):
+    def __init__(self, datasets, figshare_access_token, id_=428):
       self.resource_id = id_
       self.resource = datasets.loc[datasets.paper_id==self.resource_id]
       self.name = 'antonakaki'
       self.repo_url = self.resource.iloc[0].URL
       self.splits = {'train'}
       self.train = self.download()
-
+      self.ACCESS_TOKEN = figshare_access_token
+      self.BASE_URL = 'https://api.figshare.com/v2'
+      self.ARTICLE_ID = '5492443'
+        
+    
+    def get_article_details(self):
+        url = f"{self.BASE_URL}/articles/{self.ARTICLE_ID}"
+        headers = {
+            'Authorization': f'token {self.ACCESS_TOKEN}'
+        }
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    
+    def download_file(self, file_info):
+        file_url = file_info['download_url']
+        file_name = file_info['name']
+        print(f"Downloading {file_name} from {file_url}")
+        
+        response = requests.get(file_url)
+        response.raise_for_status()
+        
+        with open(file_name, 'wb') as file:
+            file.write(response.content)
+        print(f"{file_name} has been downloaded successfully.")
+    
     def get(self, split='train'):
       assert split in self.splits
       return self.train
 
     def download(self):
-      # to do: use figshare API to download the data
-      print('WARNING: Access to FigShare API is on its way!')
+      article_details = self.get_article_details(self.ARTICLE_ID)
+      
+      for file_info in article_details.get('files', []):
+        if file_info['name'] in ['ht_common_final_greek_sorted_reversed_with_SENTIMENT_20160419.txt', 'ht_sorted_unique_with_SENTIMENT_20160419.txt']:
+          self.download_file(file_info)
+
       data_types = {'tweet_id': str, 'text': str}
       ref_df = pd.read_csv('428_referendum_sentiment.csv', dtype=data_types)
       ref_df.drop(columns=["positive", "negative", "sentiment"], inplace=True)
