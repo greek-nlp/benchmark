@@ -74,7 +74,7 @@ def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
   # Install Git (if not already installed) and configure sparse checkout
   # !sudo apt-get install git -y
   run_git_command(f'git init repo_{resource_id}')
-  %cd repo_{resource_id}
+  os.chdir(resource_id)
   run_git_command(f'git remote add -f origin {repo_url}')
   run_git_command(f'git config core.sparseCheckout true')
 
@@ -92,7 +92,8 @@ def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
       print(f"Failed to download {down_folder}. Please check the folder path and branch name.")
 
   # Move back to the root directory
-  %cd ..
+  os.chdir('../')
+
 
 
 class BarzokasDt:
