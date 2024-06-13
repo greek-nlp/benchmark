@@ -172,23 +172,23 @@ class KorreDt:
 
   def download(self):
       git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_folder, self.branch)
-
+      path = f'repo_{self.resource_id}
       # Merge the two annotators dataframes
-      df_annA = pd.read_excel(f'{self.resource_id}/GNC_annotator_A.xlsx')
+      df_annA = pd.read_excel(f'{path}/GNC_annotator_A.xlsx')
       df_annA.columns = ["label_annA", "original_text_annA", "corrected_text_annA", "error_description_annA", "error_type_annA", "fluency_annA"]
-      df_annB = pd.read_excel(f'{self.resource_id}/GNC_annotator_B.xlsx')
+      df_annB = pd.read_excel(f'{path}/GNC_annotator_B.xlsx')
       df_annB.columns = ["label_annB", "original_text_annB", "corrected_text_annB", "error_description_annB", "error_type_annB", "fluency_annB"]
       df_ann = pd.merge(df_annA, df_annB, left_index=True, right_index=True, how='inner')
 
       # Corrected text
-      with open(f"{self.resource_id}/orig.txt", 'r', encoding='utf-8') as file:
+      with open(f"{path}/orig.txt", 'r', encoding='utf-8') as file:
           lines = file.readlines()
       df_orig = pd.DataFrame(lines, columns=['original_text'])
       df_orig['original_text'] = df_orig['original_text'].str.strip()
       df_orig.replace('', np.nan, inplace=True)
 
       # Corrected text
-      with open(f"{self.resource_id}/corr.txt", 'r', encoding='utf-8') as file:
+      with open(f"{path}/corr.txt", 'r', encoding='utf-8') as file:
           lines = file.readlines()
       df_corr = pd.DataFrame(lines, columns=['corrected_text'])
       df_corr['corrected_text'] = df_corr['corrected_text'].str.strip()
