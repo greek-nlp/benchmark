@@ -67,10 +67,13 @@ def run_git_command(command, cwd=None):
     result = subprocess.run(command, shell=True, cwd=cwd, check=True, text=True, capture_output=True)
     return result.stdout.strip()
 
-def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
+def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch, root_dir):
   """
   Download folder containing the data from github repository
   """
+  # move to root dirrectory
+  os.chdir(root_dir)
+
   # Install Git (if not already installed) and configure sparse checkout
   # !sudo apt-get install git -y
   run_git_command(f'git init repo_{resource_id}')
@@ -92,7 +95,7 @@ def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch):
       print(f"Failed to download {down_folder}. Please check the folder path and branch name.")
 
   # Move back to the root directory
-  os.chdir('../')
+  os.chdir(root_dir)
 
 
 
@@ -158,12 +161,13 @@ class BarzokasDt:
 
 
 class KorreDt:
-  def __init__(self, datasets, id_=244):
+  def __init__(self, datasets, root_dir, id_=244):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
+      self.resource = datasets.loc[datasets.id==self.resource_id]
       self.name = 'korre'
       # Download data
-      self.repo_url = self.resource.iloc[0].URL
+      self.root_dir = root_dir
+      self.repo_url = self.resource.iloc[0].url
       self.down_folder = 'GNC'  # Data folder path within the git repository
       self.branch = "main"
       self.splits = {'train'}
@@ -171,8 +175,8 @@ class KorreDt:
       self.train = self.download()
 
   def download(self):
-      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_folder, self.branch)
-      path = f'repo_{self.resource_id}/{self.down_folder}'
+      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_folder, self.branch, self.root_dir)
+      path = os.path.join(self.root_dir, f'repo_{self.resource_id}', self.down_folder)      
       # Merge the two annotators dataframes
       df_annA = pd.read_excel(f'{path}/GNC_annotator_A.xlsx')
       df_annA.columns = ["label_annA", "original_text_annA", "corrected_text_annA", "error_description_annA", "error_type_annA", "fluency_annA"]
@@ -180,7 +184,7 @@ class KorreDt:
       df_annB.columns = ["label_annB", "original_text_annB", "corrected_text_annB", "error_description_annB", "error_type_annB", "fluency_annB"]
       df_ann = pd.merge(df_annA, df_annB, left_index=True, right_index=True, how='inner')
 
-      # Corrected text
+      # Original text
       with open(f"{path}/orig.txt", 'r', encoding='utf-8') as file:
           lines = file.readlines()
       df_orig = pd.DataFrame(lines, columns=['original_text'])
@@ -199,9 +203,15 @@ class KorreDt:
       # merge the annotations and the txt
       df_gnc = pd.merge(df_txt, df_ann, left_index=True, right_index=True, how='inner')
       df_gnc.drop(columns=['original_text_annA', 'original_text_annB', 'corrected_text_annA', 'corrected_text_annB'], inplace=True)
-      df_gnc.dropna(how='all', inplace=True)
-      df_gnc.original_text = df_gnc.original_text.astype(str)
-      df_gnc.corrected_text = df_gnc.corrected_text.astype(str)
+
+      # Drop rows where either 'corrected_text' or 'original_text' is NaN
+      df_gnc.dropna(subset=['corrected_text', 'original_text'], how='any', inplace=True)
+      # keep only the incorrect sentences
+      df_gnc = df_gnc.loc[df_gnc['corrected_text'] != df_gnc['original_text']]
+      # Convert all columns of type 'object' to 'string'
+      df_gnc = df_gnc.astype({col: 'string' for col in df_gnc.select_dtypes(include='object').columns})
+      # remove git repository
+      shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
 
       return df_gnc
 
@@ -210,8 +220,8 @@ class KorreDt:
     assert split in {'train'}
     return self.train
 
-  def save_to_csv(self, path = './'):
-    self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
+  def save_to_csv(self):
+    self.train.to_csv(os.path.join(self.root_dir, f'{self.name}.csv'), index=False)
 
 
 
