@@ -33,34 +33,25 @@ def zenodo_download(resource_id, zenodo_url):
   zenodo_get.zenodo_get(zenodo_url, output=resource_id)
 
 
-def huggingface_download(resource_id, to_folder, dataset_name, splits, subsets=[None]):
+def huggingface_download(resource_id, dataset_name, splits, subsets=[None]):
   """
   Download the data from HuggingFace
   """
   # Create the directory if it does not exist
-  os.makedirs(str(resource_id), exist_ok=True)
+  # os.makedirs(str(resource_id), exist_ok=True)
   df_dict = {}
   for subset in subsets:
-    # Load the dataset
     dataset = load_dataset(dataset_name, subset)
 
     for split in splits:
-      # Convert the dataset to a Pandas DataFrame
       df_hg = pd.DataFrame(dataset[split])
-      if resource_id == '250': #The Papaloukas dataset
+      if resource_id == '250': # The Papaloukas dataset
         df_hg = df_hg.rename(columns={'label': subset})
 
       if len(subsets) > 1:
         df_dict[f"{split}_{subset}"] = df_hg
       else:
         df_dict[f"{split}"] = df_hg
-
-      # Save the DataFrame to a CSV file
-      if subset is not None:
-        df_hg.to_csv(f'{to_folder}/{resource_id}_{subset}_{split}.csv', index=False)
-      else:
-        df_hg.to_csv(f'{to_folder}/{resource_id}_{split}.csv', index=False)
-
   return df_dict
 
 def run_git_command(command, cwd=None):
@@ -224,32 +215,31 @@ class KorreDt:
     self.train.to_csv(os.path.join(self.root_dir, f'{self.name}.csv'), index=False)
 
 
-
 class ZampieriDt:
     def __init__(self, datasets, id_=341):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
+      self.resource = datasets.loc[datasets.id==self.resource_id]
       self.name = 'zampieri'
       # Download data
-      self.repo_url = self.resource.iloc[0].URL
+      self.repo_url = self.resource.iloc[0].url
       self.splits = ["train", "test"]
       self.dataset = self.download()
       self.train = self.dataset['train']
       self.test = self.dataset['test']
 
-    def download(self, split='train', csv_datasets_folder='./'):
+    def download(self):
       dataset_name = 'strombergnlp/offenseval_2020'
       subsets = ["gr"]
-      df_dict = huggingface_download(self.resource_id, csv_datasets_folder, dataset_name, self.splits, subsets=subsets)
+      df_dict = huggingface_download(self.resource_id, dataset_name, self.splits, subsets=subsets)
       return df_dict
 
     def get(self, split='train'):
       assert split in {'train', 'test'}
       return self.dataset[split]
 
-    def save_to_csv(self, path = './'):
-      self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
-
+    def save_to_csv(self, split='train', path = './'):
+      assert split in {'train', 'test'}
+      self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
 
 class ProkopidisDt:
     def __init__(self, datasets, id_=486):
