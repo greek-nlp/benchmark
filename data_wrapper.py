@@ -526,18 +526,19 @@ class DritsaDt:
 
 
 class AntonakakiDt:
-    def __init__(self, datasets, figshare_access_token, id_=428):
+    def __init__(self, datasets, figshare_access_tok, id_=428):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
+      self.resource = datasets.loc[datasets.id==self.resource_id]
       self.name = 'antonakaki'
-      self.repo_url = self.resource.iloc[0].URL
+      self.repo_url = self.resource.iloc[0].url
       self.splits = {'train'}
-      self.train = self.download()
-      self.ACCESS_TOKEN = figshare_access_token
+      self.ACCESS_TOKEN = figshare_access_tok
       self.BASE_URL = 'https://api.figshare.com/v2'
       self.ARTICLE_ID = '5492443'
-        
-    
+      self.dataset = self.download()
+      self.raw = self.dataset['raw']['train']
+      self.ann = self.dataset['ann']['train']
+
     def get_article_details(self):
         url = f"{self.BASE_URL}/articles/{self.ARTICLE_ID}"
         headers = {
@@ -547,9 +548,12 @@ class AntonakakiDt:
         response.raise_for_status()
         return response.json()
     
-    def download_file(self, file_info):
+    def download_file(self, file_info, file_name):
+        if os.path.exists(file_name):
+            print(f"{file_name} already exists. Skipping download.")
+            return
+          
         file_url = file_info['download_url']
-        file_name = file_info['name']
         print(f"Downloading {file_name} from {file_url}")
         
         response = requests.get(file_url)
@@ -558,33 +562,86 @@ class AntonakakiDt:
         with open(file_name, 'wb') as file:
             file.write(response.content)
         print(f"{file_name} has been downloaded successfully.")
-    
-    def get(self, split='train'):
-      assert split in self.splits
-      return self.train
 
     def download(self):
-      article_details = self.get_article_details(self.ARTICLE_ID)
-      
+      article_details = self.get_article_details()
+      ref_filename = 'antonakaki_referendum.csv'
+      elect_filename = 'antonakaki_elections.csv'
+      sarcasm_filename = 'antonakaki_sarcasm.txt'
+      filenames_map = {
+          'ht_common_final_greek_sorted_reversed_with_SENTIMENT_20160419.txt': ref_filename,
+          'ht_sorted_unique_with_SENTIMENT_20160419.txt': elect_filename,
+          'ola_text_classified.txt': sarcasm_filename
+      }
       for file_info in article_details.get('files', []):
-        if file_info['name'] in ['ht_common_final_greek_sorted_reversed_with_SENTIMENT_20160419.txt', 'ht_sorted_unique_with_SENTIMENT_20160419.txt']:
-          self.download_file(file_info)
+        if file_info['name'] in filenames_map:
+          self.download_file(file_info, filenames_map[file_info['name']])
+        
+      # Initialize an empty list to store the JSON objects
+      data = []
 
-      data_types = {'tweet_id': str, 'text': str}
-      ref_df = pd.read_csv('428_referendum_sentiment.csv', dtype=data_types)
-      ref_df.drop(columns=["positive", "negative", "sentiment"], inplace=True)
+      # Read the file and parse each JSON object
+      with open(sarcasm_filename, 'r', encoding='utf-8') as file:
+          for line in file:
+              json_object = json.loads(line.strip())
+              data.append(json_object)
+
+      # Convert the list of dictionaries into a DataFrame
+      sarcasm_df = pd.DataFrame(data)
+      sarcasm_df.columns = ["text", "sarcasm", "svm_score"]
+      sarcasm_df.drop(columns=['svm_score'], inplace=True)
+      sarcasm_df.drop_duplicates(subset=['text'], inplace=True)
+      sarcasm_df.reset_index(drop=True, inplace=True)
+
+      # Create the raw dataset
+      # Regular expression for splitting tweet id from text
+      regex = r'(\d+)\s+(.*)'
+      # The referendum dataset
+      ref_df = pd.read_csv(ref_filename, header=None, delimiter='\t')
+      ref_df.columns = ["combined", "positive", "negative", "sentiment"]
+      # split text and tweet id
+      ref_df[['tweet_id', 'text']] = ref_df.combined.str.extract(regex)
+      ref_df.drop(columns=["combined", "positive", "negative", "sentiment"], inplace=True)
       ref_df.drop_duplicates(subset=['text'], inplace=True)
-
-      elect_df = pd.read_csv('428_elections_sentiment.csv', dtype=data_types)
-      elect_df.drop(columns=["positive", "negative", "sentiment"], inplace=True)
+      # The elextions dataset
+      elect_df = pd.read_csv(elect_filename, header=None, delimiter='\t')
+      elect_df.columns = ["combined", "positive", "negative", "sentiment"]
+      # split text and tweet id
+      elect_df[['tweet_id', 'text']] = elect_df.combined.str.extract(regex)
+      elect_df.drop(columns=["combined", "positive", "negative", "sentiment"], inplace=True)
       elect_df.drop_duplicates(subset=['text'], inplace=True)
+      # Merge raw datasets
+      raw_df = pd.concat([elect_df, ref_df], axis=0)
+      raw_df.dropna(inplace=True)
+      raw_df.drop_duplicates(subset=['text'], inplace=True)
+      raw_df.reset_index(drop=True, inplace=True)
+      
+      # Remove text that exist in the annotated sarcasm dataset
+      # Normalize the 'text' columns by stripping spaces and converting to lowercase
+      raw_df['text_normalized'] = raw_df['text'].str.strip().str.lower()
+      sarcasm_df['text_normalized'] = sarcasm_df['text'].str.strip().str.lower()
+      # Exclude rows in raw_df that have matching 'text' in sarcasm_df
+      raw_df = raw_df[~raw_df['text_normalized'].isin(sarcasm_df['text_normalized'])].copy()
+      # Drop the helper 'text_normalized' column after filtering
+      raw_df.drop(columns=['text_normalized'], inplace=True)
+      sarcasm_df.drop(columns=['text_normalized'], inplace=True)
 
-      df_428 = pd.concat([elect_df, ref_df], axis=0)
-      df_428.dropna(inplace=True)
-      return df_428
+      # Delete files
+      os.remove(ref_filename)
+      os.remove(elect_filename)
+      os.remove(sarcasm_filename)
+      
+      df_dict = {'raw': {'train': raw_df}, 'ann': {'train': sarcasm_df}}
+      return df_dict
 
-    def save_to_csv(self, path = './'):
-      self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
+    def get(self, status='raw', split='train'):
+      assert status in ['raw', 'ann']
+      assert split in ['train']
+      return self.dataset[status][split]
+
+    def save_to_csv(self, status='raw', split='train', path = './'):
+      assert status in ['raw', 'ann']
+      self.dataset[status][split].to_csv(os.path.join(path, f'{self.name}_{status}_{split}.csv'), index=False)
 
 
 class KoniarisDt:
