@@ -37,15 +37,13 @@ def huggingface_download(resource_id, dataset_name, splits, subsets=[None]):
   """
   Download the data from HuggingFace
   """
-  # Create the directory if it does not exist
-  # os.makedirs(str(resource_id), exist_ok=True)
   df_dict = {}
   for subset in subsets:
     dataset = load_dataset(dataset_name, subset)
 
     for split in splits:
       df_hg = pd.DataFrame(dataset[split])
-      if resource_id == '250': # The Papaloukas dataset
+      if resource_id == 250: # The Papaloukas dataset
         df_hg = df_hg.rename(columns={'label': subset})
 
       if len(subsets) > 1:
@@ -152,7 +150,7 @@ class BarzokasDt:
 
 
 class KorreDt:
-  def __init__(self, datasets, root_dir, id_=244):
+  def __init__(self, datasets, root_dir=os.getcwd(), id_=244):
       self.resource_id = id_
       self.resource = datasets.loc[datasets.id==self.resource_id]
       self.name = 'korre'
@@ -435,32 +433,32 @@ class BarziokasDt:
 class PapaloukasDt:
     def __init__(self, datasets, id_=250):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
+      self.resource = datasets.loc[datasets.id==self.resource_id]
       self.name = 'papaloukas'
       self.dataset_name = 'AI-team-UoA/greek_legal_code'
       self.subsets = ["volume", "chapter", "subject"]
       self.splits = {"train", "validation", "test"}
       self.dataset = self.download()
 
-    def download(self, csv_datasets_folder='./'):
-      df_dict = huggingface_download(self.resource_id, csv_datasets_folder, self.dataset_name, self.splits, subsets=self.subsets)
+    def download(self):
+      df_dict = huggingface_download(self.resource_id, self.dataset_name, self.splits, subsets=self.subsets)
 
       df_splits = {}
       for split in self.splits:
         df_split_list = [df_ for name, df_ in df_dict.items() if split in name]
         df_split = reduce(lambda  left,right: pd.merge(left,right,left_index=True, right_index=True, how='inner'), df_split_list)
         df_split = df_split.drop(['text_x', 'text_y'], axis=1)
+        df_split = df_split[['text'] + self.subsets]
         df_splits[split] = df_split
-
       return df_splits
 
     def get(self, split = 'train'):
       assert split in self.splits
       return self.dataset[split]
 
-    def save_to_csv(self, path = './'):
-      self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
-
+    def save_to_csv(self, split='train', path = './'):
+      assert split in self.splits
+      self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
 
 
 class ProkopidisCrawledDt:
