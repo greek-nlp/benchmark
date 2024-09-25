@@ -586,3 +586,28 @@ class AntonakakiDt:
     def save_to_csv(self, path = './'):
       self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
 
+
+class KoniarisDt:
+    def __init__(self, datasets, id_=780):
+      self.resource_id = id_
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.name = 'koniaris'
+      # Download data
+      self.repo_url = self.resource.iloc[0].url
+      self.splits = ["train"]
+      self.dataset = self.download()
+      self.train = self.dataset['train']
+
+    def download(self):
+      dataset_name = 'DominusTea/GreekLegalSum'
+      df_dict = huggingface_download(self.resource_id, dataset_name, self.splits)
+      return df_dict
+
+    def get(self, split='train'):
+      assert split in self.splits
+      return self.dataset[split]
+
+    def save_to_csv(self, split='train', path = './'):
+      assert split in self.splits
+      self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
+
