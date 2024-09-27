@@ -21,7 +21,7 @@ import zenodo_get
 import subprocess
 # !pip install conll-df
 from conll_df import conll_df
-
+from sklearn.model_selection import train_test_split
 
 def wget_download(resource_id, url):
   os.makedirs(str(resource_id), exist_ok=True)
@@ -730,3 +730,53 @@ class ProkopidisUdDt:
   def save_to_csv(self, split='train'):
     assert split in self.splits
     self.dataset[split].to_csv(os.path.join(self.root_dir, f'{self.name}.csv'), index=False)
+
+
+class RizouDt:
+    def __init__(self, datasets, id_=777):
+      self.resource_id = id_
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.repo_url = self.resource.iloc[0].url
+      self.repo_name = f'repo_{self.resource_id}'
+      self.name = 'rizou'
+      self.splits = {'train', 'test'}
+      self.dataset = self.download()
+
+    def download(self):
+      wget_download(self.repo_name, self.repo_url)
+
+      # Unzip
+      with zipfile.ZipFile(os.path.join(self.repo_name, 'uniway.zip'), 'r') as zip_ref:
+        zip_ref.extractall(self.repo_name)
+      
+      gr_path = os.path.join(self.repo_name, 'uniway', 'GR')
+      file_data = []
+      files = os.listdir(gr_path)
+      for file in files:
+          with open(os.path.join(gr_path, file), 'r', encoding='utf-8') as f:
+              lines = f.readlines()
+              file_data.append([line.strip() for line in lines])
+
+      # Create a dataframe where each column is data from one file
+      columns_dict = {'corpus.txt': 'text', 'entities.txt': 'ne_tags', 'intents.txt': 'intent'}
+      df = pd.DataFrame({columns_dict[file_]: data for file_, data in zip(files, file_data)})
+
+      # Shuffle and split the dataset into training and testing sets stratified 
+      # by the intent column
+      target_column = 'intent'
+      df_train, df_test = train_test_split(
+          df, test_size=0.2, stratify=df[target_column], 
+          shuffle=True, random_state=42
+          )
+      # Remove repository directory
+      shutil.rmtree(self.repo_name)
+
+      return {'train': df_train, 'test': df_test}
+
+    def get(self, split='train'):
+          assert split in self.splits
+          return self.dataset[split]
+          
+    def save_to_csv(self, split='train', path = './'):
+      assert split in self.splits
+      self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
