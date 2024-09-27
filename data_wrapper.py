@@ -707,18 +707,20 @@ class ProkopidisUdDt:
       self.repo_url = self.resource.iloc[0].url
       self.down_items = ['el_gdt-ud-train.conllu', 'el_gdt-ud-dev.conllu', 'el_gdt-ud-test.conllu']
       self.branch = "master"
-      self.splits = {'train', 'dev', 'test'}
+      self.splits = {'train', 'validation', 'test'}
       self.dataset = self.download()
 
   def download(self):
       git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
       df_dict = dict()
       for split in self.splits:
-        path = os.path.join(self.root_dir, f'repo_{self.resource_id}', f'el_gdt-ud-{split}.conllu')
+        substr_filename_split = 'dev' if split=='validation' else split
+        path = os.path.join(self.root_dir, f'repo_{self.resource_id}', f'el_gdt-ud-{substr_filename_split}.conllu')
         df = conll_df(path, file_index=False)
         df_dict[split] = df
       # remove git repository
       shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
+
       return df_dict
 
   def get(self, split='train'):
@@ -728,4 +730,3 @@ class ProkopidisUdDt:
   def save_to_csv(self, split='train'):
     assert split in self.splits
     self.dataset[split].to_csv(os.path.join(self.root_dir, f'{self.name}.csv'), index=False)
-
