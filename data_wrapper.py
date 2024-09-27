@@ -659,13 +659,33 @@ class KoniarisDt:
       self.name = 'koniaris'
       # Download data
       self.repo_url = self.resource.iloc[0].url
-      self.splits = ["train"]
+      self.splits = ["train", "validation", "test"]
       self.dataset = self.download()
       self.train = self.dataset['train']
 
     def download(self):
       dataset_name = 'DominusTea/GreekLegalSum'
-      df_dict = huggingface_download(self.resource_id, dataset_name, self.splits)
+      hf_splits = ['train']
+      df_dict = huggingface_download(self.resource_id, dataset_name, hf_splits)
+      # split is given by the column subset
+      # training set
+      df_dict['train']['subset'] = df_dict['train']['subset'].astype(int)
+      print(df_dict['train']['subset'].value_counts())
+      # validation set
+      df_dict['validation'] = df_dict['train'].loc[df_dict['train']['subset'] == 1]
+      df_dict['validation'] = df_dict['validation'].drop(columns=['subset'])
+      df_dict['validation'].reset_index(drop=True, inplace=True)
+
+      # testing set
+      df_dict['test'] = df_dict['train'].loc[df_dict['train']['subset'] == 2]
+      df_dict['test'] = df_dict['test'].drop(columns=['subset'])
+      df_dict['test'].reset_index(drop=True, inplace=True)
+
+      # training set
+      df_dict['train'] = df_dict['train'].loc[df_dict['train']['subset'] == 0]
+      df_dict['train'] = df_dict['train'].drop(columns=['subset'])
+      df_dict['train'].reset_index(drop=True, inplace=True)
+
       return df_dict
 
     def get(self, split='train'):
