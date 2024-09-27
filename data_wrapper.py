@@ -19,6 +19,8 @@ import wget
 # !pip install zenodo-get
 import zenodo_get
 import subprocess
+# !pip install conll-df
+from conll_df import conll_df
 
 
 def wget_download(resource_id, url):
@@ -56,36 +58,43 @@ def run_git_command(command, cwd=None):
     result = subprocess.run(command, shell=True, cwd=cwd, check=True, text=True, capture_output=True)
     return result.stdout.strip()
 
-def git_sparse_checkout_download(resource_id, repo_url, down_folder, branch, root_dir):
-  """
-  Download folder containing the data from github repository
-  """
-  # move to root dirrectory
+def git_sparse_checkout_download(resource_id, repo_url, to_download, branch, root_dir):
+  # Move to the root directory
   os.chdir(root_dir)
+  repo_dir = os.path.join(root_dir, f'repo_{resource_id}')
+  if os.path.exists(repo_dir):
+    print(f"Items exists in directory: {repo_dir}")
+    return
 
-  # Install Git (if not already installed) and configure sparse checkout
-  # !sudo apt-get install git -y
+  # Initialize the git repository
   run_git_command(f'git init repo_{resource_id}')
-  os.chdir(f'repo_{resource_id}')
+  os.chdir(repo_dir)
+  print(f"Download github items in directory: {repo_dir}")
+
   run_git_command(f'git remote add -f origin {repo_url}')
   run_git_command(f'git config core.sparseCheckout true')
 
-  # Define the folder to download
+  # Define the files to download by adding each file path to the sparse-checkout file
   with open('.git/info/sparse-checkout', 'w') as f:
-      f.write(down_folder + '\n')
+      for item in to_download:
+          f.write(item + '\n')
 
-  # Pull the specific folder from the repository
+  # Pull the specific files from the repository
   run_git_command(f'git pull origin {branch}')
 
-  # Verify if the folder has been downloaded
-  if os.path.exists(down_folder):
-      print(f"Successfully downloaded {down_folder}")
-  else:
-      print(f"Failed to download {down_folder}. Please check the folder path and branch name.")
+  # Verify if the files have been downloaded
+  missing_items = []
+  for item in to_download:
+      if os.path.exists(item):
+          print(f"Successfully downloaded {item}")
+      else:
+          missing_items.append(item)
+
+  if missing_items:
+      print(f"Failed to download: {', '.join(missing_items)}. Please check the paths and branch name.")
 
   # Move back to the root directory
   os.chdir(root_dir)
-
 
 
 class BarzokasDt:
@@ -157,15 +166,15 @@ class KorreDt:
       # Download data
       self.root_dir = root_dir
       self.repo_url = self.resource.iloc[0].url
-      self.down_folder = 'GNC'  # Data folder path within the git repository
+      self.down_items = ['GNC']  # Data folder path within the git repository
       self.branch = "main"
       self.splits = {'train'}
       self.dataset = None
       self.train = self.download()
 
   def download(self):
-      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_folder, self.branch, self.root_dir)
-      path = os.path.join(self.root_dir, f'repo_{self.resource_id}', self.down_folder)      
+      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
+      path = os.path.join(self.root_dir, f'repo_{self.resource_id}', self.down_items)
       # Merge the two annotators dataframes
       df_annA = pd.read_excel(f'{path}/GNC_annotator_A.xlsx')
       df_annA.columns = ["label_annA", "original_text_annA", "corrected_text_annA", "error_description_annA", "error_type_annA", "fluency_annA"]
@@ -203,7 +212,6 @@ class KorreDt:
       shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
 
       return df_gnc
-
 
   def get(self, split='train'):
     assert split in {'train'}
@@ -667,4 +675,37 @@ class KoniarisDt:
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
       self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
+
+
+class ProkopidisUdDt:
+  def __init__(self, datasets, root_dir=os.getcwd(), id_=438):
+      self.resource_id = id_
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.name = 'prokopidis_ud'
+      # Download data
+      self.root_dir = root_dir
+      self.repo_url = self.resource.iloc[0].url
+      self.down_items = ['el_gdt-ud-train.conllu', 'el_gdt-ud-dev.conllu', 'el_gdt-ud-test.conllu']
+      self.branch = "master"
+      self.splits = {'train', 'dev', 'test'}
+      self.dataset = self.download()
+
+  def download(self):
+      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
+      df_dict = dict()
+      for split in self.splits:
+        path = os.path.join(self.root_dir, f'repo_{self.resource_id}', f'el_gdt-ud-{split}.conllu')
+        df = conll_df(path, file_index=False)
+        df_dict[split] = df
+      # remove git repository
+      shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
+      return df_dict
+
+  def get(self, split='train'):
+    assert split in self.splits
+    return self.dataset[split]
+
+  def save_to_csv(self, split='train'):
+    assert split in self.splits
+    self.dataset[split].to_csv(os.path.join(self.root_dir, f'{self.name}.csv'), index=False)
 
