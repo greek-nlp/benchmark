@@ -28,12 +28,13 @@ def wget_download(resource_id, url):
   # Use wget to download the file (as in >> !wget -P {resource_id} {url})
   wget.download(url=url, out=resource_id)
 
-
-def zenodo_download(resource_id, zenodo_url):
-  os.makedirs(str(resource_id), exist_ok=True)
-  # as in >> !zenodo_get {zenodo_url}
-  zenodo_get.zenodo_get(zenodo_url, output=resource_id)
-
+def zenodo_download(output_dir, zenodo_url):
+  if os.path.exists(output_dir):
+    print(f"Items exists in directory: {output_dir}")
+    return
+  os.makedirs(str(output_dir), exist_ok=True)
+  args = ["-o", output_dir, zenodo_url]
+  zenodo_get.zenodo_get(args)
 
 def huggingface_download(resource_id, dataset_name, splits, subsets=[None]):
   """
@@ -317,44 +318,6 @@ class ProkopidisMtDt:
       self.datasets[target_lang][split].to_csv(os.path.join(path, f'{self.name}_{target_lang}_{split}.csv'), index=False)
 
 
-class FitsilisDt:
-    def __init__(self, datasets, id_=722):
-      self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
-      self.name = 'fitsilis'
-      self.repo_url = self.resource.iloc[0].URL
-      self.splits = {'train'}
-      self.train = self.download()
-
-
-    def get(self, split='train'):
-      assert split in {'train'}
-      return self.train
-
-    def _read_file_content(self, filename):
-        try:
-            with open(os.path.join(str(self.resource_id), "Parliamentary Questions Corpus", f"{filename}.txt"), 'r', encoding='utf-16') as file:
-                content = file.read()
-                content_utf8 = content.encode('utf-8')
-                return content_utf8
-        except FileNotFoundError:
-            return None
-
-    def download(self):
-      zenodo_download(self.resource_id, self.repo_url)
-      with zipfile.ZipFile(f"{self.resource_id}/Parliamentary Questions Corpus.zip", 'r') as zip_ref:
-        zip_ref.extractall(str(self.resource_id))
-
-      df_parl_quest = pd.read_csv(f"{self.resource_id}/Parliamentary Questions Corpus Metadata.csv", delimiter=";")
-      # Apply the function to replace the 'link serialNr' column with the file contents
-      df_parl_quest['text'] = df_parl_quest['link serialNr'].apply(self._read_file_content)
-      df_parl_quest['text'] = df_parl_quest['text'].str.decode('utf-8')
-      return df_parl_quest
-
-    def save_to_csv(self, path = './'):
-      self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
-
-
 class BarziokasDt:
     def __init__(self, datasets, root_dir=os.getcwd(), id_=285):
       self.resource_id = id_
@@ -487,148 +450,37 @@ class ProkopidisCrawledDt:
 class DritsaDt:
     def __init__(self, datasets, id_=728):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
+      self.resource = datasets.loc[datasets.id==self.resource_id]
       self.name = 'dritsa'
-      self.repo_url = self.resource.iloc[0].URL.split(",")[0]
+      self.repo_url = self.resource.iloc[0].url
       self.splits = {'train'}
       self.train = self.download()
-      self.train['text'] = self.train['speech']
 
     def get(self, split='train'):
       assert split in self.splits
       return self.train
 
     def download(self):
-      zenodo_download(self.resource_id, self.repo_url)
-      target_file = 'dataset_versions/tell_all.csv'
-      with zipfile.ZipFile(f"{self.resource_id}/Greek Parliament Proceedings Dataset_Support Files_Word Usage Change Computations.zip", 'r') as zip_ref:
+      repo_path = os.path.join(os.getcwd(), f'repo_{self.resource_id}')
+      zenodo_download(repo_path, self.repo_url)
+
+      zip_file = os.path.join(repo_path, 'Greek Parliament Proceedings Dataset_Support Files_Word Usage Change Computations.zip')
+      target_file = os.path.join('dataset_versions', 'tell_all.csv')
+      with zipfile.ZipFile(zip_file, 'r') as zip_ref:
           for member in zip_ref.namelist():
             if member == target_file:
               csv_path = zip_ref.extract(member)
-              df_728 = pd.read_csv(csv_path)
-              return df_728
+              df = pd.read_csv(csv_path)
+              df.rename(columns={'speech': 'text'}, inplace=True)
+              # reorder columns
+              columns = ['text'] + [col for col in df.columns if col != 'text']
+              df = df[columns]
+              # remove repo dir
+              shutil.rmtree(repo_path)
+              return df
 
     def save_to_csv(self, path = './'):
       self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
-
-
-class AntonakakiDt:
-    def __init__(self, datasets, figshare_access_tok, id_=428):
-      self.resource_id = id_
-      self.resource = datasets.loc[datasets.id==self.resource_id]
-      self.name = 'antonakaki'
-      self.repo_url = self.resource.iloc[0].url
-      self.splits = {'train'}
-      self.ACCESS_TOKEN = figshare_access_tok
-      self.BASE_URL = 'https://api.figshare.com/v2'
-      self.ARTICLE_ID = '5492443'
-      self.dataset = self.download()
-      self.raw = self.dataset['raw']['train']
-      self.ann = self.dataset['ann']['train']
-
-    def get_article_details(self):
-        url = f"{self.BASE_URL}/articles/{self.ARTICLE_ID}"
-        headers = {
-            'Authorization': f'token {self.ACCESS_TOKEN}'
-        }
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        return response.json()
-    
-    def download_file(self, file_info, file_name):
-        if os.path.exists(file_name):
-            print(f"{file_name} already exists. Skipping download.")
-            return
-          
-        file_url = file_info['download_url']
-        print(f"Downloading {file_name} from {file_url}")
-        
-        response = requests.get(file_url)
-        response.raise_for_status()
-        
-        with open(file_name, 'wb') as file:
-            file.write(response.content)
-        print(f"{file_name} has been downloaded successfully.")
-
-    def download(self):
-      article_details = self.get_article_details()
-      ref_filename = 'antonakaki_referendum.csv'
-      elect_filename = 'antonakaki_elections.csv'
-      sarcasm_filename = 'antonakaki_sarcasm.txt'
-      filenames_map = {
-          'ht_common_final_greek_sorted_reversed_with_SENTIMENT_20160419.txt': ref_filename,
-          'ht_sorted_unique_with_SENTIMENT_20160419.txt': elect_filename,
-          'ola_text_classified.txt': sarcasm_filename
-      }
-      for file_info in article_details.get('files', []):
-        if file_info['name'] in filenames_map:
-          self.download_file(file_info, filenames_map[file_info['name']])
-        
-      # Initialize an empty list to store the JSON objects
-      data = []
-
-      # Read the file and parse each JSON object
-      with open(sarcasm_filename, 'r', encoding='utf-8') as file:
-          for line in file:
-              json_object = json.loads(line.strip())
-              data.append(json_object)
-
-      # Convert the list of dictionaries into a DataFrame
-      sarcasm_df = pd.DataFrame(data)
-      sarcasm_df.columns = ["text", "sarcasm", "svm_score"]
-      sarcasm_df.drop(columns=['svm_score'], inplace=True)
-      sarcasm_df.drop_duplicates(subset=['text'], inplace=True)
-      sarcasm_df.reset_index(drop=True, inplace=True)
-
-      # Create the raw dataset
-      # Regular expression for splitting tweet id from text
-      regex = r'(\d+)\s+(.*)'
-      # The referendum dataset
-      ref_df = pd.read_csv(ref_filename, header=None, delimiter='\t')
-      ref_df.columns = ["combined", "positive", "negative", "sentiment"]
-      # split text and tweet id
-      ref_df[['tweet_id', 'text']] = ref_df.combined.str.extract(regex)
-      ref_df.drop(columns=["combined", "positive", "negative", "sentiment"], inplace=True)
-      ref_df.drop_duplicates(subset=['text'], inplace=True)
-      # The elextions dataset
-      elect_df = pd.read_csv(elect_filename, header=None, delimiter='\t')
-      elect_df.columns = ["combined", "positive", "negative", "sentiment"]
-      # split text and tweet id
-      elect_df[['tweet_id', 'text']] = elect_df.combined.str.extract(regex)
-      elect_df.drop(columns=["combined", "positive", "negative", "sentiment"], inplace=True)
-      elect_df.drop_duplicates(subset=['text'], inplace=True)
-      # Merge raw datasets
-      raw_df = pd.concat([elect_df, ref_df], axis=0)
-      raw_df.dropna(inplace=True)
-      raw_df.drop_duplicates(subset=['text'], inplace=True)
-      raw_df.reset_index(drop=True, inplace=True)
-      
-      # Remove text that exist in the annotated sarcasm dataset
-      # Normalize the 'text' columns by stripping spaces and converting to lowercase
-      raw_df['text_normalized'] = raw_df['text'].str.strip().str.lower()
-      sarcasm_df['text_normalized'] = sarcasm_df['text'].str.strip().str.lower()
-      # Exclude rows in raw_df that have matching 'text' in sarcasm_df
-      raw_df = raw_df[~raw_df['text_normalized'].isin(sarcasm_df['text_normalized'])].copy()
-      # Drop the helper 'text_normalized' column after filtering
-      raw_df.drop(columns=['text_normalized'], inplace=True)
-      sarcasm_df.drop(columns=['text_normalized'], inplace=True)
-
-      # Delete files
-      os.remove(ref_filename)
-      os.remove(elect_filename)
-      os.remove(sarcasm_filename)
-      
-      df_dict = {'raw': {'train': raw_df}, 'ann': {'train': sarcasm_df}}
-      return df_dict
-
-    def get(self, status='raw', split='train'):
-      assert status in ['raw', 'ann']
-      assert split in ['train']
-      return self.dataset[status][split]
-
-    def save_to_csv(self, status='raw', split='train', path = './'):
-      assert status in ['raw', 'ann']
-      self.dataset[status][split].to_csv(os.path.join(path, f'{self.name}_{status}_{split}.csv'), index=False)
 
 
 class KoniarisDt:
