@@ -247,109 +247,74 @@ class ZampieriDt:
       assert split in {'train', 'test'}
       self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
 
-class ProkopidisDt:
+
+class ProkopidisMtDt:
     def __init__(self, datasets, id_=486):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
-      self.repo_url = self.resource.iloc[0].URL
-      self.name = 'prokopidis'
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.repo_url = self.resource.iloc[0].url
+      self.name = 'prokopidis_mt'
+      self.langs_dict = {
+          "eng": "English",
+          "jpn": "Japanese",
+          "fas": "Farsi"
+      }
+      self.target_langs = list(self.langs_dict.keys())
+      self.target_lang_names = list(self.langs_dict.values())
       self.splits = {'train'}
-      self.train = self.download()
-      self.train['text'] = self.train.Greek
+      self.datasets = self.download()
 
     def _generate_checksum(self, text):
       return hashlib.sha256(text.encode()).hexdigest()
 
-    def get(self, split='train'):
-      assert split in {'train'}
-      return self.train
-
     def download(self):
-      langs_dict = {
-          "eng": "English",
-          "epo": "Esperanto",
-          "fas": "Farsi",
-          "fil": "Filipino",
-          "fra": "French",
-          "heb": "Hebrew",
-          "hin": "Hindi",
-          "hun": "Hungarian",
-          "ind": "Indonesian",
-          "ita": "Italian",
-          "jpn": "Japanese",
-          "khm": "Khmer",
-          "kor": "Korean",
-          "mkd": "Macedonian",
-          "mlg": "Malagasy",
-          "mya": "Burmese",
-          "nld": "Dutch",
-          "ori": "Odia",
-          "pol": "Polish",
-          "por": "Portuguese",
-          "rum": "Romanian",
-          "rus": "Russian",
-          "spa": "Spanish",
-          "sqi": "Albanian",
-          "srp": "Serbian",
-          "swa": "Swahili",
-          "swe": "Swedish",
-          "tur": "Turkish",
-          "urd": "Urdu",
-          "zhs": "Chinese-simplified",
-          "zht": "Chinese-traditional"
-      }
-
-      for other_lang in langs_dict:
+      source_lang = "ell"
+      repo_path = os.path.join(os.getcwd(), f"repo_{self.resource_id}")
+      for other_lang in self.langs_dict:
         data_url = f"{self.repo_url}archives/ell-{other_lang}.zip"
-        wget_download(self.resource_id, data_url)
-        # Unzip
-        with zipfile.ZipFile(f"{self.resource_id}/ell-{other_lang}.zip", 'r') as zip_ref:
-          zip_ref.extractall(f"{self.resource_id}/ell-{other_lang}")
+        wget_download(repo_path, data_url)
+        with zipfile.ZipFile(f"{repo_path}/ell-{other_lang}.zip", 'r') as zip_ref:
+          zip_ref.extractall(f"{repo_path}/ell-{other_lang}")
 
-      pgv_df_list = []
-
+      df_dict = dict()
       namespace = {'xml': 'http://www.w3.org/XML/1998/namespace'}
-
       # Iterate through TMX files in the directory
-      for other_lang, other_lang_name in langs_dict.items():
-        print(other_lang)
-        file_path = f"{self.resource_id}/ell-{other_lang}/pgv/ell-{other_lang}.tmx"
+      for target_lang, target_langname in self.langs_dict.items():
+        print(f'source: {source_lang}, target: {target_lang}')
+        file_path = os.path.join(repo_path, f"ell-{target_lang}", "pgv",f"ell-{target_lang}.tmx")
         tree = ET.parse(file_path)
         root = tree.getroot()
 
-        # Initialize lists to store data
-        score = []
-        source_lang = []
-        target_lang = []
-
+        source_lang_text = []
+        target_lang_text = []
         # Iterate through tu elements
         for tu in root.findall('.//tu'):
-            score.append(tu.find('.//prop[@type="score"]').text)
+            source = tu.find(f'.//tuv[@xml:lang="{source_lang}"]/seg', namespaces=namespace).text
+            target = tu.find(f'.//tuv[@xml:lang="{target_lang}"]/seg', namespaces=namespace).text
+            source_lang_text.append(source)
+            target_lang_text.append(target)
 
-            source = tu.find('.//tuv[@xml:lang="ell"]/seg', namespaces=namespace).text
-            target = tu.find(f'.//tuv[@xml:lang="{other_lang}"]/seg', namespaces=namespace).text
-            source_lang.append(source)
-            target_lang.append(target)
+        df_pair = pd.DataFrame({'source': source_lang_text, 'target': target_lang_text})
+        df_pair['checksum'] = df_pair.source.apply(self._generate_checksum)
+        df_grouped = df_pair.groupby('checksum', as_index=False).agg({
+            'source': 'first',  # Keep the first occurrence of 'source' for each group
+            'target': lambda x: list(set(x))  # Convert 'target' values to a list of unique values
+        })
+        df_grouped.drop(columns=['checksum'], inplace=True)
+        df_dict[target_lang] = {"train": df_grouped}
+      # Remove repo directory
+      shutil.rmtree(repo_path)
+      return df_dict
 
-        # Create DataFrame
-        df_pair = pd.DataFrame({'Greek': source_lang, other_lang_name: target_lang, f"Greek_{other_lang_name}_score": score})
-        df_pair['Checksum'] = df_pair[f'Greek'].apply(self._generate_checksum)
-        df_pair.drop_duplicates(subset='Checksum', inplace=True)
-        pgv_df_list.append(df_pair)
+    def get(self, target_lang='eng', split='train'):
+        assert target_lang in self.target_langs_ids
+        assert split in self.splits
+        return self.datasets[target_lang][split]
 
-      # Initialize merged DataFrame with the first DataFrame
-      df_pgv = pgv_df_list[0]
-
-      # Merge all DataFrames in the list
-      for df_pgv_pair in pgv_df_list[1:]:
-          df_pgv = pd.merge(df_pgv, df_pgv_pair, on=['Checksum', 'Greek'], how='outer')
-
-      df_pgv.drop(columns=['Checksum'], inplace=True)
-      return df_pgv
-
-    def save_to_csv(self, path = './'):
-      self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
-
+    def save_to_csv(self, target_lang='eng', split='train', path = './'):
+      assert target_lang in self.target_langs_ids
+      assert split in self.splits
+      self.datasets[target_lang][split].to_csv(os.path.join(path, f'{self.name}_{target_lang}_{split}.csv'), index=False)
 
 
 class FitsilisDt:
