@@ -99,34 +99,33 @@ def git_sparse_checkout_download(resource_id, repo_url, to_download, branch, roo
 
 
 class BarzokasDt:
-
-    def __init__(self, datasets, id_=56):
-      self.paper_id = id_ # the ID in the shared resource
-      self.datasets = datasets
-      self.repo_url = self.datasets[self.datasets.paper_id==self.paper_id].URL.iloc[0]
-      self.down_folder = 'data/corpora'  # Data folder path within the git repository
+    def __init__(self, datasets, root_dir=os.getcwd(), id_=56):
+      self.resource_id = id_
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.repo_url = self.resource.iloc[0].url
+      self.root_dir = root_dir
+      self.down_items = ['data/corpora']  # Data folder path within the git repository
       self.branch = "master"
       self.name = "barzokas"
       self.splits = {'train'}
       self.train = self.download()
 
-
-    def _create_df(self, dataset_folder):
-        df_tsv = pd.read_csv(os.path.join(dataset_folder, "metadata.tsv"), sep='\t')
-        print(f"tsv records: {df_tsv.shape}")
-
+    def download(self):
+      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
+      data_root_dir = os.path.join(self.root_dir, f'repo_{self.resource_id}', self.down_items[0])
+      df_list = []
+      for data_folder in os.listdir(data_root_dir):
+        df_tsv = pd.read_csv(os.path.join(data_root_dir, data_folder, "metadata.tsv"), sep='\t')
         data = []
-        txt_root_dir = os.path.join(dataset_folder, "text")
+        txt_root_dir = os.path.join(data_root_dir, data_folder, "text")
         for txt_folder in os.listdir(txt_root_dir):
           for txt_file in os.listdir(os.path.join(txt_root_dir, txt_folder)):
               if txt_file.endswith('.txt'):
                   # Extract the ID from each TXT filename
                   txt_id = os.path.splitext(txt_file)[0]
-
                   # Read the content of each TXT file
                   with open(os.path.join(txt_root_dir, txt_folder, txt_file), 'r', encoding='utf-8') as f:
-                      txt_content = f.read()
-
+                      txt_content = f.read().replace('\n', '')
                   # Merge the ID, title, and text content into a new DataFrame
                   row = df_tsv[df_tsv['id'] == txt_id]
                   if not row.empty:
@@ -135,20 +134,14 @@ class BarzokasDt:
                       row_data['status'] = txt_folder
                       data.append(row_data)
 
-        # Create the final DataFrame
-        df_final = pd.DataFrame(data)
-        return df_final
+          # Create the final DataFrame
+          df_publisher = pd.DataFrame(data)
+          df_publisher["publisher"] = data_folder
+          df_list.append(df_publisher)
 
-    def download(self):
-      git_sparse_checkout_download(self.paper_id, self.repo_url, self.down_folder, self.branch)
-      barzokas_df_list = []
-      for data_fname in os.listdir(f"{self.paper_id}"):
-        dataset_folder = f"{self.paper_id}/{data_fname}"
-        df_56 = self._create_df(dataset_folder)
-        df_56["publisher"] = data_fname
-        barzokas_df_list.append(df_56)
-
-      df = pd.concat(barzokas_df_list)
+      df = pd.concat(df_list)
+      # remove repo dir
+      shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
       return df
 
     def get(self, split='train'):
