@@ -391,51 +391,64 @@ class FitsilisDt:
 
 
 class BarziokasDt:
-    def __init__(self, datasets, id_=285):
+    def __init__(self, datasets, root_dir=os.getcwd(), id_=285):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
-      self.name = 'barsiokas'
-      self.repo_url = self.resource.iloc[0].URL
-      self.down_folder = 'dataset'  # Data folder path within the git repository
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.name = 'barziokas'
+      self.repo_url = self.resource.iloc[0].url
+      self.root_dir = root_dir
+      self.down_items = ['dataset']
       self.branch = "master"
       self.splits = {'train'}
-      self.word_based_data = self.download()
-      self.train = self.reduce()
+      self.word_based_dataset = self.download()
+      self.dataset = self.assemble_sentences()
 
-    def get(self, split='train'):
-      assert split in {'train'}
-      return self.train
-
-    def reduce(self):
+    def assemble_sentences(self):
+      '''
+      Create full sentences from individual words
+      '''
       sentences,gt4,gt18 = {},{},{}
       counter = 0
-      for index, row in self.word_based_data.iterrows():
-        if len(str(row['Sentence#'])) > 5:
+      for index, row in self.word_based_dataset.iterrows():
+        if len(str(row['sentence'])) > 5:
           counter += 1
-          sentences[counter] = [row['Word']]
-          gt4[counter] = [row['NE_4Tagset']]
-          gt18[counter] = [row['NE_18Tagset']]
+          sentences[counter] = [row['word']]
+          gt4[counter] = [row['ne_tag4']]
+          gt18[counter] = [row['ne_tag18']]
         else:
-          sentences[counter].append(row['Word'])
-          gt4[counter].append(row['NE_4Tagset'])
-          gt18[counter].append(row['NE_18Tagset'])
-      return pd.DataFrame({'sentence':sentences, 'tags4': gt4, 'tags18':gt18})
-
+          sentences[counter].append(row['word'])
+          gt4[counter].append(row['ne_tag4'])
+          gt18[counter].append(row['ne_tag18'])
+      
+      # Convert lists of words to sentences (strings)
+      for key in sentences:
+          sentences[key] = ' '.join(sentences[key])
+      
+      train_df = pd.DataFrame({'sentence':sentences, 'ne_tag4': gt4, 'ne_tag18':gt18})
+      return {'train': train_df}
 
     def download(self):
-      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_folder, self.branch)
-      barziokas_4_df = pd.read_csv(f"{self.resource_id}/elNER4/elNER4_iobes.csv")
-      barziokas_4_df = barziokas_4_df.rename(columns={'Tag': 'NE_4Tagset'})
-      barziokas_18_df = pd.read_csv(f"{self.resource_id}/elNER18/elNER18_iobes.csv")
-      barziokas_18_df = barziokas_18_df.rename(columns={'Tag': 'NE_18Tagset'})
+      git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
+      dataset_path = os.path.join(self.root_dir, f'repo_{self.resource_id}', 'dataset')
+      df_4tags = pd.read_csv(f"{dataset_path}/elNER4/elNER4_iobes.csv")
+      df_4tags = df_4tags.rename(columns={'Tag': 'ne_tags4'})
+      df_18tags = pd.read_csv(f"{dataset_path}/elNER18/elNER18_iobes.csv")
+      df_18tags = df_18tags.rename(columns={'Tag': 'ne_tags18'})
 
-      barziokas_df = pd.merge(barziokas_4_df, barziokas_18_df, left_index=True, right_index=True, how='inner')
-      barziokas_df = barziokas_df.drop(['Sentence #_y', 'Word_y', 'POS_y'], axis=1)
-      barziokas_df.columns = ['Sentence#', 'Word', 'POS', 'NE_4Tagset', 'NE_18Tagset']
-      return barziokas_df
+      df_word = pd.merge(df_4tags, df_18tags, left_index=True, right_index=True, how='inner')
+      df_word = df_word.drop(['Sentence #_y', 'Word_y', 'POS_y'], axis=1)
+      df_word.columns = ['sentence', 'word', 'pos_tag', 'ne_tag4', 'ne_tag18']
+      # Remove repo directory
+      shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
+      return df_word
 
-    def save_to_csv(self, path = './'):
-      self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
+    def get(self, split='train'):
+      assert split in self.splits
+      return self.dataset[split]
+
+    def save_to_csv(self, split='train', path = './'):
+      assert split in self.splits
+      self.dataset[split].to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
 
 
 class PapaloukasDt:
