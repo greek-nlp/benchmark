@@ -450,34 +450,35 @@ class PapaloukasDt:
 class ProkopidisCrawledDt:
     def __init__(self, datasets, id_=284):
       self.resource_id = id_
-      self.resource = datasets.loc[datasets.paper_id==self.resource_id]
-      self.name = 'prokopidis'
-      self.repo_url = self.resource.iloc[0].URL
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.name = 'prokopidis_crawled'
+      self.repo_url = self.resource.iloc[0].url
       self.splits = {'train'}
       self.train = self.download()
 
-    def get(self, split='train'):
-      assert split in self.splits
-      return self.train
-
-
     def download(self):
-      wget_download(self.resource_id, f"{self.repo_url}/resources/greek_corpus.tar.gz")
-      tar_file_path = f"{self.resource_id}/greek_corpus.tar.gz"
+      repo_path = os.path.join(os.getcwd(), f'repo_{self.resource_id}')
+      wget_download(repo_path, f"{self.repo_url}/resources/greek_corpus.tar.gz")
 
+      tar_file_path = os.path.join(repo_path, "greek_corpus.tar.gz")
       with tarfile.open(tar_file_path, "r:gz") as tar:
-        # Extract all files to the current directory
-        tar.extractall()
+        tar.extractall(path=repo_path)
 
-      data_folder = 'data-20130219-20191231'
+      data_dir = os.path.join(repo_path, 'data-20130219-20191231')
       data = []
-      for filename in os.listdir(data_folder):
-        with open(os.path.join(data_folder, filename), 'r') as f:
+      for filename in os.listdir(data_dir):
+        with open(os.path.join(data_dir, filename), 'r') as f:
           file_content = f.read()
           data.append({"text": file_content, "filename": filename.split(".txt")[0]})
 
       df = pd.DataFrame(data)
+      # remove repo dir
+      shutil.rmtree(repo_path)
       return df
+    
+    def get(self, split='train'):
+      assert split in self.splits
+      return self.train
 
     def save_to_csv(self, path = './'):
       self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
