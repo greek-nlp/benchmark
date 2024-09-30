@@ -604,3 +604,41 @@ class RizouDt:
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
       self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
+
+
+class PapantoniouDt:
+    def __init__(self, datasets, id_=756):
+      self.resource_id = id_
+      self.resource = datasets.loc[datasets.id==self.resource_id]
+      self.name = 'papantoniou'
+      self.repo_url = self.resource.iloc[0].url
+      self.splits = {'train', 'validation', 'test'}
+      self.dataset = self.download()
+
+    def download(self):
+      repo_path = os.path.join(os.getcwd(), f'repo_{self.resource_id}')
+      zenodo_download(repo_path, self.repo_url)
+
+      zip_file = os.path.join(repo_path, 'ner_nel_greek_dataset.zip')
+      with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+        zip_ref.extractall(repo_path)
+      
+      df_dict = dict()
+      for split in self.splits:
+        filename = 'validate.json' if split=='validation' else f'{split}.json'
+        file_path = os.path.join(repo_path, 'ner_nel_greek_dataset', filename)
+        with open(file_path, 'r', encoding='utf-8') as f:
+          data = json.load(f)
+
+        df_dict[split] = pd.DataFrame(data['items'])
+      # remove repo dir
+      shutil.rmtree(repo_path)
+      return df_dict
+
+    def get(self, split='train'):
+      assert split in self.splits
+      return self.dataset[split]
+
+    def save_to_csv(self, split='train', path = './'):
+      assert split in self.splits
+      self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
