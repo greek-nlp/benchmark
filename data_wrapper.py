@@ -307,12 +307,12 @@ class ProkopidisMtDt:
       return df_dict
 
     def get(self, target_lang='eng', split='train'):
-        assert target_lang in self.target_langs_ids
+        assert target_lang in self.target_langs
         assert split in self.splits
         return self.datasets[target_lang][split]
 
     def save_to_csv(self, target_lang='eng', split='train', path = './'):
-      assert target_lang in self.target_langs_ids
+      assert target_lang in self.target_langs
       assert split in self.splits
       self.datasets[target_lang][split].to_csv(os.path.join(path, f'{self.name}_{target_lang}_{split}.csv'), index=False)
 
