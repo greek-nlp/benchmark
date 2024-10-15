@@ -255,7 +255,7 @@ class ProkopidisMtDt:
       }
       self.target_langs = list(self.langs_dict.keys())
       self.target_lang_names = list(self.langs_dict.values())
-      self.splits = {'train'}
+      self.splits = {'train', 'test'}
       self.datasets = self.download()
 
     def _generate_checksum(self, text):
@@ -289,13 +289,22 @@ class ProkopidisMtDt:
             target_lang_text.append(target)
 
         df_pair = pd.DataFrame({'source': source_lang_text, 'target': target_lang_text})
+        df_pair['original_index'] = df_pair.index
         df_pair['checksum'] = df_pair.source.apply(self._generate_checksum)
         df_grouped = df_pair.groupby('checksum', as_index=False).agg({
             'source': 'first',  # Keep the first occurrence of 'source' for each group
-            'target': lambda x: list(set(x))  # Convert 'target' values to a list of unique values
+            'target': lambda x: list(set(x)),  # Convert 'target' values to a list of unique values
+            'original_index': 'first'
         })
-        df_grouped.drop(columns=['checksum'], inplace=True)
-        df_dict[target_lang] = {"train": df_grouped}
+        # Sort by the original index to maintain the original order
+        df_grouped.sort_values('original_index', inplace=True)
+        df_grouped.drop(columns=['checksum', 'original_index'], inplace=True)
+        df_grouped.reset_index(drop=True, inplace=True)
+        
+        test_df = df_grouped[df_grouped.index < 500]
+        train_df = df_grouped[df_grouped.index >= 500]
+        df_dict[target_lang] = {"train": train_df, "test": test_df}
+        
       # Remove repo directory
       shutil.rmtree(repo_path)
       return df_dict
