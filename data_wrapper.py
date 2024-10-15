@@ -320,7 +320,7 @@ class BarziokasDt:
       self.root_dir = root_dir
       self.down_items = ['dataset']
       self.branch = "master"
-      self.splits = {'train'}
+      self.splits = {'train', 'test'}
       self.word_based_dataset = self.download()
       self.dataset = self.assemble_sentences()
 
@@ -345,8 +345,13 @@ class BarziokasDt:
       for key in sentences:
           sentences[key] = ' '.join(sentences[key])
       
-      train_df = pd.DataFrame({'sentence':sentences, 'ne_tag4': gt4, 'ne_tag18':gt18})
-      return {'train': train_df}
+      df = pd.DataFrame({'sentence':sentences, 'ne_tag4': gt4, 'ne_tag18':gt18})
+      df_dict = {
+          'train': df[df.index >= 300],
+          'test': df[df.index < 300]
+      
+      }
+      return df_dict
 
     def download(self):
       git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
