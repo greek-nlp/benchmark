@@ -350,10 +350,6 @@ class BarziokasDt:
           gt4[counter].append(row['ne_tag4'])
           gt18[counter].append(row['ne_tag18'])
       
-      # Convert lists of words to sentences (strings)
-      for key in sentences:
-          sentences[key] = ' '.join(sentences[key])
-      
       df = pd.DataFrame({'sentence':sentences, 'ne_tag4': gt4, 'ne_tag18':gt18})
       df_dict = {
           'train': df[df.index >= 300],
