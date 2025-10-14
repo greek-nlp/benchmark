@@ -28,13 +28,52 @@ def wget_download(resource_id, url):
   # Use wget to download the file (as in >> !wget -P {resource_id} {url})
   wget.download(url=url, out=resource_id)
 
-def zenodo_download(output_dir, zenodo_url):
-  if os.path.exists(output_dir):
-    print(f"Items exists in directory: {output_dir}")
-    return
-  os.makedirs(str(output_dir), exist_ok=True)
-  args = ["-o", output_dir, zenodo_url]
-  zenodo_get.download(args)
+import os
+import subprocess
+import shlex
+
+def zenodo_download(output_dir: str, zenodo_url: str):
+    """
+    Downloads a Zenodo record using the zenodo-get command-line tool.
+
+    Args:
+        output_dir: The directory where the files will be saved.
+        zenodo_url: The full Zenodo URL or the Zenodo Record ID/DOI.
+    """
+    # 1. Check if the directory already exists and contains content
+    if os.path.exists(output_dir) and len(os.listdir(output_dir)) > 0:
+        print(f"Directory exists and is not empty: {output_dir}. Skipping download.")
+        return
+
+    # 2. Create the output directory if it doesn't exist
+    print(f"Creating directory: {output_dir}")
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 3. Construct and run the command
+    print(f"Starting download from {zenodo_url}...")
+    
+    # Construct the command as a string
+    # The zenodo-get tool can take the full URL, the DOI, or just the Record ID
+    command = f"zenodo_get -o {shlex.quote(output_dir)} {shlex.quote(zenodo_url)}"
+    
+    try:
+        # Execute the command. check=True raises an error for non-zero exit codes.
+        subprocess.run(
+            shlex.split(command), 
+            check=True, 
+            capture_output=True, 
+            text=True
+        )
+        print("✅ Download complete.")
+        
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Zenodo download failed with error: {e}")
+        print(f"Stderr: {e.stderr}")
+        # Optionally, clean up the created directory if the download fails
+        # os.rmdir(output_dir) 
+    except FileNotFoundError:
+        print("❌ Error: 'zenodo_get' command not found. Ensure the tool is installed (pip install zenodo-get) and accessible in your environment's PATH.")
+
 
 def huggingface_download(resource_id, dataset_name, splits, subsets=[None]):
   """
