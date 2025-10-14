@@ -34,7 +34,7 @@ def zenodo_download(output_dir, zenodo_url):
     return
   os.makedirs(str(output_dir), exist_ok=True)
   args = ["-o", output_dir, zenodo_url]
-  zenodo_get.zenodo_get(args)
+  zenodo_get.download(args)
 
 def huggingface_download(resource_id, dataset_name, splits, subsets=[None]):
   """
