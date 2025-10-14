@@ -42,7 +42,20 @@ def huggingface_download(resource_id, dataset_name, splits, subsets=[None]):
   """
   df_dict = {}
   for subset in subsets:
-    dataset = load_dataset(dataset_name, subset)
+    if dataset_name == "strombergnlp/offenseval_2020" and subset == "gr":
+            # Manual URL mapping for Greek subset
+            data_files = {
+                "train": "https://huggingface.co/datasets/strombergnlp/offenseval_2020/resolve/main/offenseval-gr-training-v1.tsv",
+                "test": "https://huggingface.co/datasets/strombergnlp/offenseval_2020/resolve/main/offenseval-gr-test-v1.tsv",
+            }
+
+            dataset = load_dataset(
+                "csv",
+                data_files=data_files,
+                sep="\t"
+            )
+    else:
+      dataset = load_dataset(dataset_name, subset)
 
     for split in splits:
       df_hg = pd.DataFrame(dataset[split])
