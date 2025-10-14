@@ -22,15 +22,13 @@ import subprocess
 # !pip install conll-df
 from conll_df import conll_df
 from sklearn.model_selection import train_test_split
+import shlex
 
 def wget_download(resource_id, url):
   os.makedirs(str(resource_id), exist_ok=True)
   # Use wget to download the file (as in >> !wget -P {resource_id} {url})
   wget.download(url=url, out=resource_id)
 
-import os
-import subprocess
-import shlex
 
 def zenodo_download(output_dir: str, zenodo_url: str):
     """
