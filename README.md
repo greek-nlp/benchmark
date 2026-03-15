@@ -7,6 +7,23 @@ While large language models (LLMs) have significantly advanced Natural Language 
 * Run [the data notebook](nlp_gr_access_data.ipynb) to download the data.
 * Run the experiments for [the task benchmarks](nlp_gr_experiments.ipynb) for the open-source Llama model. 
 
+## Greek GEC Benchmark In VS Code
+To benchmark accessible Greek-capable LLMs for grammatical error correction locally, use [`gec_benchmark.py`](gec_benchmark.py) with Ollama.
+
+1. Create and activate a virtual environment.
+2. Install the dependencies:
+   `pip install pandas pywer zenodo-get wget datasets conll-df openpyxl`
+3. Start Ollama and pull the models you want to compare, for example:
+   `ollama pull qwen2.5:7b-instruct`
+   `ollama pull aya-expanse:8b`
+   `ollama pull llama3.1:8b`
+4. Run the benchmark:
+   `python gec_benchmark.py --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100`
+
+The benchmark uses the `KorreDt` dataset, prompts each model to correct Modern Greek text, and writes:
+* `results/gec_ollama/gec_benchmark_summary.csv`
+* `results/gec_ollama/gec_benchmark_predictions.csv`
+
 ## Requirements
 * [zenodo-get](https://github.com/dvolgyes/zenodo_get)
 * [datasets](https://pypi.org/project/datasets/)
