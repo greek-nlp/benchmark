@@ -24,6 +24,23 @@ The benchmark uses the `KorreDt` dataset, prompts each model to correct Modern G
 * `results/gec_ollama/gec_benchmark_summary.csv`
 * `results/gec_ollama/gec_benchmark_predictions.csv`
 
+## Shared Benchmark Runner
+For a reusable benchmark runner across tasks, use [`suite_benchmark.py`](suite_benchmark.py).
+
+Currently supported tasks:
+* `gec`
+* `toxicity`
+* `mt_eng`
+* `mt_jpn`
+* `mt_fas`
+* `intent`
+* `summarization`
+
+Example:
+`python suite_benchmark.py --task toxicity --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100`
+
+This writes per-task outputs under `results/suite/`.
+
 ## Requirements
 * [zenodo-get](https://github.com/dvolgyes/zenodo_get)
 * [datasets](https://pypi.org/project/datasets/)
