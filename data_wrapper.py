@@ -157,8 +157,10 @@ class BarzokasDt:
       self.down_items = ['data/corpora']  # Data folder path within the git repository
       self.branch = "master"
       self.name = "barzokas"
-      self.splits = {'train'}
-      self.train = self.download()
+      self.splits = {'train', 'test'}
+      self.dataset = self.download()
+      self.train = self.dataset['train']
+      self.test = self.dataset['test']
 
     def download(self):
       git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
@@ -190,16 +192,32 @@ class BarzokasDt:
           df_list.append(df_publisher)
 
       df = pd.concat(df_list)
+      # Ensure stratification is feasible by dropping authors with <2 samples.
+      author_counts = df["author"].value_counts()
+      valid_authors = author_counts[author_counts >= 2].index
+      df = df[df["author"].isin(valid_authors)].copy()
+
+      df_train, df_test = train_test_split(
+          df,
+          test_size=0.2,
+          stratify=df["author"],
+          shuffle=True,
+          random_state=42,
+      )
       # remove repo dir
       shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
-      return df
+      return {
+          "train": df_train.reset_index(drop=True),
+          "test": df_test.reset_index(drop=True),
+      }
 
     def get(self, split='train'):
-      assert split in {'train'}
-      return self.train
+      assert split in self.splits
+      return self.dataset[split]
 
-    def save_to_csv(self, path = './'):
-      self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
+    def save_to_csv(self, split='train', path = './'):
+      assert split in self.splits
+      self.dataset[split].to_csv(os.path.join(path, f'{self.name}_{split}.csv'), index=False)
 
 
 class KorreDt:
@@ -212,9 +230,9 @@ class KorreDt:
       self.repo_url = self.resource.iloc[0].url
       self.down_items = ['GNC']  # Data folder path within the git repository
       self.branch = "main"
-      self.splits = {'train'}
+      self.splits = {'test'}
       self.dataset = None
-      self.train = self.download()
+      self.test = self.download()
 
   def download(self):
       git_sparse_checkout_download(self.resource_id, self.repo_url, self.down_items, self.branch, self.root_dir)
@@ -257,12 +275,12 @@ class KorreDt:
 
       return df_gnc
 
-  def get(self, split='train'):
-    assert split in {'train'}
-    return self.train
+  def get(self, split='test'):
+    assert split in self.splits
+    return self.test
 
   def save_to_csv(self):
-    self.train.to_csv(os.path.join(self.root_dir, f'{self.name}.csv'), index=False)
+    self.test.to_csv(os.path.join(self.root_dir, f'{self.name}_test.csv'), index=False)
 
 
 class ZampieriDt:
@@ -351,9 +369,16 @@ class ProkopidisMtDt:
         df_grouped.drop(columns=['checksum', 'original_index'], inplace=True)
         df_grouped.reset_index(drop=True, inplace=True)
         
-        test_df = df_grouped[df_grouped.index < 500]
-        train_df = df_grouped[df_grouped.index >= 500]
-        df_dict[target_lang] = {"train": train_df, "test": test_df}
+        train_df, test_df = train_test_split(
+            df_grouped,
+            test_size=0.2,
+            shuffle=True,
+            random_state=42,
+        )
+        df_dict[target_lang] = {
+            "train": train_df.reset_index(drop=True),
+            "test": test_df.reset_index(drop=True),
+        }
         
       # Remove repo directory
       shutil.rmtree(repo_path)
@@ -379,7 +404,7 @@ class BarziokasDt:
       self.root_dir = root_dir
       self.down_items = ['dataset']
       self.branch = "master"
-      self.splits = {'train', 'test'}
+      self.splits = {'train', 'validation', 'test'}
       self.word_based_dataset = self.download()
       self.dataset = self.assemble_sentences()
 
@@ -401,10 +426,22 @@ class BarziokasDt:
           gt18[counter].append(row['ne_tag18'])
       
       df = pd.DataFrame({'sentence':sentences, 'ne_tag4': gt4, 'ne_tag18':gt18})
+      train_df, temp_df = train_test_split(
+          df,
+          test_size=0.2,
+          shuffle=True,
+          random_state=42,
+      )
+      validation_df, test_df = train_test_split(
+          temp_df,
+          test_size=0.5,
+          shuffle=True,
+          random_state=42,
+      )
       df_dict = {
-          'train': df[df.index >= 300],
-          'test': df[df.index < 300]
-      
+          'train': train_df.reset_index(drop=True),
+          'validation': validation_df.reset_index(drop=True),
+          'test': test_df.reset_index(drop=True),
       }
       return df_dict
 

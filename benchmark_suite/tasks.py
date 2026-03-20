@@ -80,7 +80,6 @@ def _load_mt_dataset(
     target_lang: str = "eng",
     split: str = "test",
 ) -> pd.DataFrame:
-    del random_state
     registry = _load_dataset_registry(data_csv)
     repo_url = registry.loc[registry["id"] == 486, "url"].iloc[0]
     zip_bytes = _download_bytes(f"{repo_url}archives/ell-{target_lang}.zip")
@@ -99,9 +98,14 @@ def _load_mt_dataset(
         records.append({"source": source.text, "target": target.text, "target_lang": target_lang})
 
     df = pd.DataFrame(records).drop_duplicates(subset=["source", "target"]).reset_index(drop=True)
-    test_df = df.iloc[:500].copy()
-    train_df = df.iloc[500:].copy()
-    return train_df if split == "train" else test_df
+    train_df, test_df = train_test_split(
+        df,
+        test_size=0.2,
+        shuffle=True,
+        random_state=random_state,
+    )
+    selected = train_df if split == "train" else test_df
+    return selected.reset_index(drop=True)
 
 
 def _load_intent_dataset(*, data_csv: str | Path, random_state: int, split: str = "test") -> pd.DataFrame:
