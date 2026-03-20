@@ -39,7 +39,12 @@ Currently supported tasks:
 Example:
 `python suite_benchmark.py --task toxicity --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100`
 
-This writes per-task outputs under `results/suite/`.
+This writes per-task outputs under `results/suite/`:
+* `{task}_summary.csv`
+* `{task}_predictions.csv`
+* `{task}_visualization.html`
+
+Open the HTML file in a browser to see a per-task visualization of the benchmark metrics for each model.
 
 ## Requirements
 * [zenodo-get](https://github.com/dvolgyes/zenodo_get)

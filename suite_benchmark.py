@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from pathlib import Path
 
 from benchmark_suite import GenerationConfig, list_tasks, run_task, save_run_outputs
 
@@ -35,6 +36,10 @@ def main() -> None:
     )
     save_run_outputs(summary, raw, args.output_dir, args.task)
     print(summary.to_string(index=False))
+    output_path = Path(args.output_dir)
+    print(f"\nSaved summary CSV: {output_path / f'{args.task}_summary.csv'}")
+    print(f"Saved predictions CSV: {output_path / f'{args.task}_predictions.csv'}")
+    print(f"Saved visualization: {output_path / f'{args.task}_visualization.html'}")
 
 
 if __name__ == "__main__":
