@@ -58,6 +58,21 @@ When running `--task all`, it also writes:
 
 Open the HTML file in a browser to see a per-task visualization of the benchmark metrics for each model.
 
+## Monte Carlo Runner
+For repeated sampled runs with mean and standard error of the mean (SEM), use [`suite_benchmark_monte_carlo.py`](suite_benchmark_monte_carlo.py).
+
+Example:
+`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --repeats 5 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b`
+
+To resume a long run on a server or after a Colab disconnect:
+`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --repeats 5 --resume`
+
+This writes:
+* `results/suite_monte_carlo/{task}/repeat_XX/{task}_summary.csv`
+* `results/suite_monte_carlo/{task}/{task}_summary_with_sem.csv`
+* `results/suite_monte_carlo/all_tasks_summary_with_sem.csv`
+* `results/suite_monte_carlo/performance_by_task.csv`
+
 ## Requirements
 * [zenodo-get](https://github.com/dvolgyes/zenodo_get)
 * [datasets](https://pypi.org/project/datasets/)
