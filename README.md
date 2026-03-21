@@ -39,10 +39,19 @@ Currently supported tasks:
 Example:
 `python suite_benchmark.py --task toxicity --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100`
 
+Run the full Ollama-backed suite across every supported task:
+`python suite_benchmark.py --task all --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100`
+
+The runner now defaults to Ollama models and `--task all`, so this also works:
+`python suite_benchmark.py`
+
 This writes per-task outputs under `results/suite/`:
 * `{task}_summary.csv`
 * `{task}_predictions.csv`
 * `{task}_visualization.html`
+
+When running `--task all`, it also writes:
+* `all_tasks_summary.csv`
 
 Open the HTML file in a browser to see a per-task visualization of the benchmark metrics for each model.
 

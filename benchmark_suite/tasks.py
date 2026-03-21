@@ -229,13 +229,15 @@ def _evaluate_gec(raw: pd.DataFrame) -> pd.DataFrame:
 def _evaluate_classification(raw: pd.DataFrame, label_col: str) -> pd.DataFrame:
     rows = []
     for model, group in raw.groupby("model", sort=False):
+        labels = group[label_col].fillna("").astype(str).str.strip()
+        predictions = group["prediction"].fillna("").astype(str).str.strip()
         rows.append(
             {
                 "task": group["task"].iloc[0],
                 "model": model,
                 "samples": len(group),
-                "accuracy": accuracy_score(group[label_col], group["prediction"]),
-                "macro_f1": f1_score(group[label_col], group["prediction"], average="macro", zero_division=0),
+                "accuracy": accuracy_score(labels, predictions),
+                "macro_f1": f1_score(labels, predictions, average="macro", zero_division=0),
                 "avg_latency_seconds": group["latency_seconds"].mean(),
             }
         )
