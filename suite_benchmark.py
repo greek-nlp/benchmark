@@ -32,7 +32,12 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_MODELS,
         help="Ollama model names to benchmark.",
     )
-    parser.add_argument("--sample-size", type=int, default=100, help="How many examples to score.")
+    parser.add_argument(
+        "--sample-size",
+        type=int,
+        default=100,
+        help="How many examples to score. Use 0 to run on the full test dataset.",
+    )
     parser.add_argument("--random-state", type=int, default=42, help="Sampling seed.")
     parser.add_argument("--data-csv", default="data.csv", help="Path to the benchmark dataset registry CSV.")
     parser.add_argument("--output-dir", default="results/suite", help="Where to save benchmark outputs.")
@@ -55,6 +60,7 @@ def _print_summary(summary: pd.DataFrame) -> None:
 def main() -> None:
     args = parse_args()
     output_path = Path(args.output_dir)
+    sample_size = None if args.sample_size <= 0 else args.sample_size
     config = GenerationConfig(
         temperature=args.temperature,
         num_predict=args.num_predict,
@@ -69,7 +75,7 @@ def main() -> None:
         summary, raw = run_task(
             task_name=task_name,
             models=args.models,
-            sample_size=args.sample_size,
+            sample_size=sample_size,
             random_state=args.random_state,
             data_csv=args.data_csv,
             config=config,

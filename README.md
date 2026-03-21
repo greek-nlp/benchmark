@@ -45,6 +45,9 @@ Run the full Ollama-backed suite across every supported task:
 The runner now defaults to Ollama models and `--task all`, so this also works:
 `python suite_benchmark.py`
 
+To run against the full test dataset instead of a sample:
+`python suite_benchmark.py --task all --sample-size 0`
+
 This writes per-task outputs under `results/suite/`:
 * `{task}_summary.csv`
 * `{task}_predictions.csv`
