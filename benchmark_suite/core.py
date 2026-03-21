@@ -25,11 +25,18 @@ def _sample_dataset(dataset: pd.DataFrame, sample_size: int | None, random_state
     return dataset.sample(sample_size, random_state=random_state).reset_index(drop=True)
 
 
+def _limit_dataset(dataset: pd.DataFrame, data_limit: int | None) -> pd.DataFrame:
+    if data_limit is None or data_limit >= len(dataset):
+        return dataset.reset_index(drop=True)
+    return dataset.head(data_limit).reset_index(drop=True)
+
+
 def run_task(
     *,
     task_name: str,
     models: Iterable[str],
     sample_size: int | None = 100,
+    data_limit: int | None = None,
     random_state: int = 42,
     data_csv: str | Path = "data.csv",
     config: GenerationConfig | None = None,
@@ -45,6 +52,7 @@ def run_task(
     task: TaskSpec = TASKS[task_name]
 
     dataset = task.load_dataset(data_csv=data_csv, random_state=random_state, **task_options)
+    dataset = _limit_dataset(dataset, data_limit=data_limit)
     dataset = _sample_dataset(dataset, sample_size=sample_size, random_state=random_state)
 
     records: list[dict[str, object]] = []

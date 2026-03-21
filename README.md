@@ -62,10 +62,12 @@ Open the HTML file in a browser to see a per-task visualization of the benchmark
 For repeated sampled runs with mean and standard error of the mean (SEM), use [`suite_benchmark_monte_carlo.py`](suite_benchmark_monte_carlo.py).
 
 Example:
-`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --repeats 5 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b`
+`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --data-limit-per-task 500 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b`
 
 To resume a long run on a server or after a Colab disconnect:
-`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --repeats 5 --resume`
+`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --resume`
+
+`--num-splits` controls how many repeated sampled runs are performed per task. `--data-limit-per-task` caps the task dataset before sampling; use `0` to keep the full dataset. The older `--repeats` flag still works as an alias for `--num-splits`.
 
 This writes:
 * `results/suite_monte_carlo/{task}/repeat_XX/{task}_summary.csv`

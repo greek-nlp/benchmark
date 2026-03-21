@@ -39,7 +39,20 @@ def parse_args() -> argparse.Namespace:
         default=100,
         help="How many examples to score per repeat. Use 0 to run on the full test dataset.",
     )
-    parser.add_argument("--repeats", type=int, default=5, help="How many repeated runs to perform per task.")
+    parser.add_argument(
+        "--num-splits",
+        "--repeats",
+        dest="num_splits",
+        type=int,
+        default=5,
+        help="How many repeated sampled splits to run per task.",
+    )
+    parser.add_argument(
+        "--data-limit-per-task",
+        type=int,
+        default=0,
+        help="Maximum number of task examples to keep before sampling. Use 0 to keep the full dataset.",
+    )
     parser.add_argument("--random-state", type=int, default=42, help="Base sampling seed.")
     parser.add_argument("--data-csv", default="data.csv", help="Path to the benchmark dataset registry CSV.")
     parser.add_argument("--output-dir", default="results/suite_monte_carlo", help="Where to save benchmark outputs.")
@@ -152,6 +165,7 @@ def main() -> None:
     args = parse_args()
     output_root = Path(args.output_dir)
     sample_size = None if args.sample_size <= 0 else args.sample_size
+    data_limit = None if args.data_limit_per_task <= 0 else args.data_limit_per_task
     selected_tasks = _selected_tasks(args.task)
     config = GenerationConfig(
         temperature=args.temperature,
@@ -167,20 +181,21 @@ def main() -> None:
         repeat_summaries: list[pd.DataFrame] = []
         repeat_predictions: list[pd.DataFrame] = []
 
-        for repeat_index in range(args.repeats):
+        for repeat_index in range(args.num_splits):
             repeat_number = repeat_index + 1
             repeat_seed = args.random_state + repeat_index
             repeat_output_dir = output_root / task_name / f"repeat_{repeat_number:02d}"
 
             if args.resume and (repeat_output_dir / f"{task_name}_summary.csv").exists():
-                print(f"Reusing repeat {repeat_number}/{args.repeats} from {repeat_output_dir}")
+                print(f"Reusing repeat {repeat_number}/{args.num_splits} from {repeat_output_dir}")
                 summary, raw = _load_repeat_outputs(repeat_output_dir, task_name)
             else:
-                print(f"Running repeat {repeat_number}/{args.repeats} with seed {repeat_seed}")
+                print(f"Running repeat {repeat_number}/{args.num_splits} with seed {repeat_seed}")
                 summary, raw = run_task(
                     task_name=task_name,
                     models=args.models,
                     sample_size=sample_size,
+                    data_limit=data_limit,
                     random_state=repeat_seed,
                     data_csv=args.data_csv,
                     config=config,
