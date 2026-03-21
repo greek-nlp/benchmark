@@ -24,6 +24,13 @@ from conll_df import conll_df
 from sklearn.model_selection import train_test_split
 import shlex
 
+def resolve_split(split, available_splits):
+  if split in available_splits:
+    return split
+  if split == 'test' and 'train' in available_splits:
+    return 'train'
+  raise AssertionError(f"Invalid split '{split}'. Available splits: {sorted(available_splits)}")
+
 def wget_download(resource_id, url):
   os.makedirs(str(resource_id), exist_ok=True)
   # Use wget to download the file (as in >> !wget -P {resource_id} {url})
@@ -212,8 +219,7 @@ class BarzokasDt:
       }
 
     def get(self, split='train'):
-      assert split in self.splits
-      return self.dataset[split]
+      return self.dataset[resolve_split(split, self.splits)]
 
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
@@ -276,8 +282,10 @@ class KorreDt:
       return df_gnc
 
   def get(self, split='test'):
-    assert split in self.splits
-    return self.test
+    resolved_split = resolve_split(split, self.splits)
+    if resolved_split == 'test':
+      return self.test
+    raise AssertionError(f"Invalid split '{split}'. Available splits: {sorted(self.splits)}")
 
   def save_to_csv(self):
     self.test.to_csv(os.path.join(self.root_dir, f'{self.name}_test.csv'), index=False)
@@ -302,8 +310,7 @@ class ZampieriDt:
       return df_dict
 
     def get(self, split='train'):
-      assert split in {'train', 'test'}
-      return self.dataset[split]
+      return self.dataset[resolve_split(split, set(self.splits))]
 
     def save_to_csv(self, split='train', path = './'):
       assert split in {'train', 'test'}
@@ -386,8 +393,7 @@ class ProkopidisMtDt:
 
     def get(self, target_lang='eng', split='train'):
         assert target_lang in self.target_langs
-        assert split in self.splits
-        return self.datasets[target_lang][split]
+        return self.datasets[target_lang][resolve_split(split, self.splits)]
 
     def save_to_csv(self, target_lang='eng', split='train', path = './'):
       assert target_lang in self.target_langs
@@ -461,8 +467,7 @@ class BarziokasDt:
       return df_word
 
     def get(self, split='train'):
-      assert split in self.splits
-      return self.dataset[split]
+      return self.dataset[resolve_split(split, self.splits)]
 
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
@@ -492,8 +497,7 @@ class PapaloukasDt:
       return df_splits
 
     def get(self, split = 'train'):
-      assert split in self.splits
-      return self.dataset[split]
+      return self.dataset[resolve_split(split, self.splits)]
 
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
@@ -530,8 +534,10 @@ class ProkopidisCrawledDt:
       return df
     
     def get(self, split='train'):
-      assert split in self.splits
-      return self.train
+      resolved_split = resolve_split(split, self.splits)
+      if resolved_split == 'train':
+        return self.train
+      raise AssertionError(f"Invalid split '{split}'. Available splits: {sorted(self.splits)}")
 
     def save_to_csv(self, path = './'):
       self.train.to_csv(os.path.join(path, f'{self.name}.csv'), index=False)
@@ -547,8 +553,10 @@ class DritsaDt:
       self.train = self.download()
 
     def get(self, split='train'):
-      assert split in self.splits
-      return self.train
+      resolved_split = resolve_split(split, self.splits)
+      if resolved_split == 'train':
+        return self.train
+      raise AssertionError(f"Invalid split '{split}'. Available splits: {sorted(self.splits)}")
 
     def download(self):
       repo_path = os.path.join(os.getcwd(), f'repo_{self.resource_id}')
@@ -610,8 +618,7 @@ class KoniarisDt:
       return df_dict
 
     def get(self, split='train'):
-      assert split in self.splits
-      return self.dataset[split]
+      return self.dataset[resolve_split(split, self.splits)]
 
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
@@ -645,8 +652,7 @@ class ProkopidisUdDt:
       return df_dict
 
   def get(self, split='train'):
-    assert split in self.splits
-    return self.dataset[split]
+    return self.dataset[resolve_split(split, self.splits)]
 
   def save_to_csv(self, split='train'):
     assert split in self.splits
@@ -695,8 +701,7 @@ class RizouDt:
       return {'train': df_train, 'test': df_test}
 
     def get(self, split='train'):
-          assert split in self.splits
-          return self.dataset[split]
+          return self.dataset[resolve_split(split, self.splits)]
           
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
@@ -733,8 +738,7 @@ class PapantoniouDt:
       return df_dict
 
     def get(self, split='train'):
-      assert split in self.splits
-      return self.dataset[split]
+      return self.dataset[resolve_split(split, self.splits)]
 
     def save_to_csv(self, split='train', path = './'):
       assert split in self.splits
