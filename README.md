@@ -61,6 +61,20 @@ Open the HTML file in a browser to see a per-task visualization of the benchmark
 ## Monte Carlo Runner
 For repeated sampled runs with mean and standard error of the mean (SEM), use [`suite_benchmark_monte_carlo.py`](suite_benchmark_monte_carlo.py).
 
+How to run it:
+
+1. Create and activate a virtual environment.
+2. Install the dependencies:
+   `pip install -r requirements.txt`
+3. Start Ollama and pull the models you want to compare, for example:
+   `ollama pull qwen2.5:7b-instruct`
+   `ollama pull aya-expanse:8b`
+   `ollama pull llama3.1:8b`
+4. Run one task:
+   `python suite_benchmark_monte_carlo.py --task toxicity --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100 --num-splits 5`
+5. Run all supported tasks:
+   `python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --data-limit-per-task 500 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b`
+
 Example:
 `python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --data-limit-per-task 500 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b`
 
@@ -68,6 +82,14 @@ To resume a long run on a server or after a Colab disconnect:
 `python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --resume`
 
 `--num-splits` controls how many repeated sampled runs are performed per task. `--data-limit-per-task` caps the task dataset before sampling; use `0` to keep the full dataset. The older `--repeats` flag still works as an alias for `--num-splits`.
+
+Useful flags:
+* `--task`: run a single task such as `toxicity`, `gec`, or `summarization`, or use `all`.
+* `--models`: one or more Ollama model names.
+* `--sample-size`: how many examples to score in each split. Use `0` for the full available dataset after any task cap.
+* `--num-splits`: how many repeated sampled runs to perform per task.
+* `--data-limit-per-task`: maximum number of examples to keep per task before sampling.
+* `--resume`: reuse already saved split outputs instead of recomputing them.
 
 This writes:
 * `results/suite_monte_carlo/{task}/repeat_XX/{task}_summary.csv`

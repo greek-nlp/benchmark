@@ -1,0 +1,10 @@
+pandas
+numpy
+scikit-learn
+pywer
+datasets
+zenodo-get
+wget
+conll-df
+matplotlib
+seaborn
