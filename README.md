@@ -20,26 +20,38 @@ The supported task set is:
 ### Setup
 1. Create and activate a virtual environment.
 2. Install the dependencies:
-   `pip install -r requirements.txt`
+```bash
+pip install -r requirements.txt
+```
 3. Start Ollama and pull the models you want to compare, for example:
-   `ollama pull qwen2.5:7b-instruct`
-   `ollama pull aya-expanse:8b`
-   `ollama pull llama3.1:8b`
+```bash
+ollama pull qwen2.5:7b-instruct
+ollama pull aya-expanse:8b
+ollama pull llama3.1:8b
+```
 
 ### Unified Python Runner
 Use [`scripts/run_all_benchmarks.py`](scripts/run_all_benchmarks.py) to run one task or the whole benchmark suite.
 
 Run all supported tasks:
-`python scripts/run_all_benchmarks.py --task all --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100`
+```bash
+python scripts/run_all_benchmarks.py --task all --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100
+```
 
 Run a single task:
-`python scripts/run_all_benchmarks.py --task ner --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100`
+```bash
+python scripts/run_all_benchmarks.py --task ner --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100
+```
 
 Run on the full available dataset for a task:
-`python scripts/run_all_benchmarks.py --task summarization --sample-size 0`
+```bash
+python scripts/run_all_benchmarks.py --task summarization --sample-size 0
+```
 
 The compatibility entrypoint [`suite_benchmark.py`](suite_benchmark.py) forwards to the same runner, so this also works:
-`python suite_benchmark.py --task all`
+```bash
+python suite_benchmark.py --task all
+```
 
 Outputs are written under `results/full_benchmark_suite/`:
 * `{task}_summary.csv`
@@ -61,31 +73,49 @@ Useful flags:
 To run the benchmark on a remote Linux server:
 
 1. Clone the repository and enter it:
-   `git clone https://github.com/greek-nlp/benchmark.git`
-   `cd benchmark`
+```bash
+git clone https://github.com/greek-nlp/benchmark.git
+cd benchmark
+```
 2. Create and activate a virtual environment:
-   `python -m venv .venv`
-   `source .venv/bin/activate`
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
 3. Install the dependencies:
-   `pip install -r requirements.txt`
+```bash
+pip install -r requirements.txt
+```
 4. Install Ollama on the server and start it:
-   `ollama serve`
+```bash
+ollama serve
+```
 5. In another shell, pull the models you want to benchmark:
-   `ollama pull qwen2.5:7b-instruct`
-   `ollama pull aya-expanse:8b`
-   `ollama pull llama3.1:8b`
+```bash
+ollama pull qwen2.5:7b-instruct
+ollama pull aya-expanse:8b
+ollama pull llama3.1:8b
+```
 6. Run the benchmark:
-   `python scripts/run_all_benchmarks.py --task all --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100`
+```bash
+python scripts/run_all_benchmarks.py --task all --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100
+```
 
 To run a single task on the server:
-`python scripts/run_all_benchmarks.py --task ner --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100`
+```bash
+python scripts/run_all_benchmarks.py --task ner --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100
+```
 
 To keep a long benchmark running after disconnecting, use `tmux` or `screen`. For example:
-`tmux new -s benchmark`
-`python scripts/run_all_benchmarks.py --task all --sample-size 100`
+```bash
+tmux new -s benchmark
+python scripts/run_all_benchmarks.py --task all --sample-size 100
+```
 
 Server outputs are written under:
-`results/full_benchmark_suite/`
+```bash
+results/full_benchmark_suite/
+```
 
 ## Colab Notebooks
 The current Colab entrypoints are:
@@ -106,13 +136,19 @@ To benchmark accessible Greek-capable LLMs for grammatical error correction loca
 
 1. Create and activate a virtual environment.
 2. Install the dependencies:
-   `pip install pandas pywer zenodo-get wget datasets conll-df openpyxl`
+```bash
+pip install pandas pywer zenodo-get wget datasets conll-df openpyxl
+```
 3. Start Ollama and pull the models you want to compare, for example:
-   `ollama pull qwen2.5:7b-instruct`
-   `ollama pull aya-expanse:8b`
-   `ollama pull llama3.1:8b`
+```bash
+ollama pull qwen2.5:7b-instruct
+ollama pull aya-expanse:8b
+ollama pull llama3.1:8b
+```
 4. Run the benchmark:
-   `python gec_benchmark.py --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100`
+```bash
+python gec_benchmark.py --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100
+```
 
 The benchmark uses the `KorreDt` dataset, prompts each model to correct Modern Greek text, and writes:
 * `results/gec_ollama/gec_benchmark_summary.csv`
@@ -125,21 +161,33 @@ How to run it:
 
 1. Create and activate a virtual environment.
 2. Install the dependencies:
-   `pip install -r requirements.txt`
+```bash
+pip install -r requirements.txt
+```
 3. Start Ollama and pull the models you want to compare, for example:
-   `ollama pull qwen2.5:7b-instruct`
-   `ollama pull aya-expanse:8b`
-   `ollama pull llama3.1:8b`
+```bash
+ollama pull qwen2.5:7b-instruct
+ollama pull aya-expanse:8b
+ollama pull llama3.1:8b
+```
 4. Run one task:
-   `python suite_benchmark_monte_carlo.py --task ner --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100 --num-splits 5`
+```bash
+python suite_benchmark_monte_carlo.py --task ner --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100 --num-splits 5
+```
 5. Run all supported tasks:
-   `python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --data-limit-per-task 500 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b`
+```bash
+python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --data-limit-per-task 500 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b
+```
 
 Example:
-`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --data-limit-per-task 500 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b`
+```bash
+python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --data-limit-per-task 500 --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b
+```
 
 To resume a long run on a server or after a Colab disconnect:
-`python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --resume`
+```bash
+python suite_benchmark_monte_carlo.py --task all --sample-size 100 --num-splits 5 --resume
+```
 
 `--num-splits` controls how many repeated sampled runs are performed per task. `--data-limit-per-task` caps the task dataset before sampling; use `0` to keep the full dataset. The older `--repeats` flag still works as an alias for `--num-splits`.
 
