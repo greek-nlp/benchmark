@@ -204,9 +204,23 @@ class BarzokasDt:
       valid_authors = author_counts[author_counts >= 2].index
       df = df[df["author"].isin(valid_authors)].copy()
 
+      # Keep an 80/20 target, but ensure stratified split feasibility:
+      # sklearn requires test and train sizes to be >= number of classes.
+      n_samples = len(df)
+      n_classes = df["author"].nunique()
+      desired_test_count = int(round(0.2 * n_samples))
+      test_count = max(desired_test_count, n_classes)
+      if n_samples - test_count < n_classes:
+          test_count = n_samples - n_classes
+      if test_count < n_classes:
+          raise ValueError(
+              f"Cannot stratify split: samples={n_samples}, classes={n_classes}. "
+              "Need at least 2 samples per class and enough rows for train/test."
+          )
+
       df_train, df_test = train_test_split(
           df,
-          test_size=0.2,
+          test_size=test_count,
           stratify=df["author"],
           shuffle=True,
           random_state=42,
