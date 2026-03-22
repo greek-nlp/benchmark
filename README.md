@@ -57,6 +57,36 @@ Useful flags:
 * `--num-predict`: maximum output tokens
 * `--timeout-seconds`: request timeout per generation
 
+### Running On A Server
+To run the benchmark on a remote Linux server:
+
+1. Clone the repository and enter it:
+   `git clone https://github.com/greek-nlp/benchmark.git`
+   `cd benchmark`
+2. Create and activate a virtual environment:
+   `python -m venv .venv`
+   `source .venv/bin/activate`
+3. Install the dependencies:
+   `pip install -r requirements.txt`
+4. Install Ollama on the server and start it:
+   `ollama serve`
+5. In another shell, pull the models you want to benchmark:
+   `ollama pull qwen2.5:7b-instruct`
+   `ollama pull aya-expanse:8b`
+   `ollama pull llama3.1:8b`
+6. Run the benchmark:
+   `python scripts/run_all_benchmarks.py --task all --models qwen2.5:7b-instruct aya-expanse:8b llama3.1:8b --sample-size 100`
+
+To run a single task on the server:
+`python scripts/run_all_benchmarks.py --task ner --models qwen2.5:7b-instruct llama3.1:8b --sample-size 100`
+
+To keep a long benchmark running after disconnecting, use `tmux` or `screen`. For example:
+`tmux new -s benchmark`
+`python scripts/run_all_benchmarks.py --task all --sample-size 100`
+
+Server outputs are written under:
+`results/full_benchmark_suite/`
+
 ## Colab Notebooks
 The current Colab entrypoints are:
 * [Suite notebook](notebooks/colab/suite/suite_benchmark_colab_monte_carlo.ipynb)
