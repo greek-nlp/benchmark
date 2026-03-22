@@ -9,7 +9,8 @@ from typing import Iterable
 import pandas as pd
 
 from .backends import OllamaBackend
-from .tasks import TASKS, TaskSpec
+from .registry import TASKS
+from .spec import TaskSpec
 
 
 @dataclass
