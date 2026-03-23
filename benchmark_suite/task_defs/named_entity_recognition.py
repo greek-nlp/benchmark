@@ -55,7 +55,34 @@ def _normalize_prediction(text: str, _example: dict[str, object]) -> list[str]:
 
 
 def _evaluate(raw: pd.DataFrame) -> pd.DataFrame:
-    return evaluate_sequence_labeling(raw, task_name="ner", gold_col="labels", labels=NER_LABELS, filler_label="O")
+    summary = evaluate_sequence_labeling(raw, task_name="ner", gold_col="labels", labels=NER_LABELS, filler_label="O")
+
+    # Added metric: entity-level F1 (strict IOBES via seqeval).
+    entity_f1_by_model = {}
+    for model, group in raw.groupby("model", sort=False):
+        try:
+            from seqeval.metrics import f1_score as seqeval_f1_score
+            from seqeval.scheme import IOBES
+        except Exception:
+            entity_f1_by_model[model] = float("nan")
+            continue
+
+        gold_sequences = []
+        pred_sequences = []
+        for row in group.itertuples(index=False):
+            gold_tags = [normalize_whitespace(tag) for tag in list(row.labels)]
+            pred_tags = list(row.prediction)[: len(gold_tags)]
+            if len(pred_tags) < len(gold_tags):
+                pred_tags.extend(["O"] * (len(gold_tags) - len(pred_tags)))
+            gold_sequences.append(gold_tags)
+            pred_sequences.append(pred_tags)
+
+        entity_f1_by_model[model] = float(
+            seqeval_f1_score(gold_sequences, pred_sequences, mode="strict", scheme=IOBES)
+        )
+
+    summary["entity_f1"] = summary["model"].map(entity_f1_by_model)
+    return summary
 
 
 def build_task() -> TaskSpec:

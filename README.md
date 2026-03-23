@@ -48,21 +48,38 @@ Run on the full available dataset for a task:
 python scripts/run_all_benchmarks.py --task summarization --sample-size 0
 ```
 
+Run repeated Monte Carlo-style sampled evaluations (mean + SEM):
+```bash
+python scripts/run_all_benchmarks.py --task all --sample-size 100 --repeats 5
+```
+
 The compatibility entrypoint [`suite_benchmark.py`](suite_benchmark.py) forwards to the same runner, so this also works:
 ```bash
 python suite_benchmark.py --task all
 ```
 
-Outputs are written under `results/full_benchmark_suite/`:
+Outputs are written under `results/full_benchmark_suite/`.
+
+When `--repeats 1` (default, single run):
 * `{task}_summary.csv`
 * `{task}_predictions.csv`
 * `{task}_visualization.html`
 * `all_tasks_summary.csv` when `--task all` is used
 
+When `--repeats > 1` (Monte Carlo mode):
+* `{task}/repeat_XX/{task}_summary.csv`
+* `{task}/repeat_XX/{task}_predictions.csv`
+* `{task}/repeat_XX/{task}_visualization.html`
+* `{task}/{task}_summary_with_sem.csv`
+* `{task}/{task}_repeat_summaries.csv`
+* `{task}/{task}_repeat_predictions.csv`
+* `all_tasks_summary_with_sem.csv` when `--task all` is used
+
 Useful flags:
 * `--task`: one of `all`, `gec`, `machine_translation`, `intent_classification`, `legal_classification`, `ner`, `pos`, `summarization`
 * `--models`: one or more Ollama model names
 * `--sample-size`: number of examples to score; use `0` for the full dataset
+* `--repeats`: optional; number of repeated sampled runs (default: `1`). Use `>1` with `--sample-size > 0`.
 * `--random-state`: sampling seed
 * `--output-dir`: where result files are written
 * `--temperature`: Ollama sampling temperature

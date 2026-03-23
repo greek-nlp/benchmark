@@ -49,6 +49,18 @@ def _build_prompt(example: dict[str, object]) -> str:
 def _evaluate(raw):
     rows = []
     for (model, target_lang), group in raw.groupby(["model", "target_lang"], sort=False):
+        bleu_score = float("nan")
+        chrf_score = float("nan")
+        try:
+            import sacrebleu
+
+            predictions = group["prediction"].fillna("").astype(str).tolist()
+            references = group["target"].fillna("").astype(str).tolist()
+            bleu_score = float(sacrebleu.corpus_bleu(predictions, [references]).score)
+            chrf_score = float(sacrebleu.corpus_chrf(predictions, [references]).score)
+        except Exception:
+            pass
+
         rows.append(
             {
                 "task": "machine_translation",
@@ -57,6 +69,8 @@ def _evaluate(raw):
                 "samples": len(group),
                 "wer_vs_reference": group.apply(lambda row: best_reference_wer(row["prediction"], row["target"]), axis=1).mean(),
                 "cer_vs_reference": group.apply(lambda row: best_reference_cer(row["prediction"], row["target"]), axis=1).mean(),
+                "bleu": bleu_score,
+                "chrf": chrf_score,
                 "avg_latency_seconds": group["latency_seconds"].mean(),
             }
         )

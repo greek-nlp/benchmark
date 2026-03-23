@@ -33,6 +33,53 @@ def _build_prompt(example: dict[str, object]) -> str:
 def _evaluate(raw: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for model, group in raw.groupby("model", sort=False):
+        rouge_1 = float("nan")
+        rouge_2 = float("nan")
+        rouge_l = float("nan")
+        bertscore_p = float("nan")
+        bertscore_r = float("nan")
+        bertscore_f1 = float("nan")
+
+        predictions = group["prediction"].fillna("").astype(str).tolist()
+        references = group["reference_summary"].fillna("").astype(str).tolist()
+
+        # Added metrics: ROUGE-1/2/L
+        try:
+            from rouge_score import rouge_scorer
+
+            scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=False)
+            rouge1_vals, rouge2_vals, rougel_vals = [], [], []
+            for pred, ref in zip(predictions, references):
+                score = scorer.score(ref, pred)
+                rouge1_vals.append(score["rouge1"].fmeasure)
+                rouge2_vals.append(score["rouge2"].fmeasure)
+                rougel_vals.append(score["rougeL"].fmeasure)
+            rouge_1 = float(pd.Series(rouge1_vals).mean())
+            rouge_2 = float(pd.Series(rouge2_vals).mean())
+            rouge_l = float(pd.Series(rougel_vals).mean())
+        except Exception:
+            pass
+
+        # Added metric: BERTScore for Greek.
+        try:
+            from bert_score import score as bertscore_score
+            import torch
+
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            p_scores, r_scores, f1_scores = bertscore_score(
+                predictions,
+                references,
+                model_type="nlpaueb/bert-base-greek-uncased-v1",
+                lang="el",
+                verbose=False,
+                device=device,
+            )
+            bertscore_p = float(p_scores.mean().item())
+            bertscore_r = float(r_scores.mean().item())
+            bertscore_f1 = float(f1_scores.mean().item())
+        except Exception:
+            pass
+
         rows.append(
             {
                 "task": "summarization",
@@ -46,6 +93,12 @@ def _evaluate(raw: pd.DataFrame) -> pd.DataFrame:
                     lambda row: best_reference_cer(row["prediction"], row["reference_summary"]),
                     axis=1,
                 ).mean(),
+                "rouge_1": rouge_1,
+                "rouge_2": rouge_2,
+                "rouge_l": rouge_l,
+                "bertscore_precision": bertscore_p,
+                "bertscore_recall": bertscore_r,
+                "bertscore_f1": bertscore_f1,
                 "avg_latency_seconds": group["latency_seconds"].mean(),
             }
         )

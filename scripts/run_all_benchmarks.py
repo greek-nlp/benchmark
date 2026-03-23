@@ -15,8 +15,10 @@ from benchmark_suite import GenerationConfig, list_tasks, run_task, save_run_out
 
 DEFAULT_MODELS = [
     "qwen2.5:7b-instruct",
+    "llama3.1:8b-instruct",
     "aya-expanse:8b",
-    "llama3.1:8b",
+    "gemma2:9b",
+    "falcon3:7b-instruct",
 ]
 
 ALL_TASKS = "all"
@@ -43,6 +45,12 @@ def parse_args() -> argparse.Namespace:
         default=100,
         help="How many examples to score. Use 0 to run on the full test dataset.",
     )
+    parser.add_argument(
+        "--repeats",
+        type=int,
+        default=1,
+        help="Number of repeated sampled runs (Monte Carlo style). Use >1 with --sample-size > 0.",
+    )
     parser.add_argument("--random-state", type=int, default=42, help="Sampling seed.")
     parser.add_argument("--data-csv", default="data.csv", help="Path to the benchmark dataset registry CSV.")
     parser.add_argument("--output-dir", default="results/full_benchmark_suite", help="Where to save benchmark outputs.")
@@ -62,10 +70,34 @@ def _print_summary(summary: pd.DataFrame) -> None:
     print(summary.to_string(index=False, float_format=lambda x: f"{x:.4f}" if not math.isnan(x) else "nan"))
 
 
+def _aggregate_repeated_summaries(summary_by_repeat: list[pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    repeated_summary = pd.concat(summary_by_repeat, ignore_index=True)
+    key_columns = [column for column in ["task", "model", "target_lang"] if column in repeated_summary.columns]
+    numeric_columns = [
+        column
+        for column in repeated_summary.columns
+        if column not in key_columns + ["repeat"] and pd.api.types.is_numeric_dtype(repeated_summary[column])
+    ]
+
+    aggregated = repeated_summary[key_columns].drop_duplicates().sort_values(key_columns).reset_index(drop=True)
+    grouped = repeated_summary.groupby(key_columns, sort=False)
+
+    for column in numeric_columns:
+        aggregated[f"{column}_mean"] = grouped[column].mean().to_numpy()
+        aggregated[f"{column}_sem"] = grouped[column].sem(ddof=1).fillna(0.0).to_numpy()
+
+    return aggregated, repeated_summary
+
+
 def main() -> None:
     args = parse_args()
     output_path = Path(args.output_dir)
     sample_size = None if args.sample_size <= 0 else args.sample_size
+    if args.repeats <= 0:
+        raise ValueError("--repeats must be >= 1.")
+    if args.repeats > 1 and sample_size is None:
+        raise ValueError("Monte Carlo mode requires a specific sample size. Set --sample-size > 0.")
+
     config = GenerationConfig(
         temperature=args.temperature,
         num_predict=args.num_predict,
@@ -77,27 +109,70 @@ def main() -> None:
 
     print("Tasks:", selected_tasks)
     print("Models:", args.models)
+    print("Repeats:", args.repeats)
 
     for task_name in selected_tasks:
         print(f"\n=== Running task: {task_name} ===")
-        summary, raw = run_task(
-            task_name=task_name,
-            models=args.models,
-            sample_size=sample_size,
-            random_state=args.random_state,
-            data_csv=args.data_csv,
-            config=config,
-        )
-        save_run_outputs(summary, raw, output_path, task_name)
-        combined_summaries.append(summary.assign(task_name=task_name))
-        _print_summary(summary)
-        print(f"\nSaved summary CSV: {output_path / f'{task_name}_summary.csv'}")
-        print(f"Saved predictions CSV: {output_path / f'{task_name}_predictions.csv'}")
-        print(f"Saved visualization: {output_path / f'{task_name}_visualization.html'}")
+        if args.repeats == 1:
+            summary, raw = run_task(
+                task_name=task_name,
+                models=args.models,
+                sample_size=sample_size,
+                random_state=args.random_state,
+                data_csv=args.data_csv,
+                config=config,
+            )
+            save_run_outputs(summary, raw, output_path, task_name)
+            combined_summaries.append(summary.assign(task_name=task_name))
+            _print_summary(summary)
+            print(f"\nSaved summary CSV: {output_path / f'{task_name}_summary.csv'}")
+            print(f"Saved predictions CSV: {output_path / f'{task_name}_predictions.csv'}")
+            print(f"Saved visualization: {output_path / f'{task_name}_visualization.html'}")
+        else:
+            repeat_summaries: list[pd.DataFrame] = []
+            repeat_predictions: list[pd.DataFrame] = []
+            for repeat_index in range(args.repeats):
+                repeat_number = repeat_index + 1
+                repeat_seed = args.random_state + repeat_index
+                repeat_output_dir = output_path / task_name / f"repeat_{repeat_number:02d}"
+                print(f"Running repeat {repeat_number}/{args.repeats} with seed {repeat_seed}")
+                summary, raw = run_task(
+                    task_name=task_name,
+                    models=args.models,
+                    sample_size=sample_size,
+                    random_state=repeat_seed,
+                    data_csv=args.data_csv,
+                    config=config,
+                )
+                save_run_outputs(summary, raw, repeat_output_dir, task_name)
+                summary = summary.copy()
+                raw = raw.copy()
+                summary["repeat"] = repeat_number
+                raw["repeat"] = repeat_number
+                repeat_summaries.append(summary)
+                repeat_predictions.append(raw)
+
+            aggregated_summary, repeated_summary = _aggregate_repeated_summaries(repeat_summaries)
+            repeated_predictions = pd.concat(repeat_predictions, ignore_index=True)
+
+            task_output_dir = output_path / task_name
+            task_output_dir.mkdir(parents=True, exist_ok=True)
+            aggregated_summary_path = task_output_dir / f"{task_name}_summary_with_sem.csv"
+            repeated_summary_path = task_output_dir / f"{task_name}_repeat_summaries.csv"
+            repeated_predictions_path = task_output_dir / f"{task_name}_repeat_predictions.csv"
+
+            aggregated_summary.to_csv(aggregated_summary_path, index=False)
+            repeated_summary.to_csv(repeated_summary_path, index=False)
+            repeated_predictions.to_csv(repeated_predictions_path, index=False)
+            combined_summaries.append(aggregated_summary.assign(task_name=task_name))
+            _print_summary(aggregated_summary)
+            print(f"\nSaved aggregated summary CSV: {aggregated_summary_path}")
+            print(f"Saved repeat summaries CSV: {repeated_summary_path}")
+            print(f"Saved repeat predictions CSV: {repeated_predictions_path}")
 
     if len(combined_summaries) > 1:
         combined_summary = pd.concat(combined_summaries, ignore_index=True)
-        combined_summary_path = output_path / "all_tasks_summary.csv"
+        combined_summary_path = output_path / ("all_tasks_summary_with_sem.csv" if args.repeats > 1 else "all_tasks_summary.csv")
         combined_summary.to_csv(combined_summary_path, index=False)
         print(f"\nSaved combined summary CSV: {combined_summary_path}")
 
