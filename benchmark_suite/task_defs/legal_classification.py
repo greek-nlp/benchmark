@@ -13,6 +13,18 @@ SYSTEM_PROMPT = """You are a Greek legal text classification system.
 Return only one label from the provided label set and nothing else."""
 
 
+TARGET_LABEL_COLUMN = "volume"
+
+
+def _volume_label(value: object) -> str:
+    return f"Volume {normalize_whitespace(value)}"
+
+
+def _volume_sort_key(label: str) -> tuple[int, str]:
+    suffix = label.removeprefix("Volume ").strip()
+    return (int(suffix), label) if suffix.isdigit() else (10**9, label)
+
+
 def _load_subset(subset_name: str, split: str) -> pd.DataFrame:
     dataset = load_dataset("AI-team-UoA/greek_legal_code", subset_name)
     resolved_split = split if split in dataset else next(iter(dataset.keys()))
@@ -34,14 +46,17 @@ def _load_dataset(*, data_csv: str, random_state: int, split: str = "test") -> p
         merged = merged.drop(columns=drop_columns)
 
     merged = merged[["text", "volume", "chapter", "subject"]].dropna().reset_index(drop=True)
+    merged["volume"] = merged["volume"].map(normalize_whitespace)
+    merged["chapter"] = merged["chapter"].map(normalize_whitespace)
     merged["subject"] = merged["subject"].map(normalize_whitespace)
-    merged["label_space"] = ", ".join(sorted(merged["subject"].unique()))
+    merged["label"] = merged[TARGET_LABEL_COLUMN].map(_volume_label)
+    merged["label_space"] = ", ".join(sorted(merged["label"].unique(), key=_volume_sort_key))
     return merged
 
 
 def _build_prompt(example: dict[str, object]) -> str:
     return (
-        "Given the following Greek legal text, return only its legal subject label.\n"
+        "Given the following Greek legal text, return only its coarse-grained legal volume label.\n"
         f"Choose exactly one label from: {example['label_space']}\n\n"
         f"Text: {example['text']}\n"
         "Label:"
@@ -63,9 +78,9 @@ def _normalize_prediction(text: str, example: dict[str, object]) -> str:
 
 def _evaluate(raw: pd.DataFrame) -> pd.DataFrame:
     raw = raw.copy()
-    raw["subject"] = raw["subject"].map(normalize_whitespace)
+    raw["label"] = raw["label"].map(normalize_whitespace)
     raw["prediction"] = raw["prediction"].map(normalize_whitespace)
-    return evaluate_classification(raw, label_col="subject", task_name="legal_classification")
+    return evaluate_classification(raw, label_col="label", task_name="legal_classification")
 
 
 def build_task() -> TaskSpec:
