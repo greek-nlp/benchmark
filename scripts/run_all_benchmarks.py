@@ -105,6 +105,7 @@ def main() -> None:
     )
 
     combined_summaries: list[pd.DataFrame] = []
+    combined_predictions: list[pd.DataFrame] = []
     selected_tasks = _selected_tasks(args.task)
 
     print("Tasks:", selected_tasks)
@@ -124,6 +125,7 @@ def main() -> None:
             )
             save_run_outputs(summary, raw, output_path, task_name)
             combined_summaries.append(summary.assign(task_name=task_name))
+            combined_predictions.append(raw.assign(task_name=task_name))
             _print_summary(summary)
             print(f"\nSaved summary CSV: {output_path / f'{task_name}_summary.csv'}")
             print(f"Saved predictions CSV: {output_path / f'{task_name}_predictions.csv'}")
@@ -165,6 +167,7 @@ def main() -> None:
             repeated_summary.to_csv(repeated_summary_path, index=False)
             repeated_predictions.to_csv(repeated_predictions_path, index=False)
             combined_summaries.append(aggregated_summary.assign(task_name=task_name))
+            combined_predictions.append(repeated_predictions.assign(task_name=task_name))
             _print_summary(aggregated_summary)
             print(f"\nSaved aggregated summary CSV: {aggregated_summary_path}")
             print(f"Saved repeat summaries CSV: {repeated_summary_path}")
@@ -175,6 +178,13 @@ def main() -> None:
         combined_summary_path = output_path / ("all_tasks_summary_with_sem.csv" if args.repeats > 1 else "all_tasks_summary.csv")
         combined_summary.to_csv(combined_summary_path, index=False)
         print(f"\nSaved combined summary CSV: {combined_summary_path}")
+    if len(combined_predictions) > 1:
+        combined_predictions_df = pd.concat(combined_predictions, ignore_index=True)
+        combined_predictions_path = output_path / (
+            "all_tasks_repeat_predictions.csv" if args.repeats > 1 else "all_tasks_predictions.csv"
+        )
+        combined_predictions_df.to_csv(combined_predictions_path, index=False)
+        print(f"Saved combined predictions CSV: {combined_predictions_path}")
 
 
 if __name__ == "__main__":
