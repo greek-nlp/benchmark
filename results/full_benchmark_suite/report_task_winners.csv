@@ -1,0 +1,8 @@
+task_segment,primary_metric,winner,winner_value,winner_quality_score,runner_up,runner_up_value,runner_up_quality_score,quality_margin,margin,fastest_model,fastest_latency_seconds,samples,note
+GEC,exact_match,gemma2:2b,0.17,99.99999999999999,gemma2:9b,0.17,99.99999999999999,0.0,0.0,gemma2:2b,0.646435246123001,100,Winner also had the fastest average latency.
+Intent Classification,macro_f1,gemma2:9b,0.8470143871701158,100.0,llama3.1:8b,0.7009348586383469,75.70064174015515,24.29935825984485,0.14607952853176887,mistral:7b,0.1766474222205579,100,
+Legal Classification,macro_f1,gemma2:2b,0.0,50.0,qwen2.5:3b,0.0,50.0,0.0,0.0,gemma2:2b,2.65687250031624,100,"All models scored 0, likely evaluation or prompting issue."
+Machine Translation (ENG),wer_vs_reference,aya-expanse:8b,54.68785306069433,100.0,qwen2.5:7b-instruct,58.65559441550345,94.29651005735407,5.7034899426459305,3.967741354809121,qwen2.5:3b,0.3321908970829099,87,
+Machine Translation (FAS),wer_vs_reference,qwen2.5:7b-instruct,104.76979916635088,100.0,qwen2.5:3b,108.54700854700856,98.62581973098463,1.374180269015369,3.7772093806576805,gemma2:2b,0.3412756410543807,4,
+Machine Translation (JPN),wer_vs_reference,qwen2.5:3b,100.0,100.0,aya-expanse:8b,133.33333333333334,98.27586206896552,1.7241379310344769,33.33333333333334,gemma2:2b,0.3328857108588434,9,Winner was within 10% of the fastest model.
+NER,macro_f1,gemma2:9b,0.1089096757380743,100.0,llama3.1:8b,0.0991758397798908,79.07881131284248,20.921188687157525,0.009733835958183487,qwen2.5:3b,0.8082579568121582,100,
