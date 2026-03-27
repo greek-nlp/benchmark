@@ -15,7 +15,13 @@ Return only the translation and nothing else."""
 TARGET_LANGS = ["eng", "jpn", "fas"]
 
 
-def _load_dataset(*, data_csv: str, random_state: int, split: str = "test"):
+def _load_dataset(
+    *,
+    data_csv: str,
+    random_state: int,
+    split: str = "test",
+    target_lang_limits: dict[str, int] | None = None,
+):
     registry = load_dataset_registry(data_csv)
     repo_url = registry.loc[registry["id"] == 486, "url"].iloc[0]
 
@@ -30,7 +36,10 @@ def _load_dataset(*, data_csv: str, random_state: int, split: str = "test"):
             random_state=random_state,
         )
         selected = train_df if split == "train" else test_df
-        records.append(selected.reset_index(drop=True))
+        selected = selected.reset_index(drop=True)
+        if target_lang_limits and target_lang in target_lang_limits:
+            selected = selected.head(target_lang_limits[target_lang]).reset_index(drop=True)
+        records.append(selected)
 
     return pd.DataFrame.from_records(
         [row for frame in records for row in frame.to_dict(orient="records")]

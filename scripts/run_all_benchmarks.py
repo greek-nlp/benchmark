@@ -22,6 +22,22 @@ DEFAULT_MODELS = [
 ]
 
 ALL_TASKS = "all"
+NO_CAP_PROFILE = "none"
+REASONABLE_CAP_PROFILE = "reasonable"
+
+FULL_TEST_TASK_CAPS = {
+    REASONABLE_CAP_PROFILE: {
+        "legal_classification": 500,
+        "ner": 500,
+        "summarization": 300,
+    }
+}
+
+FULL_TEST_TASK_OPTIONS = {
+    REASONABLE_CAP_PROFILE: {
+        "machine_translation": {"target_lang_limits": {"eng": 300, "fas": 4, "jpn": 9}},
+    }
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -54,6 +70,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--random-state", type=int, default=42, help="Sampling seed.")
     parser.add_argument("--data-csv", default="data.csv", help="Path to the benchmark dataset registry CSV.")
     parser.add_argument("--output-dir", default="results/full_benchmark_suite", help="Where to save benchmark outputs.")
+    parser.add_argument(
+        "--task-cap-profile",
+        choices=[NO_CAP_PROFILE, REASONABLE_CAP_PROFILE],
+        default=NO_CAP_PROFILE,
+        help="Optional deterministic per-task cap profile. Applies first-instance caps before any sampling.",
+    )
     parser.add_argument("--temperature", type=float, default=0.0, help="Sampling temperature passed to Ollama.")
     parser.add_argument("--num-predict", type=int, default=256, help="Maximum tokens to generate.")
     parser.add_argument("--timeout-seconds", type=int, default=300, help="Per-request timeout.")
@@ -64,6 +86,14 @@ def _selected_tasks(task_name: str) -> list[str]:
     if task_name == ALL_TASKS:
         return list_tasks()
     return [task_name]
+
+
+def _task_data_limit(task_name: str, cap_profile: str) -> int | None:
+    return FULL_TEST_TASK_CAPS.get(cap_profile, {}).get(task_name)
+
+
+def _task_specific_options(task_name: str, cap_profile: str) -> dict[str, object]:
+    return dict(FULL_TEST_TASK_OPTIONS.get(cap_profile, {}).get(task_name, {}))
 
 
 def _print_summary(summary: pd.DataFrame) -> None:
@@ -114,14 +144,18 @@ def main() -> None:
 
     for task_name in selected_tasks:
         print(f"\n=== Running task: {task_name} ===")
+        task_data_limit = _task_data_limit(task_name, args.task_cap_profile)
+        task_options = _task_specific_options(task_name, args.task_cap_profile)
         if args.repeats == 1:
             summary, raw = run_task(
                 task_name=task_name,
                 models=args.models,
                 sample_size=sample_size,
+                data_limit=task_data_limit,
                 random_state=args.random_state,
                 data_csv=args.data_csv,
                 config=config,
+                task_options=task_options,
             )
             save_run_outputs(summary, raw, output_path, task_name)
             combined_summaries.append(summary.assign(task_name=task_name))
@@ -142,9 +176,11 @@ def main() -> None:
                     task_name=task_name,
                     models=args.models,
                     sample_size=sample_size,
+                    data_limit=task_data_limit,
                     random_state=repeat_seed,
                     data_csv=args.data_csv,
                     config=config,
+                    task_options=task_options,
                 )
                 save_run_outputs(summary, raw, repeat_output_dir, task_name)
                 summary = summary.copy()
