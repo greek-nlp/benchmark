@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>machine_translation benchmark visualization</title>
+      <style>
+        :root {
+          color-scheme: light;
+          --bg: #f5f1e8;
+          --panel: rgba(255, 252, 245, 0.9);
+          --panel-border: #d7cab5;
+          --text: #1f2933;
+          --muted: #52606d;
+          --accent: linear-gradient(90deg, #d97706, #0f766e);
+          --track: #e6dccd;
+        }
+        * { box-sizing: border-box; }
+        body {
+          margin: 0;
+          font-family: Georgia, "Times New Roman", serif;
+          color: var(--text);
+          background:
+            radial-gradient(circle at top left, rgba(217, 119, 6, 0.18), transparent 30%),
+            radial-gradient(circle at top right, rgba(15, 118, 110, 0.16), transparent 28%),
+            var(--bg);
+        }
+        main {
+          max-width: 1100px;
+          margin: 0 auto;
+          padding: 48px 20px 64px;
+        }
+        h1, h2 {
+          margin: 0;
+          font-weight: 700;
+        }
+        p {
+          margin: 0;
+          line-height: 1.5;
+        }
+        .hero {
+          margin-bottom: 24px;
+        }
+        .hero p {
+          margin-top: 10px;
+          color: var(--muted);
+        }
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 16px;
+          margin-bottom: 16px;
+        }
+        .card {
+          background: var(--panel);
+          backdrop-filter: blur(8px);
+          border: 1px solid var(--panel-border);
+          border-radius: 18px;
+          padding: 20px;
+          box-shadow: 0 10px 30px rgba(31, 41, 51, 0.08);
+        }
+        .metric-note {
+          margin-top: 8px;
+          color: var(--muted);
+          font-size: 0.95rem;
+        }
+        .metric-rows {
+          margin-top: 18px;
+          display: grid;
+          gap: 14px;
+        }
+        .metric-row-header {
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 7px;
+          font-size: 0.98rem;
+        }
+        .model-name {
+          font-weight: 700;
+          overflow-wrap: anywhere;
+        }
+        .metric-value {
+          color: var(--muted);
+          white-space: nowrap;
+        }
+        .bar-track {
+          height: 12px;
+          border-radius: 999px;
+          background: var(--track);
+          overflow: hidden;
+        }
+        .bar-fill {
+          height: 100%;
+          border-radius: inherit;
+          background: var(--accent);
+        }
+        .table-wrap {
+          margin-top: 16px;
+          overflow-x: auto;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+          font-size: 0.92rem;
+        }
+        th, td {
+          text-align: left;
+          padding: 10px 12px;
+          border-bottom: 1px solid var(--panel-border);
+          white-space: nowrap;
+        }
+        th {
+          color: var(--muted);
+          font-weight: 700;
+        }
+      </style>
+    </head>
+    <body>
+      <main>
+        <section class="hero">
+          <h1>machine_translation benchmark visualization</h1>
+          <p>Generated from the task summary. Each chart compares models on one metric for this benchmark run.</p>
+        </section>
+        <div class="grid">
+          <section class="card">
+      <h2>Samples</h2>
+      <p class="metric-note">Higher is better.</p>
+      <div class="metric-rows">
+        <div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">87.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">87.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">87.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">87.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">87.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">4.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">4.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">4.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">4.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">4.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">9.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 6.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">9.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 6.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">9.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 6.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">9.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 6.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">9.0000</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 6.0%"></div>
+              </div>
+            </div>
+      </div>
+    </section>
+<section class="card">
+      <h2>Wer Vs Reference</h2>
+      <p class="metric-note">Lower is better.</p>
+      <div class="metric-rows">
+        <div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">54.6879</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">58.6556</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 99.1%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">62.9673</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 98.2%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">90.8891</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 92.1%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">91.3957</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 92.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">104.7698</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 89.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">111.1264</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 87.6%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">112.9121</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 87.2%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">117.6814</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 86.2%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">159.9359</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 76.9%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">133.3333</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 82.8%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">144.4444</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 80.3%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">155.5556</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 77.9%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">255.5556</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 56.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">511.1111</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+      </div>
+    </section>
+<section class="card">
+      <h2>Cer Vs Reference</h2>
+      <p class="metric-note">Lower is better.</p>
+      <div class="metric-rows">
+        <div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">38.7943</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">43.4948</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 98.8%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">43.3390</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 98.9%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">69.5294</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 92.2%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">64.7180</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 93.4%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">90.9844</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 86.8%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">101.7348</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 84.1%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">109.2943</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 82.2%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">111.4066</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 81.6%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">159.8810</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 69.4%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">212.9447</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 56.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">148.5686</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 72.3%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">229.0452</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 51.9%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">250.1883</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 46.6%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">434.4748</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+      </div>
+    </section>
+
+
+<section class="card">
+      <h2>Avg Latency Seconds</h2>
+      <p class="metric-note">Lower is better.</p>
+      <div class="metric-rows">
+        <div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">0.5791</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 69.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">0.4708</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 93.5%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">0.6214</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 59.5%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">0.4787</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 91.7%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">0.4819</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 91.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">0.8844</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 0.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">0.5268</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 80.9%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">0.5633</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 72.6%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">0.4421</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 100.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">0.4466</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 99.0%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">aya-expanse:8b</span>
+                <span class="metric-value">0.6265</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 58.3%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">gemma2:9b</span>
+                <span class="metric-value">0.5955</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 65.3%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">falcon3:7b-instruct</span>
+                <span class="metric-value">0.8576</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 6.1%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">qwen2.5:7b-instruct</span>
+                <span class="metric-value">0.5477</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 76.1%"></div>
+              </div>
+            </div>
+<div class="metric-row">
+              <div class="metric-row-header">
+                <span class="model-name">llama3.1:8b-instruct</span>
+                <span class="metric-value">0.6329</span>
+              </div>
+              <div class="bar-track">
+                <div class="bar-fill" style="width: 56.9%"></div>
+              </div>
+            </div>
+      </div>
+    </section>
+        </div>
+        <section class="card">
+      <h2>Summary Table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>task</th><th>model</th><th>target_lang</th><th>samples</th><th>wer_vs_reference</th><th>cer_vs_reference</th><th>bleu</th><th>chrf</th><th>avg_latency_seconds</th></tr></thead>
+          <tbody>
+            <tr><td>machine_translation</td><td>aya-expanse:8b</td><td>eng</td><td>87</td><td>54.6879</td><td>38.7943</td><td>nan</td><td>nan</td><td>0.5791</td></tr>
+<tr><td>machine_translation</td><td>qwen2.5:7b-instruct</td><td>eng</td><td>87</td><td>58.6556</td><td>43.4948</td><td>nan</td><td>nan</td><td>0.4708</td></tr>
+<tr><td>machine_translation</td><td>gemma2:9b</td><td>eng</td><td>87</td><td>62.9673</td><td>43.3390</td><td>nan</td><td>nan</td><td>0.6214</td></tr>
+<tr><td>machine_translation</td><td>falcon3:7b-instruct</td><td>eng</td><td>87</td><td>90.8891</td><td>69.5294</td><td>nan</td><td>nan</td><td>0.4787</td></tr>
+<tr><td>machine_translation</td><td>llama3.1:8b-instruct</td><td>eng</td><td>87</td><td>91.3957</td><td>64.7180</td><td>nan</td><td>nan</td><td>0.4819</td></tr>
+<tr><td>machine_translation</td><td>qwen2.5:7b-instruct</td><td>fas</td><td>4</td><td>104.7698</td><td>90.9844</td><td>nan</td><td>nan</td><td>0.8844</td></tr>
+<tr><td>machine_translation</td><td>aya-expanse:8b</td><td>fas</td><td>4</td><td>111.1264</td><td>101.7348</td><td>nan</td><td>nan</td><td>0.5268</td></tr>
+<tr><td>machine_translation</td><td>gemma2:9b</td><td>fas</td><td>4</td><td>112.9121</td><td>109.2943</td><td>nan</td><td>nan</td><td>0.5633</td></tr>
+<tr><td>machine_translation</td><td>falcon3:7b-instruct</td><td>fas</td><td>4</td><td>117.6814</td><td>111.4066</td><td>nan</td><td>nan</td><td>0.4421</td></tr>
+<tr><td>machine_translation</td><td>llama3.1:8b-instruct</td><td>fas</td><td>4</td><td>159.9359</td><td>159.8810</td><td>nan</td><td>nan</td><td>0.4466</td></tr>
+<tr><td>machine_translation</td><td>aya-expanse:8b</td><td>jpn</td><td>9</td><td>133.3333</td><td>212.9447</td><td>nan</td><td>nan</td><td>0.6265</td></tr>
+<tr><td>machine_translation</td><td>gemma2:9b</td><td>jpn</td><td>9</td><td>144.4444</td><td>148.5686</td><td>nan</td><td>nan</td><td>0.5955</td></tr>
+<tr><td>machine_translation</td><td>falcon3:7b-instruct</td><td>jpn</td><td>9</td><td>155.5556</td><td>229.0452</td><td>nan</td><td>nan</td><td>0.8576</td></tr>
+<tr><td>machine_translation</td><td>qwen2.5:7b-instruct</td><td>jpn</td><td>9</td><td>255.5556</td><td>250.1883</td><td>nan</td><td>nan</td><td>0.5477</td></tr>
+<tr><td>machine_translation</td><td>llama3.1:8b-instruct</td><td>jpn</td><td>9</td><td>511.1111</td><td>434.4748</td><td>nan</td><td>nan</td><td>0.6329</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+      </main>
+    </body>
+    </html>

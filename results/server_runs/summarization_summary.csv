@@ -1,0 +1,6 @@
+task,model,samples,wer_vs_reference,cer_vs_reference,rouge_1,rouge_2,rouge_l,bertscore_precision,bertscore_recall,bertscore_f1,avg_latency_seconds
+summarization,llama3.1:8b-instruct,100,189.06133311803882,143.03134722832755,,,,,,,3.80750177557813
+summarization,aya-expanse:8b,100,243.16152269465394,190.94880208109961,,,,,,,3.68814569687238
+summarization,falcon3:7b-instruct,100,327.5376502688857,257.9313469852699,,,,,,,3.846800343084615
+summarization,gemma2:9b,100,382.61065367624474,300.8246285670096,,,,,,,5.419603800382465
+summarization,qwen2.5:7b-instruct,100,428.3525180518102,319.7216996508312,,,,,,,4.375187614061869

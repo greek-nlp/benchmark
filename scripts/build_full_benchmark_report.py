@@ -22,6 +22,8 @@ PRIMARY_METRIC_BY_TASK = {
     "legal_classification": ("macro_f1", False),
     "machine_translation": ("wer_vs_reference", True),
     "ner": ("macro_f1", False),
+    "pos": ("macro_f1", False),
+    "summarization": ("wer_vs_reference", True),
 }
 
 TASK_LABELS = {
@@ -42,6 +44,8 @@ PLOT_TASK_ORDER = [
     "Machine Translation (FAS)",
     "Machine Translation (JPN)",
     "NER",
+    "POS",
+    "Summarization",
 ]
 
 
@@ -102,6 +106,8 @@ def _build_segment_rows(summary_frames: dict[str, pd.DataFrame]) -> tuple[pd.Dat
     segment_summaries: list[SegmentSummary] = []
 
     for task, df in summary_frames.items():
+        if task not in PRIMARY_METRIC_BY_TASK:
+            continue
         primary_metric, lower_is_better = PRIMARY_METRIC_BY_TASK[task]
         working = df.copy()
         if task == "machine_translation":
@@ -319,6 +325,8 @@ def _plot_quality_latency(combined: pd.DataFrame, charts_dir: Path) -> None:
         "Legal Classification": "X",
         "Machine Translation": "D",
         "NER": "^",
+        "POS": "P",
+        "Summarization": "v",
     }
 
     fig, ax = plt.subplots(figsize=(11.5, 7.2))
@@ -369,17 +377,19 @@ def _write_markdown_report(
     overall_model_table: pd.DataFrame,
     failed_tasks: list[str],
 ) -> None:
+    completed_segments = winner_table["task_segment"].tolist()
     lines: list[str] = []
     lines.append("# Full Benchmark Report")
     lines.append("")
-    lines.append("This report summarizes the completed March 25, 2026 full-suite run captured in `results/full_benchmark_suite/`.")
+    lines.append(f"This report summarizes the benchmark run captured in `{results_dir}/`.")
     lines.append("")
     lines.append("## Run Status")
     lines.append("")
-    lines.append("- Completed tasks: `gec`, `intent_classification`, `legal_classification`, `machine_translation`, `ner`")
+    lines.append("- Completed task segments: " + ", ".join(f"`{segment}`" for segment in completed_segments))
     if failed_tasks:
         lines.append("- Incomplete tasks: " + ", ".join(f"`{task}`" for task in failed_tasks))
-    lines.append("- Failure point: `pos` crashed in the dataset parser with `ValueError: invalid literal for int() with base 10: '_'`.")
+    else:
+        lines.append("- Incomplete tasks: none")
     lines.append("")
     lines.append("## Overall Model Ranking")
     lines.append("")
@@ -399,11 +409,14 @@ def _write_markdown_report(
     lines.append("")
     lines.append("## Takeaways")
     lines.append("")
-    lines.append("- `gemma2:9b` is the most balanced model overall: it wins intent classification, leads NER on macro-F1, and stays competitive elsewhere.")
-    lines.append("- `llama3.1:8b` is the strongest GEC model on edit-distance metrics even though it does not top exact match.")
-    lines.append("- Machine translation quality depends heavily on the target language: `aya-expanse:8b` leads English, `qwen2.5:7b-instruct` leads Persian, and `qwen2.5:3b` leads Japanese on this sample.")
-    lines.append("- Legal classification did not separate the models because every run scored zero, so that benchmark likely needs prompt or evaluator debugging before it is useful.")
-    lines.append("- `gemma2:2b` is still interesting as a speed-efficient option: it ties for best GEC exact match, is fastest among the strongest GEC models, and posts the highest raw token accuracy on NER.")
+    top_model = overall_model_table.iloc[0]["model"] if not overall_model_table.empty else "n/a"
+    lines.append(f"- `{top_model}` ranks first overall on the normalized quality aggregate for this run.")
+    if "Legal Classification" in completed_segments:
+        lines.append("- Legal classification is now coarse-grained (`Volume N` labels), which avoids the previous all-zero opaque-ID setup, though the task remains difficult.")
+    if "POS" in completed_segments:
+        lines.append("- POS tagging completed after switching the UD loader to a parser that tolerates `_` head values in the CoNLL-U files.")
+    if "Summarization" in completed_segments:
+        lines.append("- Summarization remains the slowest task family in this sample and is currently scored with edit-distance metrics in the summary table.")
     lines.append("")
 
     (results_dir / "REPORT.md").write_text("\n".join(lines), encoding="utf-8")
