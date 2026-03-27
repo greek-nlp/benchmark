@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\caption{Best-performing model per task segment on the Greek NLP benchmark sample (100 instances per task, except where the dataset is smaller).}
+\label{tab:task-winners}
+\begin{tabular}{llrr}
+\toprule
+Task Segment & Winner & Primary Metric & Value \\
+\midrule
+GEC & Gemma2 9B & exact\_match & 0.170 \\
+Intent & Gemma2 9B & macro\_f1 & 0.847 \\
+Legal & Falcon3 7B Instruct & macro\_f1 & 0.010 \\
+MT-ENG & Aya Expanse 8B & wer\_vs\_reference & 54.688 \\
+MT-FAS & Qwen2.5 7B Instruct & wer\_vs\_reference & 104.770 \\
+MT-JPN & Aya Expanse 8B & wer\_vs\_reference & 133.333 \\
+NER & Gemma2 9B & macro\_f1 & 0.109 \\
+POS & Gemma2 9B & macro\_f1 & 0.469 \\
+Summ. & Llama 3.1 8B Instruct & wer\_vs\_reference & 189.061 \\
+\bottomrule
+\end{tabular}
+\end{table*}
