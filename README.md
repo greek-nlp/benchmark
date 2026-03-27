@@ -60,6 +60,16 @@ python suite_benchmark.py --task all
 
 Outputs are written under `results/full_benchmark_suite/`.
 
+For long-running server work, a clearer layout is to keep sampled and full-dataset runs separate, for example:
+```bash
+results/server_runs/
+  completed_runs/
+    20260326_235652_full_suite_default_models_sample100_volume_labels/
+  full_test_set/
+    20260327_XXXXXX_full_suite_default_models_full_test/
+```
+Pass `--output-dir` explicitly when you want to keep a run in one of these directories.
+
 When `--repeats 1` (default, single run):
 * `{task}_summary.csv`
 * `{task}_predictions.csv`
