@@ -155,6 +155,53 @@ def git_sparse_checkout_download(resource_id, repo_url, to_download, branch, roo
   os.chdir(root_dir)
 
 
+def _parse_conllu_basic(path):
+  rows = []
+  sentence_index = -1
+  with open(path, 'r', encoding='utf-8') as handle:
+    for raw_line in handle:
+      line = raw_line.strip()
+      if not line:
+        continue
+      if line.startswith('#'):
+        if line.startswith('# sent_id'):
+          sentence_index += 1
+        continue
+
+      parts = line.split('\t')
+      if len(parts) != 10:
+        continue
+
+      token_id = parts[0]
+      if '-' in token_id or '.' in token_id:
+        continue
+
+      if sentence_index < 0:
+        sentence_index = 0
+
+      head = parts[6]
+      rows.append(
+          {
+              's': sentence_index,
+              'i': int(token_id),
+              'w': parts[1],
+              'l': parts[2],
+              'x': parts[3],
+              'p': parts[4],
+              'g': int(head) if head.isdigit() else pd.NA,
+              'f': parts[5],
+              'e': parts[7],
+              'd': parts[8],
+              'm': parts[9],
+          }
+      )
+
+  df = pd.DataFrame(rows)
+  if 'g' in df.columns:
+    df['g'] = df['g'].astype('Int64')
+  return df
+
+
 class BarzokasDt:
     def __init__(self, datasets, root_dir=os.getcwd(), id_=56):
       self.resource_id = id_
@@ -658,7 +705,12 @@ class ProkopidisUdDt:
       for split in self.splits:
         substr_filename_split = 'dev' if split=='validation' else split
         path = os.path.join(self.root_dir, f'repo_{self.resource_id}', f'el_gdt-ud-{substr_filename_split}.conllu')
-        df = conll_df(path, file_index=False)
+        try:
+          df = conll_df(path, file_index=False)
+        except ValueError as exc:
+          if "invalid literal for int() with base 10: '_'" not in str(exc):
+            raise
+          df = _parse_conllu_basic(path)
         df_dict[split] = df
       # remove git repository
       shutil.rmtree(os.path.join(self.root_dir, f'repo_{self.resource_id}'))
