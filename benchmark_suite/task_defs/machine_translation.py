@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from sklearn.model_selection import train_test_split
-
-from .common import best_reference_cer, best_reference_wer, download_bytes, load_dataset_registry, parse_tmx_records
 import pandas as pd
 
+from .common import best_reference_cer, best_reference_wer
 from ..spec import TaskSpec
 
 
@@ -15,27 +13,35 @@ Return only the translation and nothing else."""
 TARGET_LANGS = ["eng", "jpn", "fas"]
 
 
+def _first_reference(value: object) -> str:
+    if isinstance(value, list):
+        return str(value[0]) if value else ""
+    return str(value)
+
+
 def _load_dataset(
     *,
     data_csv: str,
     random_state: int,
     split: str = "test",
     target_lang_limits: dict[str, int] | None = None,
+    full_corpus_target_langs: list[str] | None = None,
 ):
-    registry = load_dataset_registry(data_csv)
-    repo_url = registry.loc[registry["id"] == 486, "url"].iloc[0]
+    import data_wrapper
+
+    datasets = pd.read_csv(data_csv)
+    mt_dataset = data_wrapper.ProkopidisMtDt(datasets=datasets)
+    full_corpus_target_langs = set(full_corpus_target_langs or [])
 
     records = []
     for target_lang in TARGET_LANGS:
-        zip_bytes = download_bytes(f"{repo_url}archives/ell-{target_lang}.zip")
-        lang_df = parse_tmx_records(zip_bytes, target_langs=[target_lang]).drop_duplicates(subset=["source", "target"])
-        train_df, test_df = train_test_split(
-            lang_df,
-            test_size=0.2,
-            shuffle=True,
-            random_state=random_state,
-        )
-        selected = train_df if split == "train" else test_df
+        if target_lang in full_corpus_target_langs:
+            train_df = mt_dataset.get(target_lang=target_lang, split="train").copy()
+            test_df = mt_dataset.get(target_lang=target_lang, split="test").copy()
+            selected = pd.concat([train_df, test_df], ignore_index=True)
+        else:
+            selected = mt_dataset.get(target_lang=target_lang, split=split).copy()
+        selected["target_lang"] = target_lang
         selected = selected.reset_index(drop=True)
         if target_lang_limits and target_lang in target_lang_limits:
             selected = selected.head(target_lang_limits[target_lang]).reset_index(drop=True)
@@ -64,7 +70,7 @@ def _evaluate(raw):
             import sacrebleu
 
             predictions = group["prediction"].fillna("").astype(str).tolist()
-            references = group["target"].fillna("").astype(str).tolist()
+            references = group["target"].apply(_first_reference).fillna("").astype(str).tolist()
             bleu_score = float(sacrebleu.corpus_bleu(predictions, [references]).score)
             chrf_score = float(sacrebleu.corpus_chrf(predictions, [references]).score)
         except Exception:

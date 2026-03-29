@@ -44,6 +44,16 @@ PRIMARY_METRIC_LABELS = {
     "wer_vs_reference": "WER",
 }
 
+APPENDIX_TASK_ORDER = [
+    "gec",
+    "intent_classification",
+    "legal_classification",
+    "machine_translation",
+    "ner",
+    "pos",
+    "summarization",
+]
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build publication-ready tables and figures for a benchmark run.")
@@ -169,6 +179,146 @@ def _write_figure_snippets(article_dir: Path) -> None:
         r"\end{figure*}",
     ]
     (article_dir / "figure_snippets.tex").write_text("\n".join(lines) + "\n", encoding="ascii")
+
+
+def _primary_metric_for_task(task_name: str) -> tuple[str, bool]:
+    if task_name in {"machine_translation", "summarization"}:
+        return ("wer_vs_reference", True)
+    if task_name == "gec":
+        return ("exact_match", False)
+    return ("macro_f1", False)
+
+
+def _task_table_columns(task_name: str, df: pd.DataFrame) -> list[tuple[str, str]]:
+    if task_name == "gec":
+        pairs = [("model", "Model"), ("exact_match", "Exact Match"), ("wer_vs_reference", "WER"), ("avg_latency_seconds", "Latency (s)")]
+    elif task_name in {"intent_classification", "legal_classification"}:
+        pairs = [("model", "Model"), ("accuracy", "Accuracy"), ("macro_f1", "Macro-F1"), ("avg_latency_seconds", "Latency (s)")]
+    elif task_name == "machine_translation":
+        pairs = [("target_lang", "Lang"), ("model", "Model"), ("wer_vs_reference", "WER"), ("bleu", "BLEU"), ("chrf", "chrF"), ("avg_latency_seconds", "Latency (s)")]
+    elif task_name == "ner":
+        pairs = [("model", "Model"), ("accuracy", "Accuracy"), ("macro_f1", "Macro-F1"), ("entity_f1", "Entity F1"), ("avg_latency_seconds", "Latency (s)")]
+    elif task_name == "pos":
+        pairs = [("model", "Model"), ("accuracy", "Accuracy"), ("macro_f1", "Macro-F1"), ("avg_latency_seconds", "Latency (s)")]
+    else:
+        pairs = [
+            ("model", "Model"),
+            ("wer_vs_reference", "WER"),
+            ("rouge_1", "ROUGE-1"),
+            ("rouge_l", "ROUGE-L"),
+            ("bertscore_f1", "BERTScore-F1"),
+            ("avg_latency_seconds", "Latency (s)"),
+        ]
+    return [(column, label) for column, label in pairs if column in df.columns]
+
+
+def _format_latex_value(value: object, column: str) -> str:
+    if pd.isna(value):
+        return "--"
+    if column == "model":
+        return _pretty_model(str(value))
+    if column == "target_lang":
+        return str(value).upper()
+    if isinstance(value, (int, np.integer)):
+        return str(int(value))
+    if isinstance(value, (float, np.floating)):
+        return f"{float(value):.3f}"
+    return str(value)
+
+
+def _write_appendix_task_table(task_name: str, df: pd.DataFrame, tables_dir: Path) -> None:
+    metric, lower_is_better = _primary_metric_for_task(task_name)
+    sort_columns = [metric, "avg_latency_seconds"] if "avg_latency_seconds" in df.columns else [metric]
+    sort_ascending = [lower_is_better, True] if "avg_latency_seconds" in df.columns else [lower_is_better]
+    working = df.sort_values(sort_columns, ascending=sort_ascending).copy()
+    columns = _task_table_columns(task_name, working)
+    align = "".join("l" if column in {"model", "target_lang"} else "r" for column, _ in columns)
+
+    lines = [
+        r"\begin{table*}[t]",
+        r"\centering",
+        rf"\caption{{Per-model results for {_pretty_segment(TASK_LABELS.get(task_name, task_name.replace('_', ' ').title()))}.}}",
+        rf"\label{{tab:appendix-{task_name.replace('_', '-')}-analysis}}",
+        rf"\begin{{tabular}}{{{align}}}",
+        r"\toprule",
+        " & ".join(label for _, label in columns) + r" \\",
+        r"\midrule",
+    ]
+    for _, row in working.iterrows():
+        lines.append(" & ".join(_format_latex_value(row[column], column) for column, _ in columns) + r" \\")
+    lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table*}"])
+    (tables_dir / f"{task_name}_analysis_table.tex").write_text("\n".join(lines) + "\n", encoding="ascii")
+
+
+def _plot_appendix_task_figure(task_name: str, df: pd.DataFrame, figures_dir: Path, dpi: int) -> None:
+    metric, lower_is_better = _primary_metric_for_task(task_name)
+    sns.set_theme(style="whitegrid", context="paper")
+
+    if task_name == "machine_translation":
+        target_langs = [lang for lang in ["eng", "fas", "jpn"] if lang in set(df["target_lang"])]
+        fig, axes = plt.subplots(1, len(target_langs), figsize=(14.0, 4.6), sharey=False)
+        if len(target_langs) == 1:
+            axes = [axes]
+        for ax, target_lang in zip(axes, target_langs, strict=False):
+            lang_df = df[df["target_lang"] == target_lang].sort_values(metric, ascending=lower_is_better).copy()
+            labels = [_pretty_model(model) for model in lang_df["model"]]
+            values = lang_df[metric].astype(float).tolist()
+            bars = ax.barh(labels, values, color=sns.color_palette("crest", n_colors=len(lang_df)), edgecolor="#17324d")
+            ax.set_title(str(target_lang).upper())
+            ax.set_xlabel(_pretty_metric(metric))
+            if lower_is_better:
+                ax.invert_yaxis()
+            for bar, latency in zip(bars, lang_df["avg_latency_seconds"], strict=False):
+                ax.text(bar.get_width(), bar.get_y() + bar.get_height() / 2, f"  {latency:.2f}s", va="center", ha="left", fontsize=7.5)
+        fig.suptitle("Machine Translation by Target Language", fontsize=14, y=1.02)
+        plt.tight_layout()
+        _save_dual(fig, figures_dir / "machine_translation_analysis", dpi)
+        return
+
+    working = df.sort_values(metric, ascending=lower_is_better).copy()
+    labels = [_pretty_model(model) for model in working["model"]]
+    values = working[metric].astype(float).tolist()
+    fig, ax = plt.subplots(figsize=(9.0, 4.6))
+    bars = ax.barh(labels, values, color=sns.color_palette("crest", n_colors=len(working)), edgecolor="#17324d")
+    ax.set_title(f"{TASK_LABELS.get(task_name, task_name.title())} Analysis", fontsize=14, pad=10)
+    ax.set_xlabel(_pretty_metric(metric))
+    ax.grid(axis="x", linestyle="--", alpha=0.25)
+    if lower_is_better:
+        ax.invert_yaxis()
+    for bar, latency in zip(bars, working["avg_latency_seconds"], strict=False):
+        ax.text(bar.get_width(), bar.get_y() + bar.get_height() / 2, f"  {latency:.2f}s", va="center", ha="left", fontsize=7.5)
+    plt.tight_layout()
+    _save_dual(fig, figures_dir / f"{task_name}_analysis", dpi)
+
+
+def _write_appendix_task_analysis(summary_frames: dict[str, pd.DataFrame], article_dir: Path, dpi: int) -> None:
+    tables_dir = article_dir / "appendix_tables"
+    figures_dir = article_dir / "appendix_figures"
+    tables_dir.mkdir(parents=True, exist_ok=True)
+    figures_dir.mkdir(parents=True, exist_ok=True)
+
+    section_lines = [r"\section{Per-Task Analysis}", r"\label{sec:appendix-per-task-analysis}", ""]
+    for task_name in APPENDIX_TASK_ORDER:
+        if task_name not in summary_frames:
+            continue
+        df = summary_frames[task_name].copy()
+        _write_appendix_task_table(task_name, df, tables_dir)
+        _plot_appendix_task_figure(task_name, df, figures_dir, dpi)
+
+        section_lines.extend(
+            [
+                rf"\subsection{{{TASK_LABELS.get(task_name, task_name.replace('_', ' ').title())}}}",
+                rf"\input{{\assetsdir/appendix_tables/{task_name}_analysis_table.tex}}",
+                r"\begin{figure*}[t]",
+                r"\centering",
+                rf"\includegraphics[width=0.92\textwidth]{{\assetsdir/appendix_figures/{task_name}_analysis.pdf}}",
+                rf"\caption{{Per-task comparison for {TASK_LABELS.get(task_name, task_name.replace('_', ' ').title())}. Bars show the primary metric and annotations show average latency.}}",
+                rf"\label{{fig:appendix-{task_name.replace('_', '-')}-analysis}}",
+                r"\end{figure*}",
+                "",
+            ]
+        )
+    (article_dir / "appendix_task_analysis.tex").write_text("\n".join(section_lines) + "\n", encoding="ascii")
 
 
 def _save_dual(fig: plt.Figure, output_base: Path, dpi: int) -> None:
@@ -318,6 +468,7 @@ def main() -> None:
     _write_overall_table(article_dir, overall_table, winner_table)
     _write_winners_table(article_dir, winner_table, sample_caption)
     _write_figure_snippets(article_dir)
+    _write_appendix_task_analysis(summary_frames, article_dir, args.dpi)
     _plot_task_winners_publication(winner_table, figures_dir, args.dpi)
     _plot_quality_heatmap_publication(combined, figures_dir, args.dpi)
     _plot_quality_latency_publication(combined, figures_dir, args.dpi)

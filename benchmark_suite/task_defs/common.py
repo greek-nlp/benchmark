@@ -43,11 +43,21 @@ def evaluate_classification(raw: pd.DataFrame, *, label_col: str, task_name: str
     return pd.DataFrame(rows).sort_values(["accuracy", "macro_f1"], ascending=[False, False]).reset_index(drop=True)
 
 
-def best_reference_wer(prediction: str, reference: str) -> float:
+def best_reference_wer(prediction: str, reference: str | list[str]) -> float:
+    if isinstance(reference, list):
+        valid_references = [str(item) for item in reference if str(item).strip()]
+        if not valid_references:
+            return pywer.wer([""], [prediction])
+        return min(pywer.wer([candidate], [prediction]) for candidate in valid_references)
     return pywer.wer([reference], [prediction])
 
 
-def best_reference_cer(prediction: str, reference: str) -> float:
+def best_reference_cer(prediction: str, reference: str | list[str]) -> float:
+    if isinstance(reference, list):
+        valid_references = [str(item) for item in reference if str(item).strip()]
+        if not valid_references:
+            return pywer.cer([""], [prediction])
+        return min(pywer.cer([candidate], [prediction]) for candidate in valid_references)
     return pywer.cer([reference], [prediction])
 
 

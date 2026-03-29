@@ -13,7 +13,7 @@
 \usepackage{microtype}
 
 \newcommand{\benchmarkname}{GreekNLPBench\xspace}
-\newcommand{\resultsdir}{results/server_runs/completed_runs/20260327_234711_full_suite_default_models_capped_test_reasonable}
+\newcommand{\resultsdir}{results/server_runs/completed_runs/20260328_182745_full_suite_default_models_capped500}
 \newcommand{\assetsdir}{\resultsdir/article_assets}
 
 \title{Benchmarking Open Instruction-Tuned LLMs for Greek NLP: A Reproducible Multi-Task Evaluation}
@@ -50,7 +50,7 @@
 \begin{document}
 
 \begin{abstract}
-We present a reproducible benchmark for evaluating open instruction-tuned large language models on Greek NLP. The benchmark covers grammatical error correction, intent classification, legal document classification, machine translation, named entity recognition, part-of-speech tagging, and summarization. We evaluate five open models under a deterministic capped-test protocol that preserves ordering and exact reproducibility while reducing the runtime burden of very large test sets. Across nine benchmark segments, \texttt{gemma2:9b} ranks first overall on normalized quality, while \texttt{aya-expanse:8b} is strongest on legal classification and English machine translation, and \texttt{llama3.1:8b-instruct} performs best on summarization. The paper is paired with repository-native tables, vector figures, and combined prediction exports so that benchmark execution and manuscript preparation remain tightly coupled.
+We present a reproducible benchmark for evaluating open instruction-tuned large language models on Greek NLP. The benchmark covers grammatical error correction, intent classification, legal document classification, machine translation, named entity recognition, part-of-speech tagging, and summarization. We evaluate five open models under a deterministic capped-test protocol that preserves ordering and exact reproducibility while reducing the runtime burden of very large test sets. Across nine benchmark segments, \texttt{gemma2:9b} ranks first overall on normalized quality, while \texttt{aya-expanse:8b} is strongest on legal classification and machine translation, and \texttt{llama3.1:8b-instruct} performs best on summarization. The paper is paired with repository-native tables, vector figures, appendix-level task analyses, and combined prediction exports so that benchmark execution and manuscript preparation remain tightly coupled.
 \end{abstract}
 
 \maketitle
@@ -60,7 +60,7 @@ Broad evaluation has become central to modern language model research because si
 
 Instruction tuning has made general-purpose language models more usable across many tasks without task-specific retraining \cite{wei2022finetuned,chung2024scaling}. However, evaluating such models on Greek remains cumbersome in practice. This paper packages our evaluation workflow into a reproducible benchmark suitable for SETN 2026. The benchmark aggregates seven task families into nine reporting segments: grammatical error correction (GEC), intent classification, legal classification, machine translation into three target languages, named entity recognition (NER), part-of-speech (POS) tagging, and summarization. The runner produces per-task summaries, per-instance predictions, combined CSV outputs, HTML visualizations, and publication-facing figures.
 
-Our contribution is practical rather than algorithmic. First, we provide a unified multi-task evaluation setup for Greek NLP with open local models. Second, we adopt a deterministic capped-test protocol that remains reproducible without relying on random sampling. Third, we expose benchmark outputs in a form that flows directly into a conference paper.
+Our contribution is practical rather than algorithmic. First, we provide a unified multi-task evaluation setup for Greek NLP with open local models. Second, we adopt a deterministic capped-test protocol that remains reproducible without relying on random sampling. Third, we expose benchmark outputs in a form that flows directly into a conference paper, including automatically generated appendix materials for task-level analysis.
 
 \section{Benchmark Setup}
 \subsection{Tasks and Models}
@@ -88,24 +88,24 @@ The full test sets are very uneven in size, with legal classification and machin
 \item GEC: 175 examples
 \item intent classification: 436 examples
 \item legal classification: 500 examples
-\item machine translation: 300 English pairs, 4 Persian pairs, and 9 Japanese pairs
+\item machine translation: 500 English pairs, 500 Persian pairs, and 500 Japanese pairs
 \item NER: 500 examples
 \item POS: 456 examples
 \item summarization: 300 examples
 \end{itemize}
 
-This design keeps the smaller tasks intact while reducing the runtime burden of the largest tasks. It also supports exact reruns because the selected subset is deterministic.
+This design keeps the smaller tasks intact while reducing the runtime burden of the largest tasks. It also supports exact reruns because the selected subset is deterministic. For machine translation, the benchmark now uses a shared data-wrapper path rather than a separate task-local split implementation, which eliminates an earlier source of inconsistency in language-specific counts.
 
 \subsection{Metrics}
-We report task-appropriate primary metrics. For classification-style tasks we use accuracy and macro-F1, with macro-F1 treated as the primary comparison metric. For GEC we report exact match and edit-distance-derived measures against the reference and source text. For machine translation and summarization we currently rely on word error rate (WER) and character error rate (CER), where lower values are better. Latency is reported as average per-instance generation time in seconds.
+We report task-appropriate primary metrics. For classification-style tasks we use accuracy and macro-F1, with macro-F1 treated as the primary comparison metric. For GEC we report exact match and edit-distance-derived measures against the reference and source text. For machine translation and summarization we currently rely on word error rate (WER) and character error rate (CER), where lower values are better. We also compute supplemental task-specific metrics for diagnostic analysis: GLEU for GEC, BLEU and chrF for machine translation, entity-level F1 for NER, and ROUGE for summarization. Latency is reported as average per-instance generation time in seconds.
 
-To compare models across heterogeneous metrics, we additionally compute a direction-aware normalized quality score per benchmark segment. Within each segment, the best model receives the highest normalized value and the worst model the lowest. These segment-normalized scores are then averaged to obtain an overall ranking.
+To compare models across heterogeneous metrics, we additionally compute a direction-aware normalized quality score per benchmark segment. Within each segment, the best model receives the highest normalized value and the worst model the lowest. These segment-normalized scores are then averaged to obtain an overall ranking. The main paper focuses on the primary metrics used for ranking, while Appendix~\ref{sec:appendix-per-task-analysis} reports the richer per-task metric panels.
 
 \section{Implementation Notes}
-The benchmark pipeline was adjusted in several ways to make end-to-end runs stable and paper-ready. We added combined prediction exports so that the full suite produces unified CSV files across tasks. We also changed legal classification from opaque subject identifiers to coarse-grained human-readable volume labels, which avoids the degenerate all-zero behavior observed with raw numeric class IDs. For POS tagging, we added a fallback parser that tolerates \texttt{\_} head values in CoNLL-U files. At the backend level, we introduced retry and backoff logic around transient Ollama failures. Finally, we generated publication-oriented reports, tables, and vector graphics directly from benchmark outputs.
+The benchmark pipeline was adjusted in several ways to make end-to-end runs stable and paper-ready. We added combined prediction exports so that the full suite produces unified CSV files across tasks. We also changed legal classification from opaque subject identifiers to coarse-grained human-readable volume labels, which avoids the degenerate all-zero behavior observed with raw numeric class IDs. For POS tagging, we added a fallback parser that tolerates \texttt{\_} head values in CoNLL-U files. At the backend level, we introduced retry and backoff logic around transient Ollama failures. Finally, we generated publication-oriented reports, tables, vector graphics, and appendix-ready per-task analyses directly from benchmark outputs.
 
 \section{Results}
-Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark segment. Figure~\ref{fig:model-quality-heatmap} visualizes normalized quality across segments, while Figure~\ref{fig:quality-vs-latency} shows the trade-off between quality and inference speed.
+Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark segment. Figure~\ref{fig:model-quality-heatmap} visualizes normalized quality across segments, while Figure~\ref{fig:quality-vs-latency} shows the trade-off between quality and inference speed. Appendix~\ref{sec:appendix-per-task-analysis} then drills into each task with one analytical table and one corresponding figure.
 
 \input{\assetsdir/task_winners_table.tex}
 
@@ -125,14 +125,16 @@ Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark 
 \label{fig:quality-vs-latency}
 \end{figure*}
 
-Three patterns stand out. First, \texttt{gemma2:9b} is the strongest overall model in this run. It ranks first on the normalized aggregate and wins four benchmark segments, namely GEC, intent classification, NER, and POS. Second, \texttt{aya-expanse:8b} is especially competitive on cross-lingual tasks, winning legal classification and English machine translation, and tying for the best Japanese machine translation WER. Third, \texttt{llama3.1:8b-instruct} performs best on summarization, although its advantage comes at a higher latency than the fastest summarization model.
+Four patterns stand out. First, \texttt{gemma2:9b} is the strongest overall model in this run. It ranks first on the normalized aggregate with an average quality score of 82.1 and wins four benchmark segments, namely GEC, intent classification, NER, and POS. Second, \texttt{aya-expanse:8b} is especially competitive on cross-lingual tasks, winning legal classification and all three machine translation segments. Third, \texttt{llama3.1:8b-instruct} performs best on summarization, although its advantage comes at a higher latency than the fastest summarization model. Fourth, the weakest aggregate model is not uniformly weak: for example, \texttt{falcon3:7b-instruct} is often among the fastest models even when it lags in quality, which reinforces the value of reporting latency alongside task scores.
 
-Legal classification remains the most difficult benchmark component. Even after replacing opaque identifiers with coarse-grained volume labels, the best macro-F1 is only 0.011. This suggests that the task is still demanding under zero-shot prompting and may benefit from better label descriptions, exemplars, or task-specific fine-tuning. By contrast, intent classification is comparatively mature in this setup, with \texttt{gemma2:9b} reaching 0.737 macro-F1 on 436 capped test examples.
+Legal classification remains the most difficult benchmark component. Even after replacing opaque identifiers with coarse-grained volume labels, the best macro-F1 is only 0.011. This suggests that the task is still demanding under zero-shot prompting and may benefit from better label descriptions, exemplars, or task-specific fine-tuning. By contrast, intent classification is comparatively mature in this setup, with \texttt{gemma2:9b} reaching 0.737 macro-F1 on 436 capped test examples. The appendix confirms that the legal task is difficult under both accuracy and macro-F1, not only under the headline metric.
 
-Machine translation is mixed. \texttt{aya-expanse:8b} is clearly strongest for English translation, but the Persian and Japanese segments are extremely small in this deterministic capped profile. As a result, conclusions for those two languages should be treated as suggestive rather than definitive.
+Machine translation is mixed but now much more interpretable than in our earlier smaller-language slices. The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. \texttt{aya-expanse:8b} obtains the best WER in English, Persian, and Japanese, but the appendix reveals a more nuanced picture: \texttt{gemma2:9b} is nearly tied on English WER and slightly ahead on BLEU and chrF, while the two models remain very close on Japanese WER. This is a useful reminder that primary ranking metrics and auxiliary analysis metrics need not induce exactly the same ordering.
+
+The appendix also surfaces secondary structure in tasks where the main ranking alone would be too coarse. For NER, \texttt{llama3.1:8b-instruct} has the highest accuracy while \texttt{gemma2:9b} leads on macro-F1, suggesting differences in minority-entity handling. For summarization, the newly added ROUGE scores broadly align with WER in ranking the strongest model, but they also show that the overall overlap levels are low across the board, underscoring the difficulty of the task under current prompts.
 
 \section{Discussion}
-The benchmark is useful because it combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. It is well suited for iterative comparison and paper-scale reporting, but it is not a substitute for full test-set evaluation when final archival numbers are required. Some metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal classification would benefit from richer label semantics.
+The benchmark is useful because it combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. It is well suited for iterative comparison and paper-scale reporting, but it is not a substitute for full test-set evaluation when final archival numbers are required. Some metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal classification would benefit from richer label semantics. Even so, the appendix-level supplemental metrics already improve interpretability relative to a WER-only or macro-F1-only summary.
 
 Despite these caveats, the benchmark already exposes meaningful structure in model behavior. Some models offer strong general performance across multiple tasks, while others are better understood as specialists for translation or summarization. This kind of cross-task perspective is hard to obtain from isolated task runs and is exactly where a unified benchmark becomes valuable.
 
@@ -156,6 +158,8 @@ The table below reports the overall model ranking induced by the normalized segm
 \Description{A horizontal bar chart showing the normalized quality gap between the best and second-best model for each benchmark segment. The largest winner margins occur on named entity recognition and part-of-speech tagging.}
 \label{fig:task-winner-margins}
 \end{figure*}
+
+\input{\assetsdir/appendix_task_analysis.tex}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{setn2026_refs}

@@ -35,7 +35,10 @@ FULL_TEST_TASK_CAPS = {
 
 FULL_TEST_TASK_OPTIONS = {
     REASONABLE_CAP_PROFILE: {
-        "machine_translation": {"target_lang_limits": {"eng": 300, "fas": 4, "jpn": 9}},
+        "machine_translation": {
+            "target_lang_limits": {"eng": 500, "fas": 500, "jpn": 500},
+            "full_corpus_target_langs": ["fas", "jpn"],
+        },
     }
 }
 

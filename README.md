@@ -97,7 +97,7 @@ Useful flags:
 * `--repeats`: optional; number of repeated sampled runs (default: `1`). Use `>1` with `--sample-size > 0`.
 * `--random-state`: sampling seed
 * `--output-dir`: where result files are written
-* `--task-cap-profile`: optional deterministic per-task caps. `reasonable` keeps `gec`, `intent_classification`, and `pos` at full test size, caps `legal_classification` and `ner` at 500, caps `summarization` at 300, and caps machine translation to the first 300 English pairs plus all available Persian and Japanese pairs.
+* `--task-cap-profile`: optional deterministic per-task caps. `reasonable` keeps `gec`, `intent_classification`, and `pos` at full test size, caps `legal_classification` and `ner` at 500, caps `summarization` at 300, and caps machine translation to the first 500 evaluation pairs per target language.
 * `--temperature`: Ollama sampling temperature
 * `--num-predict`: maximum output tokens
 * `--timeout-seconds`: request timeout per generation
