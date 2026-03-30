@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\centering
+\caption{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300). Lower WER is better; higher Exact Match and Macro-F1 are better.}
+\label{tab:capped-task-winners}
+\begin{tabular}{lllr}
+\toprule
+Task Segment & Winner & Primary Metric & Value \\
+\midrule
+GEC & Gemma2 9B & Exact Match & 0.137 \\
+Intent & Gemma2 9B & Macro-F1 & 0.737 \\
+Legal & Aya Expanse 8B & Macro-F1 & 0.011 \\
+MT-ENG & Aya Expanse 8B & WER & 56.359 \\
+MT-FAS & Aya Expanse 8B & WER & 109.222 \\
+MT-JPN & Aya Expanse 8B & WER & 109.067 \\
+NER & Gemma2 9B & Macro-F1 & 0.122 \\
+POS & Gemma2 9B & Macro-F1 & 0.486 \\
+Summ. & Llama 3.1 8B Instruct & WER & 173.585 \\
+\bottomrule
+\end{tabular}
+\end{table*}

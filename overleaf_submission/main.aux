@@ -1,0 +1,82 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{bommasani2021foundation,liang2023helm,gao2023lmeval}
+\citation{wei2022finetuned,chung2024scaling}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Benchmark Setup}{1}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Tasks and Models}{1}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Deterministic Capped-Test Protocol}{1}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Metrics}{1}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Implementation Notes}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{2}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Discussion}{2}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Reproducibility and Artifact Structure}{2}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{2}{section.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300). Lower WER is better; higher Exact Match and Macro-F1 are better.}}{3}{table.caption.5}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:capped-task-winners}{{1}{3}{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300). Lower WER is better; higher Exact Match and Macro-F1 are better}{table.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER.}}{3}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:model-quality-heatmap}{{1}{3}{Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Overall Ranking Table}{3}{appendix.A}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Overall ranking of the evaluated models across the nine benchmark segments in the deterministic capped benchmark run. Normalized quality is averaged over segment-level, direction-aware scores.}}{3}{table.caption.8}\protected@file@percent }
+\newlabel{tab:capped-overall-ranking}{{2}{3}{Overall ranking of the evaluated models across the nine benchmark segments in the deterministic capped benchmark run. Normalized quality is averaged over segment-level, direction-aware scores}{table.caption.8}{}}
+\bibstyle{ACM-Reference-Format}
+\bibdata{refs}
+\bibcite{bommasani2021foundation}{{1}{2021}{{Bommasani et~al\mbox  {.}}}{{}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family.}}{4}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:quality-vs-latency}{{2}{4}{Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family}{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Normalized quality margin between the winning model and the runner-up for each benchmark segment. Large margins indicate clearer task-level separation between the top two models.}}{4}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:task-winner-margins}{{3}{4}{Normalized quality margin between the winning model and the runner-up for each benchmark segment. Large margins indicate clearer task-level separation between the top two models}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Winner Margins by Segment}{4}{appendix.B}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C}Per-Task Analysis}{4}{appendix.C}\protected@file@percent }
+\newlabel{sec:appendix-per-task-analysis}{{C}{4}{Per-Task Analysis}{appendix.C}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.1}GEC}{4}{subsection.C.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.2}Intent Classification}{4}{subsection.C.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.3}Legal Classification}{4}{subsection.C.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.4}Machine Translation}{4}{subsection.C.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.5}NER}{4}{subsection.C.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.6}POS}{4}{subsection.C.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {C.7}Summarization}{4}{subsection.C.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{4}{section*.25}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Per-model results for GEC.}}{5}{table.caption.10}\protected@file@percent }
+\newlabel{tab:appendix-gec-analysis}{{3}{5}{Per-model results for GEC}{table.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Per-task comparison for GEC. Bars show the primary metric and annotations show average latency.}}{5}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:appendix-gec-analysis}{{4}{5}{Per-task comparison for GEC. Bars show the primary metric and annotations show average latency}{figure.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Per-model results for Intent.}}{5}{table.caption.12}\protected@file@percent }
+\newlabel{tab:appendix-intent-classification-analysis}{{4}{5}{Per-model results for Intent}{table.caption.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Per-model results for Legal.}}{5}{table.caption.14}\protected@file@percent }
+\newlabel{tab:appendix-legal-classification-analysis}{{5}{5}{Per-model results for Legal}{table.caption.14}{}}
+\bibcite{chung2024scaling}{{2}{2024}{{Chung et~al\mbox  {.}}}{{}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Per-task comparison for Intent Classification. Bars show the primary metric and annotations show average latency.}}{6}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:appendix-intent-classification-analysis}{{5}{6}{Per-task comparison for Intent Classification. Bars show the primary metric and annotations show average latency}{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Per-task comparison for Legal Classification. Bars show the primary metric and annotations show average latency.}}{6}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:appendix-legal-classification-analysis}{{6}{6}{Per-task comparison for Legal Classification. Bars show the primary metric and annotations show average latency}{figure.caption.15}{}}
+\bibcite{gao2023lmeval}{{3}{2023}{{Gao et~al\mbox  {.}}}{{}}}
+\bibcite{liang2023helm}{{4}{2023}{{Liang et~al\mbox  {.}}}{{}}}
+\bibcite{wei2022finetuned}{{5}{2022}{{Wei et~al\mbox  {.}}}{{}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{6.25499pt}
+\newlabel{tocindent2}{11.97899pt}
+\newlabel{tocindent3}{0pt}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Per-model results for Machine Translation.}}{7}{table.caption.16}\protected@file@percent }
+\newlabel{tab:appendix-machine-translation-analysis}{{6}{7}{Per-model results for Machine Translation}{table.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Per-task comparison for Machine Translation. Bars show the primary metric and annotations show average latency.}}{7}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:appendix-machine-translation-analysis}{{7}{7}{Per-task comparison for Machine Translation. Bars show the primary metric and annotations show average latency}{figure.caption.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Per-model results for NER.}}{7}{table.caption.18}\protected@file@percent }
+\newlabel{tab:appendix-ner-analysis}{{7}{7}{Per-model results for NER}{table.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Per-task comparison for NER. Bars show the primary metric and annotations show average latency.}}{8}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:appendix-ner-analysis}{{8}{8}{Per-task comparison for NER. Bars show the primary metric and annotations show average latency}{figure.caption.19}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Per-model results for POS.}}{8}{table.caption.20}\protected@file@percent }
+\newlabel{tab:appendix-pos-analysis}{{8}{8}{Per-model results for POS}{table.caption.20}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Per-model results for Summ..}}{8}{table.caption.22}\protected@file@percent }
+\newlabel{tab:appendix-summarization-analysis}{{9}{8}{Per-model results for Summ.}{table.caption.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Per-task comparison for POS. Bars show the primary metric and annotations show average latency.}}{9}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:appendix-pos-analysis}{{9}{9}{Per-task comparison for POS. Bars show the primary metric and annotations show average latency}{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Per-task comparison for Summarization. Bars show the primary metric and annotations show average latency.}}{9}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:appendix-summarization-analysis}{{10}{9}{Per-task comparison for Summarization. Bars show the primary metric and annotations show average latency}{figure.caption.23}{}}
+\newlabel{TotPages}{{9}{9}{}{page.9}{}}
+\gdef \@abspage@last{9}

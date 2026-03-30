@@ -1,0 +1,185 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{5}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{}, \showDOI{}, and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showDOI}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showDOI #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showDOI      \undefined \def \showDOI       #1{#1}\fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[Bommasani et~al\mbox{.}(2021)]%
+        {bommasani2021foundation}
+\bibfield{author}{\bibinfo{person}{Rishi Bommasani}, \bibinfo{person}{Drew~A.
+  Hudson}, \bibinfo{person}{Ehsan Adeli}, \bibinfo{person}{Russ Altman},
+  \bibinfo{person}{Simran Arora}, \bibinfo{person}{Sydney von Arx},
+  \bibinfo{person}{Michael~S. Bernstein}, \bibinfo{person}{Jeannette Bohg},
+  \bibinfo{person}{Antoine Bosselut}, \bibinfo{person}{Emma Brunskill},
+  \bibinfo{person}{Erik Brynjolfsson}, \bibinfo{person}{Shyamal Buch},
+  \bibinfo{person}{Dallas Card}, \bibinfo{person}{Rodrigo Castellon},
+  \bibinfo{person}{Niladri Chatterji}, \bibinfo{person}{Annie Chen},
+  \bibinfo{person}{Kathleen Creel}, \bibinfo{person}{Jared Davis},
+  \bibinfo{person}{Dorottya Demszky}, \bibinfo{person}{Chris Donahue},
+  \bibinfo{person}{Moussa Doumbouya}, \bibinfo{person}{Esin Durmus},
+  \bibinfo{person}{Stefano Ermon}, \bibinfo{person}{John Etchemendy},
+  \bibinfo{person}{Judy Grossman}, \bibinfo{person}{Tatsunori~B. Hashimoto},
+  \bibinfo{person}{Peter Henderson}, \bibinfo{person}{John Hewitt},
+  \bibinfo{person}{Daniel~E. Ho}, \bibinfo{person}{Kyle Hong},
+  \bibinfo{person}{Kelvin Hsu}, \bibinfo{person}{Jing Huang},
+  \bibinfo{person}{Thomas Icard}, \bibinfo{person}{Saahil Jain},
+  \bibinfo{person}{Dan Jurafsky}, \bibinfo{person}{Pratyusha Kalluri},
+  \bibinfo{person}{Fereshte Khani}, \bibinfo{person}{Omar Khattab},
+  \bibinfo{person}{Pang~Wei Kohli}, \bibinfo{person}{Mark Krass},
+  \bibinfo{person}{Ranjay Krishna}, \bibinfo{person}{Rohit Kuditipudi},
+  \bibinfo{person}{Ananya Kumar}, \bibinfo{person}{Jure Leskovec},
+  \bibinfo{person}{Isin Levent}, \bibinfo{person}{Percy Liang},
+  \bibinfo{person}{Chaitanya Mandal}, \bibinfo{person}{Kathryn Ma},
+  \bibinfo{person}{Ali Malik}, \bibinfo{person}{Christopher~D. Manning},
+  \bibinfo{person}{Suvir Mirchandani}, \bibinfo{person}{Eric Mitchell},
+  \bibinfo{person}{Zanele Munyikwa}, \bibinfo{person}{Suraj Nair},
+  \bibinfo{person}{Deepak Narayanan}, \bibinfo{person}{Richard Ngo},
+  \bibinfo{person}{Julian Nyarko}, \bibinfo{person}{Giray Ogut},
+  \bibinfo{person}{Laurel Orr}, \bibinfo{person}{Isabel Papadimitriou},
+  \bibinfo{person}{Jeanne Park}, \bibinfo{person}{Chris Piech},
+  \bibinfo{person}{Eva Portelance}, \bibinfo{person}{Christopher Potts},
+  \bibinfo{person}{Aditi Raghunathan}, \bibinfo{person}{Rob Reich},
+  \bibinfo{person}{Hongyu Ren}, \bibinfo{person}{Frieda Rong},
+  \bibinfo{person}{Yusuf Roohani}, \bibinfo{person}{Camilo Ruiz},
+  \bibinfo{person}{Justin Ryan}, \bibinfo{person}{Christopher R{\'e}},
+  \bibinfo{person}{Dorsa Sadigh}, \bibinfo{person}{Shiori Sagawa},
+  \bibinfo{person}{Omid Salehi}, \bibinfo{person}{Karan Santhanam},
+  \bibinfo{person}{Shreya Sarkar}, \bibinfo{person}{Eli Schroeder},
+  \bibinfo{person}{Yash Sen}, \bibinfo{person}{Ananya Sharma},
+  \bibinfo{person}{Hao Shan}, \bibinfo{person}{Kyle Shanmugam},
+  \bibinfo{person}{Sharon Shen}, \bibinfo{person}{Avanika Song},
+  \bibinfo{person}{Krishna Srinivasan}, \bibinfo{person}{Alex Tamkin},
+  \bibinfo{person}{Rohan Taori}, \bibinfo{person}{Armin~W. Thomas},
+  \bibinfo{person}{Florian Tram{\`e}r}, \bibinfo{person}{Rose~E. Wang},
+  \bibinfo{person}{William Wang}, \bibinfo{person}{Bohan Wu},
+  \bibinfo{person}{Jiajun Wu}, \bibinfo{person}{Yuhuai Wu},
+  \bibinfo{person}{Cathy Xiong}, \bibinfo{person}{Yangsibo Xu},
+  \bibinfo{person}{Ziyi Yang}, \bibinfo{person}{Shun Zhang},
+  \bibinfo{person}{Jiajun Zhang}, \bibinfo{person}{Yufan Zhang},
+  \bibinfo{person}{Lucy Zheng}, \bibinfo{person}{Kaitlyn Zhou}, {and}
+  \bibinfo{person}{Percy Liang}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{On the Opportunities and Risks of Foundation
+  Models}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2108.07258}}
+  (\bibinfo{year}{2021}).
+\newblock
+
+
+\bibitem[Chung et~al\mbox{.}(2024)]%
+        {chung2024scaling}
+\bibfield{author}{\bibinfo{person}{Hyung~Won Chung}, \bibinfo{person}{Le Hou},
+  \bibinfo{person}{Shayne Longpre}, \bibinfo{person}{Barret Zoph},
+  \bibinfo{person}{Yi Tay}, \bibinfo{person}{William Fedus},
+  \bibinfo{person}{Yunxuan Li}, \bibinfo{person}{Xuezhi Wang},
+  \bibinfo{person}{Mostafa Dehghani}, \bibinfo{person}{Siddhartha Brahma},
+  \bibinfo{person}{Albert Webson}, \bibinfo{person}{Shixiang Gu},
+  \bibinfo{person}{Zhuyun Dai}, \bibinfo{person}{Mirac Suzgun},
+  \bibinfo{person}{Xinyun Chen}, \bibinfo{person}{Aakanksha Chowdhery},
+  \bibinfo{person}{Sharan Narang}, \bibinfo{person}{Gaurav Mishra},
+  \bibinfo{person}{Adams~Wei Yu}, \bibinfo{person}{Vincent~Y. Zhao},
+  \bibinfo{person}{Yanping Huang}, \bibinfo{person}{Andrew Dai},
+  \bibinfo{person}{Hongkun Yu}, \bibinfo{person}{Slav Petrov},
+  \bibinfo{person}{Ed~H. Chi}, \bibinfo{person}{Jeff Dean},
+  \bibinfo{person}{Jacob Devlin}, \bibinfo{person}{Adam Roberts},
+  \bibinfo{person}{Denny Zhou}, \bibinfo{person}{Quoc~V. Le}, {and}
+  \bibinfo{person}{Jason Wei}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Scaling Instruction-Finetuned Language Models}.
+\newblock \bibinfo{journal}{\emph{Journal of Machine Learning Research}}
+  \bibinfo{volume}{25}, \bibinfo{number}{70} (\bibinfo{year}{2024}),
+  \bibinfo{pages}{1--53}.
+\newblock
+
+
+\bibitem[Gao et~al\mbox{.}(2023)]%
+        {gao2023lmeval}
+\bibfield{author}{\bibinfo{person}{Leo Gao}, \bibinfo{person}{Jonathan Tow},
+  \bibinfo{person}{Baber Abbasi}, \bibinfo{person}{Stella Biderman},
+  \bibinfo{person}{Sidney Black}, \bibinfo{person}{Guy Blasi},
+  \bibinfo{person}{Anthony Casey}, \bibinfo{person}{Nate Cheeseman},
+  \bibinfo{person}{Juan Ciro}, \bibinfo{person}{Sasha Crabtree},
+  \bibinfo{person}{Nicholas Currier}, \bibinfo{person}{Xingyu Dang},
+  \bibinfo{person}{Clementine Decoopman}, \bibinfo{person}{Chris Foster},
+  \bibinfo{person}{Raphael Gontijo~Lopes}, \bibinfo{person}{Huan He},
+  \bibinfo{person}{Kevin Hu}, \bibinfo{person}{Brandon Knight},
+  \bibinfo{person}{Jorge Larios}, \bibinfo{person}{Logan Li},
+  \bibinfo{person}{Xander Lin}, \bibinfo{person}{Shawn Miller},
+  \bibinfo{person}{Niklas Muennighoff}, \bibinfo{person}{Aryan Naeini},
+  \bibinfo{person}{Hyunwoo Nam}, \bibinfo{person}{Sam Pan},
+  \bibinfo{person}{Louis Schmid}, \bibinfo{person}{Hailey Schoelkopf},
+  \bibinfo{person}{Xiang Wang}, \bibinfo{person}{Albert Webson},
+  \bibinfo{person}{Mitchell Wortsman}, \bibinfo{person}{Yuxi Yao},
+  \bibinfo{person}{Stella Biderman}, \bibinfo{person}{Douwe Kiela},
+  \bibinfo{person}{Teven Le~Scao}, \bibinfo{person}{Colin Raffel},
+  \bibinfo{person}{Andy Zhou}, \bibinfo{person}{Dan Hendrycks},
+  {et~al\mbox{.}}} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{A Framework for Few-Shot Language Model
+  Evaluation}. In \bibinfo{booktitle}{\emph{Advances in Neural Information
+  Processing Systems Datasets and Benchmarks Track}}.
+\newblock
+
+
+\bibitem[Liang et~al\mbox{.}(2023)]%
+        {liang2023helm}
+\bibfield{author}{\bibinfo{person}{Percy Liang}, \bibinfo{person}{Rishi
+  Bommasani}, \bibinfo{person}{Tony Lee}, \bibinfo{person}{Dimitris Tsipras},
+  \bibinfo{person}{Dilara Soylu}, \bibinfo{person}{Michihiro Yasunaga},
+  \bibinfo{person}{Yian Zhang}, \bibinfo{person}{Deepak Narayanan},
+  \bibinfo{person}{Yuhuai Wu}, \bibinfo{person}{Ananya Kumar},
+  \bibinfo{person}{Benjamin Newman}, \bibinfo{person}{Binhang Yuan},
+  \bibinfo{person}{Bonnie Yan}, \bibinfo{person}{Ce Zhang}, \bibinfo{person}{M.
+  Cosgrove}, \bibinfo{person}{Christopher~D. Manning},
+  \bibinfo{person}{Christopher R{\'e}}, {and} \bibinfo{person}{Tatsunori~B.
+  Hashimoto}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Holistic Evaluation of Language Models}.
+\newblock \bibinfo{journal}{\emph{Transactions on Machine Learning Research}}
+  (\bibinfo{year}{2023}).
+\newblock
+
+
+\bibitem[Wei et~al\mbox{.}(2022)]%
+        {wei2022finetuned}
+\bibfield{author}{\bibinfo{person}{Jason Wei}, \bibinfo{person}{Maarten Bosma},
+  \bibinfo{person}{Vincent~Y. Zhao}, \bibinfo{person}{Kelvin Guu},
+  \bibinfo{person}{Adams~Wei Yu}, \bibinfo{person}{Brian Lester},
+  \bibinfo{person}{Nan Du}, \bibinfo{person}{Andrew~M. Dai}, {and}
+  \bibinfo{person}{Quoc~V. Le}.} \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{Finetuned Language Models Are Zero-Shot Learners}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2109.01652}}
+  (\bibinfo{year}{2022}).
+\newblock
+
+
+\end{thebibliography}
