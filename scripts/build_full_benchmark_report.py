@@ -20,10 +20,10 @@ PRIMARY_METRIC_BY_TASK = {
     "gec": ("exact_match", False),
     "intent_classification": ("macro_f1", False),
     "legal_classification": ("macro_f1", False),
-    "machine_translation": ("wer_vs_reference", True),
+    "machine_translation": ("chrf", False),
     "ner": ("macro_f1", False),
     "pos": ("macro_f1", False),
-    "summarization": ("wer_vs_reference", True),
+    "summarization": ("bertscore_f1", False),
 }
 
 TASK_LABELS = {
@@ -239,6 +239,14 @@ def _save_csvs(results_dir: Path, winner_table: pd.DataFrame, overall_model_tabl
             "macro_f1",
             "wer_vs_reference",
             "cer_vs_reference",
+            "bleu",
+            "chrf",
+            "rouge_1",
+            "rouge_2",
+            "rouge_l",
+            "bertscore_precision",
+            "bertscore_recall",
+            "bertscore_f1",
             "avg_latency_seconds",
             "quality_score",
         ]

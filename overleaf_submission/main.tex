@@ -96,7 +96,7 @@ The full test sets are very uneven in size, with legal classification and machin
 This design keeps the smaller tasks intact while reducing the runtime burden of the largest tasks. It also supports exact reruns because the selected subset is deterministic. For machine translation, the benchmark now uses a shared data-wrapper path rather than a separate task-local split implementation, which eliminates an earlier source of inconsistency in language-specific counts.
 
 \subsection{Metrics}
-We report task-appropriate primary metrics. For classification-style tasks we use accuracy and macro-F1, with macro-F1 treated as the primary comparison metric. For GEC we report exact match and edit-distance-derived measures against the reference and source text. For machine translation and summarization we currently rely on word error rate (WER) and character error rate (CER), where lower values are better. We also compute supplemental task-specific metrics for diagnostic analysis: GLEU for GEC, BLEU and chrF for machine translation, entity-level F1 for NER, and ROUGE for summarization. Latency is reported as average per-instance generation time in seconds.
+We report task-appropriate primary metrics. For classification-style tasks we use accuracy and macro-F1, with macro-F1 treated as the primary comparison metric. For GEC we report exact match and edit-distance-derived measures against the reference and source text. For machine translation we use chrF as the primary reporting metric and retain WER/CER as supplementary string-distance diagnostics. For summarization we use BERTScore-F1 as the primary semantic comparison metric and report WER/CER and ROUGE as supplementary overlap-based diagnostics. We also compute GLEU for GEC and entity-level F1 for NER. Latency is reported as average per-instance generation time in seconds.
 
 To compare models across heterogeneous metrics, we additionally compute a direction-aware normalized quality score per benchmark segment. Within each segment, the best model receives the highest normalized value and the worst model the lowest. These segment-normalized scores are then averaged to obtain an overall ranking. The main paper focuses on the primary metrics used for ranking, while Appendix~\ref{sec:appendix-per-task-analysis} reports the richer per-task metric panels.
 
@@ -124,13 +124,13 @@ Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark 
 \label{fig:quality-vs-latency}
 \end{figure*}
 
-Four patterns stand out. First, \texttt{gemma2:9b} is the strongest overall model in this run. It ranks first on the normalized aggregate with an average quality score of 82.1 and wins four benchmark segments, namely GEC, intent classification, NER, and POS. Second, \texttt{aya-expanse:8b} is especially competitive on cross-lingual tasks, winning legal classification and all three machine translation segments. Third, \texttt{llama3.1:8b-instruct} performs best on summarization, although its advantage comes at a higher latency than the fastest summarization model. Fourth, the weakest aggregate model is not uniformly weak: for example, \texttt{falcon3:7b-instruct} is often among the fastest models even when it lags in quality, which reinforces the value of reporting latency alongside task scores.
+Four patterns stand out. First, \texttt{gemma2:9b} remains the strongest overall model in this run, ranking first on the normalized aggregate with an average quality score of 71.6 and winning GEC, intent classification, NER, POS, and two of the three machine translation segments under chrF. Second, \texttt{llama3.1:8b-instruct} rises to second overall once summarization is ranked semantically with BERTScore-F1 rather than by WER, which highlights the sensitivity of aggregate rankings to metric choice. Third, \texttt{aya-expanse:8b} remains especially competitive on cross-lingual tasks, winning legal classification, the English translation segment by WER's closest competitor metric chrF only narrowly losing to \texttt{gemma2:9b}, and taking the top summarization BERTScore-F1. Fourth, the weakest aggregate model is not uniformly weak: for example, \texttt{falcon3:7b-instruct} is often among the fastest models even when it lags in quality, which reinforces the value of reporting latency alongside task scores.
 
 Legal classification remains the most difficult benchmark component. Even after replacing opaque identifiers with coarse-grained volume labels, the best macro-F1 is only 0.011. This suggests that the task is still demanding under zero-shot prompting and may benefit from better label descriptions, exemplars, or task-specific fine-tuning. By contrast, intent classification is comparatively mature in this setup, with \texttt{gemma2:9b} reaching 0.737 macro-F1 on 436 capped test examples. The appendix confirms that the legal task is difficult under both accuracy and macro-F1, not only under the headline metric.
 
-Machine translation is mixed but now much more interpretable than in our earlier smaller-language slices. The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. \texttt{aya-expanse:8b} obtains the best WER in English, Persian, and Japanese, but the appendix reveals a more nuanced picture: \texttt{gemma2:9b} is nearly tied on English WER and slightly ahead on BLEU and chrF, while the two models remain very close on Japanese WER. This is a useful reminder that primary ranking metrics and auxiliary analysis metrics need not induce exactly the same ordering.
+Machine translation is mixed but now much more interpretable than in our earlier smaller-language slices. The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. Using chrF as the primary metric changes the winners relative to WER: \texttt{gemma2:9b} leads English and Japanese translation, while \texttt{qwen2.5:7b-instruct} jumps to first on Persian because its chrF substantially exceeds the rest of the field despite weaker WER. This is precisely the kind of metric dependence that argues for reporting both primary and supplementary MT metrics in the appendix rather than relying on a single surface-form score.
 
-The appendix also surfaces secondary structure in tasks where the main ranking alone would be too coarse. For NER, \texttt{llama3.1:8b-instruct} has the highest accuracy while \texttt{gemma2:9b} leads on macro-F1, suggesting differences in minority-entity handling. For summarization, the newly added ROUGE scores broadly align with WER in ranking the strongest model, but they also show that the overall overlap levels are low across the board, underscoring the difficulty of the task under current prompts.
+The appendix also surfaces secondary structure in tasks where the main ranking alone would be too coarse. For NER, \texttt{llama3.1:8b-instruct} has the highest accuracy while \texttt{gemma2:9b} leads on macro-F1, suggesting differences in minority-entity handling. For summarization, the shift from WER to BERTScore-F1 changes the segment winner from \texttt{llama3.1:8b-instruct} to \texttt{aya-expanse:8b}, but only by a very small margin (0.519 vs.\ 0.517), which suggests that the top two models are effectively near-tied semantically even though the overlap-based and distance-based metrics tell somewhat different stories.
 
 \section{Discussion}
 The benchmark is useful because it combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. It is well suited for iterative comparison and paper-scale reporting, but it is not a substitute for full test-set evaluation when final archival numbers are required. Some metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal classification would benefit from richer label semantics. Even so, the appendix-level supplemental metrics already improve interpretability relative to a WER-only or macro-F1-only summary.
@@ -159,6 +159,118 @@ The table below reports the overall model ranking induced by the normalized segm
 \end{figure*}
 
 \input{\assetsdir/appendix_task_analysis.tex}
+
+\section{Prompt Templates}
+This appendix lists the system prompts and user-side task templates used in the benchmark. Concrete examples are instantiated by replacing angle-bracket placeholders with task-specific content at runtime.
+
+\subsection{GEC}
+\paragraph{System prompt}
+\begin{verbatim}
+You are a careful grammatical error correction system for Modern Greek.
+Correct the user's sentence while preserving its meaning.
+Return only the corrected Greek sentence and nothing else.
+\end{verbatim}
+\paragraph{Prompt template}
+\begin{verbatim}
+Diorthose to parakato elliniko keimeno grammatika kai orthografika.
+Kratise to idio noima.
+
+Keimeno: <ORIGINAL_TEXT>
+Diorthomeno keimeno:
+\end{verbatim}
+
+\subsection{Intent Classification}
+\paragraph{System prompt}
+\begin{verbatim}
+You are a Greek intent classification system.
+Return only the intent label and nothing else.
+\end{verbatim}
+\paragraph{Prompt template}
+\begin{verbatim}
+Given a text, provide the intent of the text. Only the intent should be returned.
+Here is the list of possible intents: <LABEL_SPACE>
+
+Text: <TEXT>
+Intent:
+\end{verbatim}
+
+\subsection{Legal Classification}
+\paragraph{System prompt}
+\begin{verbatim}
+You are a Greek legal text classification system.
+Return only one label from the provided label set and nothing else.
+\end{verbatim}
+\paragraph{Prompt template}
+\begin{verbatim}
+Given the following Greek legal text, return only its coarse-grained legal volume label.
+Choose exactly one label from: <LABEL_SPACE>
+
+Text: <TEXT>
+Label:
+\end{verbatim}
+
+\subsection{Machine Translation}
+\paragraph{System prompt}
+\begin{verbatim}
+You are a translation system.
+Translate the user's text accurately.
+Return only the translation and nothing else.
+\end{verbatim}
+\paragraph{Prompt template}
+\begin{verbatim}
+Given a text in Greek, translate it to <TARGET_LANG>.
+Only the translation should be returned.
+
+Text: <SOURCE_TEXT>
+Translation:
+\end{verbatim}
+
+\subsection{Named Entity Recognition}
+\paragraph{System prompt}
+\begin{verbatim}
+You are a Greek named entity recognition system.
+Return only a Python-style list of tags and nothing else.
+\end{verbatim}
+\paragraph{Prompt template}
+\begin{verbatim}
+You are given a tokenized Greek sentence. Return only a Python-style list of
+NER tags, one tag per token.
+Use only these labels: <NER_LABEL_LIST>
+
+Tokens: <TOKEN_LIST>
+Tags:
+\end{verbatim}
+
+\subsection{POS Tagging}
+\paragraph{System prompt}
+\begin{verbatim}
+You are a Greek POS tagging system.
+Return only a Python-style list of tags and nothing else.
+\end{verbatim}
+\paragraph{Prompt template}
+\begin{verbatim}
+You are given a tokenized Greek sentence. Return only a Python-style list of
+POS tags, one tag per token.
+Use only these labels: <POS_LABEL_LIST>
+
+Tokens: <TOKEN_LIST>
+Tags:
+\end{verbatim}
+
+\subsection{Summarization}
+\paragraph{System prompt}
+\begin{verbatim}
+You are a Greek summarization system.
+Produce a concise summary in Greek and return only the summary.
+\end{verbatim}
+\paragraph{Prompt template}
+\begin{verbatim}
+Given a Greek legal text, provide its summary also in Greek.
+Only the summary should be returned.
+
+Text: <DOCUMENT_TEXT>
+Summary:
+\end{verbatim}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
