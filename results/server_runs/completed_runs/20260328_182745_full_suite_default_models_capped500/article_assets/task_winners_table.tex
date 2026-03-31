@@ -1,17 +1,17 @@
 \begin{table*}[t]
 \centering
-\caption{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300). Higher Exact Match, Macro-F1, chrF, and BERTScore-F1 are better.}
+\caption{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300), using representative metrics per task.}
 \label{tab:capped-task-winners}
 \begin{tabular}{lllr}
 \toprule
 Task Segment & Winner & Primary Metric & Value \\
 \midrule
-GEC & Gemma2 9B & Exact Match & 0.137 \\
+GEC & Llama 3.1 8B Instruct & GLEU & 0.796 \\
 Intent & Gemma2 9B & Macro-F1 & 0.737 \\
 Legal & Aya Expanse 8B & Macro-F1 & 0.011 \\
-MT-ENG & Gemma2 9B & chrF & 61.781 \\
-MT-FAS & Qwen2.5 7B Instruct & chrF & 18.325 \\
-MT-JPN & Gemma2 9B & chrF & 16.726 \\
+MT-ENG & Gemma2 9B & BLEU & 35.073 \\
+MT-FAS & Qwen2.5 7B Instruct & BLEU & 4.183 \\
+MT-JPN & Gemma2 9B & BLEU & 6.227 \\
 NER & Gemma2 9B & Macro-F1 & 0.122 \\
 POS & Gemma2 9B & Macro-F1 & 0.486 \\
 Summ. & Aya Expanse 8B & BERTScore-F1 & 0.519 \\

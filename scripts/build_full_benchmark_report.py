@@ -17,10 +17,10 @@ import seaborn as sns
 
 
 PRIMARY_METRIC_BY_TASK = {
-    "gec": ("exact_match", False),
+    "gec": ("gleu_vs_reference", False),
     "intent_classification": ("macro_f1", False),
     "legal_classification": ("macro_f1", False),
-    "machine_translation": ("chrf", False),
+    "machine_translation": ("bleu", False),
     "ner": ("macro_f1", False),
     "pos": ("macro_f1", False),
     "summarization": ("bertscore_f1", False),
@@ -77,6 +77,14 @@ def _task_from_path(path: Path) -> str:
     return path.name.replace("_summary.csv", "")
 
 
+def _primary_metric_for_task(task: str, df: pd.DataFrame) -> tuple[str, bool]:
+    metric, lower_is_better = PRIMARY_METRIC_BY_TASK[task]
+    if task == "summarization":
+        if metric not in df.columns or df[metric].isna().all():
+            return ("rouge_l", False)
+    return metric, lower_is_better
+
+
 def _load_summaries(results_dir: Path) -> tuple[dict[str, pd.DataFrame], list[str]]:
     summary_paths = sorted(results_dir.glob("*_summary.csv"))
     summary_frames: dict[str, pd.DataFrame] = {}
@@ -108,7 +116,7 @@ def _build_segment_rows(summary_frames: dict[str, pd.DataFrame]) -> tuple[pd.Dat
     for task, df in summary_frames.items():
         if task not in PRIMARY_METRIC_BY_TASK:
             continue
-        primary_metric, lower_is_better = PRIMARY_METRIC_BY_TASK[task]
+        primary_metric, lower_is_better = _primary_metric_for_task(task, df)
         working = df.copy()
         if task == "machine_translation":
             group_columns = ["target_lang"]

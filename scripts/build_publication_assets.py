@@ -40,9 +40,12 @@ SEGMENT_LABELS = {
 
 PRIMARY_METRIC_LABELS = {
     "exact_match": "Exact Match",
+    "gleu_vs_reference": "GLEU",
     "macro_f1": "Macro-F1",
     "wer_vs_reference": "WER",
+    "bleu": "BLEU",
     "chrf": "chrF",
+    "rouge_l": "ROUGE-L",
     "bertscore_f1": "BERTScore-F1",
 }
 
@@ -142,7 +145,7 @@ def _write_winners_table(article_dir: Path, winner_table: pd.DataFrame, sample_c
     lines = [
         r"\begin{table*}[t]",
         r"\centering",
-        rf"\caption{{Best-performing model per benchmark segment on the deterministic capped evaluation run ({sample_caption}). Higher Exact Match, Macro-F1, chrF, and BERTScore-F1 are better.}}",
+        rf"\caption{{Best-performing model per benchmark segment on the deterministic capped evaluation run ({sample_caption}), using representative metrics per task.}}",
         r"\label{tab:capped-task-winners}",
         r"\begin{tabular}{lllr}",
         r"\toprule",
@@ -185,11 +188,11 @@ def _write_figure_snippets(article_dir: Path) -> None:
 
 def _primary_metric_for_task(task_name: str) -> tuple[str, bool]:
     if task_name == "machine_translation":
-        return ("chrf", False)
+        return ("bleu", False)
     if task_name == "summarization":
         return ("bertscore_f1", False)
     if task_name == "gec":
-        return ("exact_match", False)
+        return ("gleu_vs_reference", False)
     return ("macro_f1", False)
 
 
@@ -232,6 +235,8 @@ def _format_latex_value(value: object, column: str) -> str:
 
 def _write_appendix_task_table(task_name: str, df: pd.DataFrame, tables_dir: Path) -> None:
     metric, lower_is_better = _primary_metric_for_task(task_name)
+    if task_name == "summarization" and (metric not in df.columns or df[metric].isna().all()):
+        metric, lower_is_better = ("rouge_l", False)
     sort_columns = [metric, "avg_latency_seconds"] if "avg_latency_seconds" in df.columns else [metric]
     sort_ascending = [lower_is_better, True] if "avg_latency_seconds" in df.columns else [lower_is_better]
     working = df.sort_values(sort_columns, ascending=sort_ascending).copy()
@@ -256,6 +261,8 @@ def _write_appendix_task_table(task_name: str, df: pd.DataFrame, tables_dir: Pat
 
 def _plot_appendix_task_figure(task_name: str, df: pd.DataFrame, figures_dir: Path, dpi: int) -> None:
     metric, lower_is_better = _primary_metric_for_task(task_name)
+    if task_name == "summarization" and (metric not in df.columns or df[metric].isna().all()):
+        metric, lower_is_better = ("rouge_l", False)
     sns.set_theme(style="whitegrid", context="paper")
 
     if task_name == "machine_translation":

@@ -1,0 +1,17 @@
+task,split,size,status,error
+gec,train,,error,Invalid split 'train'. Available splits: ['test']
+gec,validation,,error,Invalid split 'validation'. Available splits: ['test']
+gec,test,175.0,ok,
+machine_translation,train,59473.0,ok,
+machine_translation,test,14870.0,ok,
+intent_classification,train,1740.0,ok,
+intent_classification,validation,,error,"Invalid split 'validation'. Available splits: ['test', 'train']"
+intent_classification,test,436.0,ok,
+legal_classification,,,error,dataset_init_error: datasets is required for this dataset loader.
+ner,train,16922.0,ok,
+ner,validation,2115.0,ok,
+ner,test,2116.0,ok,
+pos,train,42326.0,ok,
+pos,validation,10443.0,ok,
+pos,test,10672.0,ok,
+summarization,,,error,dataset_init_error: datasets is required for this dataset loader.
