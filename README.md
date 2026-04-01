@@ -102,6 +102,20 @@ Useful flags:
 * `--num-predict`: maximum output tokens
 * `--timeout-seconds`: request timeout per generation
 
+### Leaderboard Export
+To convert a completed full run into leaderboard-friendly JSON artifacts:
+
+```bash
+python scripts/export_leaderboard_results.py \
+  --results-dir results/server_runs/completed_runs/20260328_182745_full_suite_default_models_capped500
+```
+
+This writes:
+* `leaderboard_results.jsonl`: one normalized results row per model
+* `leaderboard_submissions/*.json`: one prediction file per model keyed by `example_id`
+
+New benchmark runs now assign deterministic `example_id` values to every evaluated example. Older runs without saved `example_id` columns can still be exported; the script reconstructs stable IDs from task order.
+
 ### Running On A Server
 To run the benchmark on a remote Linux server:
 

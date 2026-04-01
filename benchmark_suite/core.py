@@ -20,6 +20,25 @@ class GenerationConfig:
     timeout_seconds: int = 300
 
 
+def _ensure_example_ids(dataset: pd.DataFrame, *, task_name: str) -> pd.DataFrame:
+    if "example_id" in dataset.columns:
+        return dataset
+
+    annotated = dataset.reset_index(drop=True).copy()
+    if "target_lang" in annotated.columns:
+        running_counts: dict[str, int] = {}
+        example_ids: list[str] = []
+        for target_lang in annotated["target_lang"].fillna("unknown").astype(str):
+            count = running_counts.get(target_lang, 0)
+            example_ids.append(f"{task_name}:{target_lang}:{count:06d}")
+            running_counts[target_lang] = count + 1
+        annotated["example_id"] = example_ids
+        return annotated
+
+    annotated["example_id"] = [f"{task_name}:{index:06d}" for index in range(len(annotated))]
+    return annotated
+
+
 def _sample_dataset(dataset: pd.DataFrame, sample_size: int | None, random_state: int) -> pd.DataFrame:
     if sample_size is None or sample_size >= len(dataset):
         return dataset.reset_index(drop=True)
@@ -53,6 +72,7 @@ def run_task(
     task: TaskSpec = TASKS[task_name]
 
     dataset = task.load_dataset(data_csv=data_csv, random_state=random_state, **task_options)
+    dataset = _ensure_example_ids(dataset, task_name=task_name)
     dataset = _limit_dataset(dataset, data_limit=data_limit)
     dataset = _sample_dataset(dataset, sample_size=sample_size, random_state=random_state)
 
