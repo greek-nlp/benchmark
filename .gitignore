@@ -161,3 +161,7 @@ cython_debug/
 
 # macOS
 .DS_Store
+
+# Local generated artifacts
+repo_244/
+leaderboard_space_submission.zip

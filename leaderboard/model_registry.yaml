@@ -1,0 +1,40 @@
+models:
+  - display_name: Qwen2.5 7B Instruct
+    ollama_name: qwen2.5:7b-instruct
+    huggingface_model_id: Qwen/Qwen2.5-7B-Instruct
+    parameter_scale: 7B
+    license: apache-2.0
+    provider: Qwen
+    chat_template_family: qwen
+
+  - display_name: Llama 3.1 8B Instruct
+    ollama_name: llama3.1:8b-instruct
+    huggingface_model_id: meta-llama/Llama-3.1-8B-Instruct
+    parameter_scale: 8B
+    license: llama3.1
+    provider: Meta
+    chat_template_family: llama
+
+  - display_name: Aya Expanse 8B
+    ollama_name: aya-expanse:8b
+    huggingface_model_id: CohereForAI/aya-expanse-8b
+    parameter_scale: 8B
+    license: cc-by-nc-4.0
+    provider: Cohere For AI
+    chat_template_family: command-r
+
+  - display_name: Gemma 2 9B
+    ollama_name: gemma2:9b
+    huggingface_model_id: google/gemma-2-9b-it
+    parameter_scale: 9B
+    license: gemma
+    provider: Google
+    chat_template_family: gemma
+
+  - display_name: Falcon 3 7B Instruct
+    ollama_name: falcon3:7b-instruct
+    huggingface_model_id: tiiuae/Falcon3-7B-Instruct
+    parameter_scale: 7B
+    license: falcon
+    provider: TII
+    chat_template_family: falcon

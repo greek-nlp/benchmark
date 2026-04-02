@@ -103,6 +103,18 @@ Useful flags:
 * `--timeout-seconds`: request timeout per generation
 
 ### Leaderboard Export
+To freeze benchmark evaluation splits for a Hugging Face-style leaderboard:
+
+```bash
+python scripts/export_leaderboard_splits.py \
+  --output-dir leaderboard_data/v1 \
+  --task-cap-profile reasonable
+```
+
+This writes:
+* `manifest.json`: benchmark version, cap profile, tasks, and row counts
+* one split file per task, plus per-language MT split files
+
 To convert a completed full run into leaderboard-friendly JSON artifacts:
 
 ```bash
@@ -115,6 +127,35 @@ This writes:
 * `leaderboard_submissions/*.json`: one prediction file per model keyed by `example_id`
 
 New benchmark runs now assign deterministic `example_id` values to every evaluated example. Older runs without saved `example_id` columns can still be exported; the script reconstructs stable IDs from task order.
+
+To validate a single model submission against a frozen split manifest:
+
+```bash
+python scripts/validate_leaderboard_submission.py \
+  --manifest leaderboard_data/v1/manifest.json \
+  --submission results/server_runs/completed_runs/20260328_182745_full_suite_default_models_capped500/leaderboard_submissions/gemma2__9b.json
+```
+
+The validator checks:
+* benchmark version match
+* required JSON fields
+* exact example coverage per segment
+* duplicate or unknown `example_id` values
+* required `target_lang` fields for machine translation
+
+Leaderboard-facing model metadata can be curated in:
+* [leaderboard/model_registry.yaml](leaderboard/model_registry.yaml)
+
+This is where local Ollama tags can be mapped to display names, Hugging Face model IDs, parameter scales, and license metadata for a future leaderboard UI.
+
+A minimal Hugging Face Space scaffold is available under:
+* [leaderboard_space/app.py](leaderboard_space/app.py)
+* [leaderboard_space/requirements.txt](leaderboard_space/requirements.txt)
+
+The Space reads `leaderboard_results.jsonl` and `leaderboard/model_registry.yaml` and renders:
+* an aggregate ranking table
+* per-segment model tables
+* basic benchmark metadata
 
 ### Running On A Server
 To run the benchmark on a remote Linux server:
