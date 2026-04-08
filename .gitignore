@@ -166,4 +166,3 @@ cython_debug/
 repo_244/
 leaderboard_space_submission.zip
 aws.json
-dataset_mining/*screened*.csv
