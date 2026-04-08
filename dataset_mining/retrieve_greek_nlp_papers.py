@@ -96,7 +96,7 @@ def _query_scope(title: str, abstract: str, required_term: str = "greek") -> str
 def fetch_acl(config: SearchConfig, retrieved_at_utc: str) -> list[dict[str, Any]]:
     from acl_anthology import Anthology
 
-    local_repo_cache = os.path.join("dataset_search_2024_2026", ".acl_anthology_cache")
+    local_repo_cache = os.path.join("dataset_mining", ".acl_anthology_cache")
     os.makedirs(local_repo_cache, exist_ok=True)
     anthology = Anthology.from_repo(path=local_repo_cache)
     rows: list[dict[str, Any]] = []

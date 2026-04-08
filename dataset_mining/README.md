@@ -20,14 +20,14 @@ export SEMANTIC_SCHOLAR_API_KEY="your_api_key"
 ## Run
 
 ```bash
-python dataset_search_2024_2026/retrieve_greek_nlp_papers.py
+python dataset_mining/retrieve_greek_nlp_papers.py
 ```
 
 Custom output:
 
 ```bash
-python dataset_search_2024_2026/retrieve_greek_nlp_papers.py \
-  --output-csv dataset_search_2024_2026/greek_nlp_papers_2024_2026.csv
+python dataset_mining/retrieve_greek_nlp_papers.py \
+  --output-csv dataset_mining/greek_nlp_papers_2024_2026.csv
 ```
 
 ## Output schema
@@ -45,3 +45,23 @@ Both sources are saved with the same columns:
 - `doi`
 - `query_match_scope`
 - `retrieved_at_utc`
+
+## Screening (Exclusions + LLM)
+
+Screening script:
+
+```bash
+python dataset_mining/screen_papers_modern_greek_nlp.py \
+  --input-csv dataset_mining/greek_nlp_papers_2024_2026.csv \
+  --output-csv dataset_mining/greek_nlp_papers_2024_2026_screened.csv \
+  --aws-json aws.json \
+  --model-id meta.llama3-70b-instruct-v1:0
+```
+
+This adds columns for:
+- arXiv/non-peer-review exclusion from `venue`
+- LLM rejection decision + justification for:
+  - Modern Greek
+  - textual modality
+  - NLP scope
+- dataset mention flag + evidence
