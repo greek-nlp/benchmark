@@ -24,12 +24,52 @@ from conll_df import conll_df
 from sklearn.model_selection import train_test_split
 import shlex
 
+from legal_label_metadata import get_legal_volume_name
+
 def resolve_split(split, available_splits):
   if split in available_splits:
     return split
   if split == 'test' and 'train' in available_splits:
     return 'train'
   raise AssertionError(f"Invalid split '{split}'. Available splits: {sorted(available_splits)}")
+
+
+def _extract_label_names(dataset, label_column='label'):
+  try:
+    split_name = next(iter(dataset.keys()))
+    feature = dataset[split_name].features.get(label_column)
+  except Exception:
+    return None
+
+  names = getattr(feature, 'names', None)
+  if names:
+    return list(names)
+
+  int2str = getattr(feature, 'int2str', None)
+  num_classes = getattr(feature, 'num_classes', None)
+  if callable(int2str) and isinstance(num_classes, int):
+    try:
+      return [int2str(index) for index in range(num_classes)]
+    except Exception:
+      return None
+  return None
+
+
+def _attach_label_name_column(df_hg, dataset, subset):
+  label_names = _extract_label_names(dataset)
+  if 'label' not in df_hg.columns:
+    return df_hg
+
+  name_column = f'{subset}_name'
+  if label_names:
+    df_hg[name_column] = df_hg['label'].map(
+        lambda value: label_names[int(value)] if pd.notna(value) and int(value) < len(label_names) else pd.NA
+    )
+    return df_hg
+
+  if subset == 'volume':
+    df_hg[name_column] = df_hg['label'].map(lambda value: get_legal_volume_name(value) or pd.NA)
+  return df_hg
 
 def wget_download(resource_id, url):
   os.makedirs(str(resource_id), exist_ok=True)
@@ -104,6 +144,7 @@ def huggingface_download(resource_id, dataset_name, splits, subsets=[None]):
     for split in splits:
       df_hg = pd.DataFrame(dataset[split])
       if resource_id == 250: # The Papaloukas dataset
+        df_hg = _attach_label_name_column(df_hg, dataset, subset)
         df_hg = df_hg.rename(columns={'label': subset})
 
       if len(subsets) > 1:
@@ -552,8 +593,9 @@ class PapaloukasDt:
       for split in self.splits:
         df_split_list = [df_ for name, df_ in df_dict.items() if split in name]
         df_split = reduce(lambda  left,right: pd.merge(left,right,left_index=True, right_index=True, how='inner'), df_split_list)
-        df_split = df_split.drop(['text_x', 'text_y'], axis=1)
-        df_split = df_split[['text'] + self.subsets]
+        df_split = df_split.drop(['text_x', 'text_y'], axis=1, errors='ignore')
+        keep_columns = ['text'] + self.subsets + [f'{subset}_name' for subset in self.subsets if f'{subset}_name' in df_split.columns]
+        df_split = df_split[[column for column in keep_columns if column in df_split.columns]]
         df_splits[split] = df_split
       return df_splits
 
