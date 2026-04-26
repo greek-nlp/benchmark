@@ -1,3 +1,6 @@
 .acl_anthology_cache/
+.cache_compact/
 __pycache__/
 *.pyc
+dataset_mining_report.md
+dataset_mining_stats_summary.csv

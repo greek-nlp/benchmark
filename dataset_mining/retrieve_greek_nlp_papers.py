@@ -266,12 +266,12 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Retrieve Greek NLP papers from ACL Anthology and Semantic Scholar "
-            "for years 2024-2026, with harmonized CSV output."
+            "for a configurable year range, with harmonized CSV output."
         )
     )
     parser.add_argument(
         "--output-csv",
-        default="dataset_search_2024_2026/greek_nlp_papers_2024_2026.csv",
+        default="dataset_mining/greek_nlp_papers.csv",
         help="Path to output CSV.",
     )
     parser.add_argument(

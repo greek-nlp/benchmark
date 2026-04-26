@@ -12,6 +12,35 @@ import pandas as pd
 
 DEFAULT_MODEL_ID = "meta.llama3-70b-instruct-v1:0"
 
+ACL2025_TRACKS = [
+    "computational_social_science_and_cultural_analytics",
+    "dialogue_and_interactive_systems",
+    "discourse_and_pragmatics",
+    "efficient_low_resource_methods_for_nlp",
+    "ethics_bias_and_fairness",
+    "generation",
+    "human_centered_nlp",
+    "information_extraction",
+    "information_retrieval_and_text_mining",
+    "interpretability_and_analysis_of_models_for_nlp",
+    "language_modeling",
+    "machine_learning_for_nlp",
+    "machine_translation",
+    "multilinguality_and_language_diversity",
+    "multimodality_and_language_grounding",
+    "nlp_applications",
+    "phonology_morphology_and_word_segmentation",
+    "question_answering",
+    "resources_and_evaluation",
+    "semantics_lexical_and_sentence_level",
+    "sentiment_analysis_stylistic_analysis_and_argument_mining",
+    "speech_recognition_tts_and_spoken_language_understanding",
+    "summarization",
+    "syntax_tagging_chunking_and_parsing",
+    "special_theme_generalization_of_nlp_models",
+    "other",
+]
+
 
 SCREENING_PROMPT_TEMPLATE = """You are screening academic papers for inclusion in a systematic review.
 
@@ -21,6 +50,24 @@ Inclusion criteria (all must be true to include):
 3) The paper performs NLP (task, method, resource, benchmark, model, annotation, or evaluation in NLP).
 
 Given only the title and abstract below, decide if the paper should be rejected.
+Also assign one ACL 2025 track label from this closed set:
+{acl2025_track_labels}
+
+Guidance for Greek-NLP survey style mappings:
+- Authorship tasks -> computational_social_science_and_cultural_analytics or nlp_applications
+- Ethics / hate / offensive / moderation -> ethics_bias_and_fairness
+- NER / entity linking / event extraction / term extraction -> information_extraction
+- Interpretability / bias analysis in PLMs -> interpretability_and_analysis_of_models_for_nlp
+- Language modeling -> language_modeling
+- MT and MT evaluation -> machine_translation
+- Cross-lingual / multilingual -> multilinguality_and_language_diversity
+- Legal/clinical/business/education/media use-cases -> nlp_applications
+- QA -> question_answering
+- Semantics / NLI / lexical ambiguity / WSD -> semantics_lexical_and_sentence_level
+- SA / argument mining / stance -> sentiment_analysis_stylistic_analysis_and_argument_mining
+- Summarization -> summarization
+- POS/parsing/GEC/tokenization/lemmatization -> syntax_tagging_chunking_and_parsing
+- Dataset/resource/benchmark creation without single dominant task -> resources_and_evaluation
 
 Title:
 {title}
@@ -38,7 +85,10 @@ Return ONLY valid JSON with this exact schema:
     "modern_greek": true or false,
     "textual_modality": true or false,
     "nlp": true or false
-  }}
+  }},
+  "canonical_task": "<one ACL 2025 track label from the closed set above>",
+  "canonical_task_confidence": "high|medium|low",
+  "canonical_task_justification": "short reason"
 }}
 """
 
@@ -73,6 +123,48 @@ def _build_bedrock_client(aws_json_path: str):
         aws_secret_access_key=creds["aws_secret_access_key"],
         region_name=creds["aws_region"],
     )
+
+
+def _normalize_task_label(label: str) -> str:
+    l = _norm_text(label).lower().replace(" ", "_").replace("-", "_")
+    if l in ACL2025_TRACKS:
+        return l
+    alias = {
+        "ner": "information_extraction",
+        "ie": "information_extraction",
+        "ir": "information_retrieval_and_text_mining",
+        "text_classification": "machine_learning_for_nlp",
+        "classification": "machine_learning_for_nlp",
+        "generation": "generation",
+        "mt": "machine_translation",
+        "qa": "question_answering",
+        "summarization": "summarization",
+        "lm": "language_modeling",
+        "multilingual_nlp": "multilinguality_and_language_diversity",
+        "multilingualism_and_cross_lingual_nlp": "multilinguality_and_language_diversity",
+        "resource_creation": "resources_and_evaluation",
+        "benchmark_evaluation": "resources_and_evaluation",
+        "syntax_and_gec": "syntax_tagging_chunking_and_parsing",
+        "sentiment_analysis": "sentiment_analysis_stylistic_analysis_and_argument_mining",
+        "offensive_language_detection": "ethics_bias_and_fairness",
+        "hate_speech_detection": "ethics_bias_and_fairness",
+        "speech_processing": "speech_recognition_tts_and_spoken_language_understanding",
+        "multimodal": "multimodality_and_language_grounding",
+        "interpretability": "interpretability_and_analysis_of_models_for_nlp",
+        "nlp_applications": "nlp_applications",
+        "semantics": "semantics_lexical_and_sentence_level",
+        "parsing": "syntax_tagging_chunking_and_parsing",
+        "pos": "syntax_tagging_chunking_and_parsing",
+        "gec": "syntax_tagging_chunking_and_parsing",
+    }
+    return alias.get(l, "other")
+
+
+def _normalize_conf(value: str) -> str:
+    c = _norm_text(value).lower()
+    if c in {"high", "medium", "low"}:
+        return c
+    return "low"
 
 
 def _extract_json_object(text: str) -> dict[str, Any]:
@@ -128,6 +220,9 @@ def _default_screening_dict() -> dict[str, Any]:
             "textual_modality": False,
             "nlp": False,
         },
+        "canonical_task": "other",
+        "canonical_task_confidence": "low",
+        "canonical_task_justification": "",
     }
 
 
@@ -152,6 +247,9 @@ def _apply_row_update(row: pd.Series, llm_data: dict[str, Any] | None = None) ->
     out["screen_textual_modality"] = bool(criteria.get("textual_modality", False))
     out["screen_nlp"] = bool(criteria.get("nlp", False))
     out["screen_raw_json"] = json.dumps(llm_data, ensure_ascii=False)
+    out["canonical_task"] = _normalize_task_label(_norm_text(llm_data.get("canonical_task", "other")))
+    out["canonical_task_confidence"] = _normalize_conf(_norm_text(llm_data.get("canonical_task_confidence", "low")))
+    out["canonical_task_justification"] = _norm_text(llm_data.get("canonical_task_justification", ""))
 
     out["excluded_final"] = bool(out["excluded_non_peer_reviewed"] or out["screen_rejected_llm"])
     reasons: list[str] = []
@@ -187,6 +285,9 @@ def run_screening(
         "screen_textual_modality",
         "screen_nlp",
         "screen_raw_json",
+        "canonical_task",
+        "canonical_task_confidence",
+        "canonical_task_justification",
         "excluded_final",
         "excluded_reasons",
     ]
@@ -203,7 +304,7 @@ def run_screening(
         if limit is not None and processed >= limit:
             break
 
-        already_done = pd.notna(row.get("excluded_final"))
+        already_done = pd.notna(row.get("excluded_final")) and pd.notna(row.get("canonical_task"))
         if already_done:
             continue
 
@@ -220,12 +321,16 @@ def run_screening(
                     "textual_modality": False,
                     "nlp": False,
                 },
+                "canonical_task": "other",
+                "canonical_task_confidence": "low",
+                "canonical_task_justification": "Excluded as non peer-reviewed arXiv venue.",
             })
         else:
             if skip_llm:
                 updated = _apply_row_update(row, llm_data=_default_screening_dict())
             else:
                 prompt = SCREENING_PROMPT_TEMPLATE.format(
+                    acl2025_track_labels=", ".join(ACL2025_TRACKS),
                     title=_norm_text(row.get("title", "")),
                     abstract=_norm_text(row.get("abstract", "")),
                 )
