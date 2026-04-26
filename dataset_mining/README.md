@@ -1,67 +1,55 @@
-# Greek NLP Paper Retrieval (2024-2026)
+# Greek NLP Dataset Mining
 
-This folder contains a script to retrieve recent Greek-related NLP papers from:
-
-- ACL Anthology (via `acl-anthology`)
-- Semantic Scholar API
-
-## Install
+## 1) Install requirements
 
 ```bash
-pip install acl-anthology requests
+pip install acl-anthology requests pypdf boto3
 ```
 
-Optional for Semantic Scholar rate limits:
+Optional (for Semantic Scholar rate limits):
 
 ```bash
 export SEMANTIC_SCHOLAR_API_KEY="your_api_key"
 ```
 
-## Run
+## 2) Set AWS credentials
 
-```bash
-python dataset_mining/retrieve_greek_nlp_papers.py
+Create `aws.json` in repo root with:
+
+```json
+{
+  "aws_access_key_id": "...",
+  "aws_secret_access_key": "...",
+  "aws_region": "..."
+}
 ```
 
-Custom output:
+## 3) Build the final CSV (evergreen, by date range)
+
+Run from repo root:
 
 ```bash
-python dataset_mining/retrieve_greek_nlp_papers.py \
-  --output-csv dataset_mining/greek_nlp_papers_2024_2026.csv
-```
-
-## Output schema
-
-Both sources are saved with the same columns:
-
-- `source`
-- `paper_id`
-- `title`
-- `abstract`
-- `year`
-- `authors`
-- `venue`
-- `url`
-- `doi`
-- `query_match_scope`
-- `retrieved_at_utc`
-
-## Screening (Exclusions + LLM)
-
-Screening script:
-
-```bash
-python dataset_mining/screen_papers_modern_greek_nlp.py \
-  --input-csv dataset_mining/greek_nlp_papers_2024_2026.csv \
-  --output-csv dataset_mining/greek_nlp_papers_2024_2026_screened.csv \
+python dataset_mining/build_gr_dataset_mining.py \
+  --min-year 2024 \
+  --max-year 2026 \
   --aws-json aws.json \
   --model-id meta.llama3-70b-instruct-v1:0
 ```
 
-This adds columns for:
-- arXiv/non-peer-review exclusion from `venue`
-- LLM rejection decision + justification for:
-  - Modern Greek
-  - textual modality
-  - NLP scope
-- dataset mention flag + evidence
+Output (default):
+
+`dataset_mining/gr_dataset_mining_<min>_mid<max>_automatic.csv`
+
+Example:
+
+`dataset_mining/gr_dataset_mining_2024_mid2026_automatic.csv`
+
+## 4) Keep intermediates (optional)
+
+```bash
+python dataset_mining/build_gr_dataset_mining.py \
+  --min-year 2024 \
+  --max-year 2026 \
+  --aws-json aws.json \
+  --keep-intermediate
+```
