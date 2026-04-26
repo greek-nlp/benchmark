@@ -236,7 +236,7 @@ The full test sets are very uneven in size, with legal classification and machin
 This design keeps the smaller tasks intact while reducing the runtime burden of the largest tasks. It also supports exact reruns because the selected subset is deterministic. For machine translation, the benchmark now uses a shared data-wrapper path rather than a separate task-local split implementation, which eliminates an earlier source of inconsistency in language-specific counts.
 
 \subsection{Metrics}
-We report task-appropriate primary metrics. For classification-style tasks we use accuracy and macro-F1, with macro-F1 treated as the primary comparison metric. For GEC we report exact match and edit-distance-derived measures against the reference and source text. For machine translation we use chrF \cite{popovic2015chrf} as the primary metric and retain WER/CER as supplementary string-distance diagnostics. For summarization we use BERTScore-F1 \cite{zhang2019bertscore} as the primary semantic comparison metric and report WER/CER and ROUGE \cite{lin2004rouge} as supplementary overlap-based diagnostics. We also compute GLEU \cite{napoles2015ground} for GEC and entity-level F1 for NER and POS. Latency is reported as average per-instance generation time in seconds.
+We report task-appropriate primary metrics. For GEC, the primary metric is GLEU \cite{napoles2015ground}; we also report exact match and edit-distance diagnostics (WER/CER) against reference and source text. For intent classification, legal classification, NER, and POS tagging, macro-F1 is the primary comparison metric, with accuracy as a supplementary metric; for NER we additionally report entity-level F1. For machine translation, BLEU is the primary metric, while chrF \cite{popovic2015chrf} and WER/CER are reported as supplementary diagnostics. For summarization, BERTScore-F1 \cite{zhang2019bertscore} is the primary metric, with ROUGE-1/2/L \cite{lin2004rouge} and WER/CER reported as supplementary overlap and string-distance diagnostics. Latency is reported as average per-instance generation time in seconds.
 
 To compare models across heterogeneous metrics, we additionally compute a direction-aware normalized quality score per benchmark segment. Within each segment, the best model receives the highest normalized value and the worst model the lowest. These segment-normalized scores are then averaged to obtain an overall ranking. The main paper focuses on the primary metrics used for ranking, while the appendix reports additional prompt and winner-margin material.
 
@@ -248,10 +248,10 @@ We analyse the experimental results by focusing on the best model per task, but 
 
 \subsection{Patterns across models}
 
-\subsubsection{The best model} The strongest overall model is \texttt{gemma2:9b}, ranking first on the normalized aggregate with an average quality score of 84.4 and winning intent classification, legal text classification, NER, POS, and two of the three machine translation segments. 
+\subsubsection{The best model} The strongest overall model is \texttt{gemma2:9b}, ranking first on the normalized aggregate with an average quality score of 80.8 and winning intent classification, legal text classification, NER, POS, and two of the three machine translation segments. 
 
 \subsubsection{The runner up complements the best}
-\texttt{llama3.1:8b-instruct} ranks second overall with an average normalized quality score of 53.8. It wins GEC and remains highly competitive in intent classification and summarization, but it trails \texttt{gemma2:9b} on legal text classification and the aggregate ranking.
+\texttt{llama3.1:8b-instruct} ranks second overall with an average normalized quality score of 62.5. It wins GEC and remains highly competitive in intent classification and summarization, but it trails \texttt{gemma2:9b} on legal text classification and the aggregate ranking.
 
 \subsubsection{Competitive in cross lingual tasks}
 Third is \texttt{qwen2.5:7b-instruct}, which is especially competitive on Persian machine translation and wins that segment. \texttt{aya-expanse:8b} ranks fourth overall, but remains a strong specialist in summarization and is the runner-up on legal text classification and English translation.
@@ -282,7 +282,7 @@ The weakest model is \texttt{falcon3:7b-instruct}. This is often among the faste
 Legal text classification remains a difficult benchmark component, although the refreshed coarse-grained setup raises the best macro-F1 to 0.126 with \texttt{gemma2:9b}.\footnote{We replaced opaque identifiers with coarse-grained volume labels.} This suggests that the task is still demanding under zero-shot prompting and may benefit from better label descriptions, exemplars, or task-specific fine-tuning. By contrast, intent classification is comparatively mature, with \texttt{gemma2:9b} reaching 0.737 macro-F1. 
 %The appendix confirms that the legal task is difficult under both accuracy and macro-F1, not only under the headline metric.
 
-\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. Using chrF as the primary metric, \texttt{gemma2:9b} leads English and Japanese translation, while \texttt{qwen2.5:7b-instruct} is first on Persian (chrF substantially exceeds the rest of the field despite weaker WER; see the Appendix). 
+\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. Using BLEU as the primary metric, \texttt{gemma2:9b} leads English and Japanese translation, while \texttt{qwen2.5:7b-instruct} is first on Persian (see Appendix metrics for chrF and WER/CER diagnostics). 
 
 \subsubsection{POS and NER} \texttt{gemma2:9b} leads on macro-F1 in POS and NER, but \texttt{llama3.1:8b-instruct} is better on Accuracy in NER (not POS), suggesting differences in minority-entity handling. 
 
