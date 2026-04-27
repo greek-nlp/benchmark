@@ -1,0 +1,2 @@
+task,model,samples,tokens,accuracy,macro_f1,avg_latency_seconds
+pos,ilsp/Llama-Krikri-8B-Instruct:latest,456,10672,0.335832083958021,0.26937592619355094,15.236091668055835

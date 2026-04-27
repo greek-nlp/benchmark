@@ -1,4 +1,4 @@
 task,model,target_lang,samples,wer_vs_reference,cer_vs_reference,bleu,chrf,avg_latency_seconds
-machine_translation,ilsp/Llama-Krikri-8B-Instruct:latest,eng,500,56.50835577683349,39.20458047529421,34.87238053476528,61.66588246706688,4.717792068468407
-machine_translation,ilsp/Llama-Krikri-8B-Instruct:latest,fas,500,110.69957869292418,107.39401276584104,2.025537194284977,3.5266274069886734,5.300364341337234
-machine_translation,ilsp/Llama-Krikri-8B-Instruct:latest,jpn,500,148.45476190476188,111.66315911976037,2.4475445895652754,14.335689977909274,6.930157342677936
+machine_translation,ilsp/Llama-Krikri-8B-Instruct:latest,eng,500,56.50835577683349,39.20458047529421,,,4.717792068468407
+machine_translation,ilsp/Llama-Krikri-8B-Instruct:latest,fas,500,110.69957869292418,107.39401276584104,,,5.300364341337234
+machine_translation,ilsp/Llama-Krikri-8B-Instruct:latest,jpn,500,148.45476190476188,111.66315911976037,,,6.930157342677936
