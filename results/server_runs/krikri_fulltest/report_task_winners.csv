@@ -1,0 +1,8 @@
+task_segment,primary_metric,winner,winner_value,winner_quality_score,runner_up,runner_up_value,runner_up_quality_score,quality_margin,margin,fastest_model,fastest_latency_seconds,samples,note
+GEC,gleu_vs_reference,ilsp/Llama-Krikri-8B-Instruct:latest,0.5933270566082146,50.0,,,,,,ilsp/Llama-Krikri-8B-Instruct:latest,6.329715394138225,175,Winner also had the fastest average latency.
+Intent Classification,macro_f1,ilsp/Llama-Krikri-8B-Instruct:latest,0.3240962553971985,50.0,,,,,,ilsp/Llama-Krikri-8B-Instruct:latest,1.88507576204768,436,Winner also had the fastest average latency.
+Legal Classification,macro_f1,ilsp/Llama-Krikri-8B-Instruct:latest,0.1558109611519788,50.0,,,,,,ilsp/Llama-Krikri-8B-Instruct:latest,3.7072363043017686,500,Winner also had the fastest average latency.
+Machine Translation (ENG),bleu,ilsp/Llama-Krikri-8B-Instruct:latest,34.87238053476528,50.0,,,,,,ilsp/Llama-Krikri-8B-Instruct:latest,4.717792068468407,500,Winner also had the fastest average latency.
+Machine Translation (FAS),bleu,ilsp/Llama-Krikri-8B-Instruct:latest,2.025537194284977,50.0,,,,,,ilsp/Llama-Krikri-8B-Instruct:latest,5.300364341337234,500,Winner also had the fastest average latency.
+Machine Translation (JPN),bleu,ilsp/Llama-Krikri-8B-Instruct:latest,2.4475445895652754,50.0,,,,,,ilsp/Llama-Krikri-8B-Instruct:latest,6.930157342677936,500,Winner also had the fastest average latency.
+NER,macro_f1,ilsp/Llama-Krikri-8B-Instruct:latest,0.092650906902715,50.0,,,,,,ilsp/Llama-Krikri-8B-Instruct:latest,16.443454859456047,500,Winner also had the fastest average latency.

@@ -1,0 +1,2 @@
+rank,model,tasks_completed,avg_normalized_quality,median_normalized_quality,avg_latency_seconds
+1,ilsp/Llama-Krikri-8B-Instruct:latest,7,50.0,50.0,6.473399438918185

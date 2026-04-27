@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500), using representative metrics per task.}
+\label{tab:capped-task-winners}
+\begin{tabular}{lllr}
+\toprule
+Task Segment & Winner & Primary Metric & Value \\
+\midrule
+GEC & ilsp/Llama-Krikri-8B-Instruct:latest & GLEU & 0.593 \\
+Intent & ilsp/Llama-Krikri-8B-Instruct:latest & Macro-F1 & 0.324 \\
+Legal & ilsp/Llama-Krikri-8B-Instruct:latest & Macro-F1 & 0.156 \\
+MT-ENG & ilsp/Llama-Krikri-8B-Instruct:latest & BLEU & 34.872 \\
+MT-FAS & ilsp/Llama-Krikri-8B-Instruct:latest & BLEU & 2.026 \\
+MT-JPN & ilsp/Llama-Krikri-8B-Instruct:latest & BLEU & 2.448 \\
+NER & ilsp/Llama-Krikri-8B-Instruct:latest & Macro-F1 & 0.093 \\
+\bottomrule
+\end{tabular}
+\end{table*}

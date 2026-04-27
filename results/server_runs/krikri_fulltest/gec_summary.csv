@@ -1,0 +1,2 @@
+model,samples,exact_match,wer_vs_reference,cer_vs_reference,wer_vs_original,cer_vs_original,changed_input_rate,avg_latency_seconds,task,gleu_vs_reference
+ilsp/Llama-Krikri-8B-Instruct:latest,175,0.0457142857142857,28.49043231750532,17.80594374029538,31.14792899408284,18.35687705480689,0.9942857142857144,6.329715394138225,gec,0.5933270566082146

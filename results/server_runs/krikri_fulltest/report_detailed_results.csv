@@ -1,0 +1,8 @@
+task,segment_label,model,samples,target_lang,exact_match,accuracy,macro_f1,wer_vs_reference,cer_vs_reference,bleu,chrf,avg_latency_seconds,quality_score
+gec,GEC,ilsp/Llama-Krikri-8B-Instruct:latest,175,,0.0457142857142857,,,28.49043231750532,17.80594374029538,,,6.329715394138225,50.0
+intent_classification,Intent Classification,ilsp/Llama-Krikri-8B-Instruct:latest,436,,,0.7018348623853211,0.3240962553971985,,,,,1.88507576204768,50.0
+legal_classification,Legal Classification,ilsp/Llama-Krikri-8B-Instruct:latest,500,,,0.218,0.1558109611519788,,,,,3.7072363043017686,50.0
+machine_translation,Machine Translation (ENG),ilsp/Llama-Krikri-8B-Instruct:latest,500,eng,,,,56.50835577683349,39.20458047529421,34.87238053476528,61.66588246706688,4.717792068468407,50.0
+machine_translation,Machine Translation (FAS),ilsp/Llama-Krikri-8B-Instruct:latest,500,fas,,,,110.69957869292418,107.39401276584104,2.025537194284977,3.5266274069886734,5.300364341337234,50.0
+machine_translation,Machine Translation (JPN),ilsp/Llama-Krikri-8B-Instruct:latest,500,jpn,,,,148.45476190476188,111.66315911976037,2.4475445895652754,14.335689977909274,6.930157342677936,50.0
+ner,NER,ilsp/Llama-Krikri-8B-Instruct:latest,500,,,0.7439915717389873,0.092650906902715,,,,,16.443454859456047,50.0
