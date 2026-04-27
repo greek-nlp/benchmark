@@ -1,8 +1,12 @@
 \documentclass[sigconf,review,anonymous]{acmart}
-
-\settopmatter{printacmref=false,printfolios=true}
-\renewcommand\footnotetextcopyrightpermission[1]{}
-\pagestyle{plain}
+%%
+%% \BibTeX command to typeset BibTeX logo in the docs
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    Bib\TeX}}}
+% \settopmatter{printacmref=true,printfolios=true}
+% \renewcommand\footnotetextcopyrightpermission[1]{}
+% \pagestyle{plain}
 
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -12,14 +16,21 @@
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{tabularx}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
 
 \newcommand{\benchmarkname}{GreekNLPBench\xspace}
 \newcommand{\assetsdir}{article_assets}
 
-\title{Open Instruction-Tuned LLMs: A Reproducible Evaluation across Tasks}
+\title{Open-Weight Instruction-Tuned and Edge-Capable LLMs for Greek NLP: A Reproducible Evaluation}
 
+\setcopyright{acmlicensed}
+\copyrightyear{2018}
+\acmYear{2018}
+\acmDOI{XXXXXXX.XXXXXXX}
 \acmConference[SETN '26]{14th Hellenic Conference on Artificial Intelligence}{September 9--11, 2026}{Chania, Greece}
-\acmBooktitle{Proceedings of the 14th Hellenic Conference on Artificial Intelligence (SETN '26), September 9--11, 2026, Chania, Greece}
+% \acmBooktitle{Proceedings of the 14th Hellenic Conference on Artificial Intelligence (SETN '26), September 9--11, 2026, Chania, Greece}
 
 \begin{CCSXML}
 <ccs2012>
@@ -50,45 +61,43 @@
 \begin{document}
 
 \begin{abstract}
-Natural Language Processing (NLP) for lesser-resourced languages faces persistent challenges, including limited datasets, inherited biases from high-resource languages, and the need for domain-specific solutions. This study addresses these gaps for Modern Greek through three key contributions. We evaluate the performance of open-source large language models (LLMs) on seven core NLP tasks for which Greek data are available and properly licensed, revealing task-specific strengths, weaknesses, and parity in their performance. These contributions provide a roadmap to advance NLP in Greek, bridging gaps in model evaluation, task innovation, and real-world impact.
+Natural Language Processing (NLP) for lesser-resourced languages faces persistent challenges, including fragmented datasets, inherited biases from high-resource settings, and limited reproducible evaluation protocols. This study addresses these gaps for Modern Greek through three contributions. First, we distill publicly available Greek datasets from prior survey work and classify them according to their suitability for benchmarking, pre-training, and retrieval-augmented generation. Second, we evaluate open instruction-tuned large language models (LLMs) on seven Greek NLP task families for which data are available and legally reusable, revealing task-specific strengths and weaknesses across classification, sequence labeling, translation, correction, and summarization. Third, we provide a reproducible benchmark pipeline that connects dataset selection, model execution, metric reporting, publication-ready artifacts, and automated discovery of candidate datasets from newer literature. Together, these contributions support more transparent evaluation and reuse of Greek NLP resources.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-% Broad evaluation has become central to modern language model research because single-task scores rarely capture deployment-relevant trade-offs in robustness, latency, and transfer \cite{bommasani2021foundation,liang2023helm,gao2023lmeval}. Yet, for Greek NLP, evaluation resources still remain fragmented across task-specific datasets, metrics, and execution pipelines. This makes it difficult to compare open instruction-tuned LLMs under a shared protocol, especially when the goal is not a single downstream task but a broader view across heterogeneous settings.
-
-% Instruction tuning has made general-purpose language models more usable across many tasks without task-specific retraining \cite{wei2022finetuned,chung2024scaling}. However, evaluating such models on Greek remains cumbersome in practice. The benchmark aggregates seven task families into nine reporting segments: grammatical error correction (GEC), intent classification, legal classification, machine translation into three target languages, named entity recognition (NER), part-of-speech (POS) tagging, and summarization. The runner produces per-task summaries, per-instance predictions, combined CSV outputs, HTML visualizations, and publication-facing figures.
-
-% Our contribution is practical rather than algorithmic. First, we provide a unified multi-task evaluation setup for Greek NLP with open local models. Second, we adopt a deterministic capped-test protocol that remains reproducible without relying on random sampling. Third, we expose benchmark outputs in a form that flows directly into a conference paper, including automatically generated appendix materials for task-level analysis.
-
-%%%%%%%From the preprint%%%%%%%%%
 Natural Language Processing (NLP) has advanced substantially with the rise of large language models (LLMs), whose development depends on immense volumes of digital data \cite{brown2020language}. Although multilingual NLP has benefited from these advances, progress for lesser-resourced languages continues to lag behind that of well-supported languages. As a result, NLP for many of the world's languages often relies on methods, resources, and evaluation practices developed for high-resource settings, inheriting assumptions, biases, and other characteristics that may not align with the properties of less supported languages \cite{bakagianni2024towards}.
 
 This gap is compounded by the scarcity of open-access, high-quality language resources. In this context, high-quality resources refer to native, human-authored corpora, as opposed to synthetic or machine-translated data. Although synthetic and translated resources are often used to bridge data gaps, they can introduce ``translationese'', where the text inherits syntactic and stylistic constraints from the source language \cite{koppel2011translationese}, and may lack the lexical diversity and morphological nuance of original language use. Such resources are needed both for pre-training foundation models and for building gold-standard benchmarks for downstream tasks. Comprehensive surveys of NLP resources for lesser-resourced languages therefore do more than document digital readiness: they can also guide future research, reveal reusable datasets, and support the construction of new benchmarks. Our work focuses on one such language, Modern Greek.\footnote{In our study, the term "Greek" refers exclusively to Modern Greek (ISO 639-1: el), excluding previous stages of the language's history.}
 
-In this work, we ask the following research question: \emph{which properly licensed Greek datasets can be used to train and/or assess LLMs on downstream NLP tasks?}
-By addressing this question, this work makes three key contributions:
+In this work, we ask two related research questions: \emph{which properly licensed Greek datasets can be used to train and/or assess LLMs on downstream NLP tasks, and how do open, instruction-tuned, edge-capable LLMs perform across the resulting Greek benchmark?}
+By addressing these questions, our work makes three contributions:
 \begin{itemize}
-    \item Based on a recent Greek NLP survey \cite{bakagianni2024towards}, we extract publicly available Greek datasets that are (a) open-access and (b) permit derivatives, and aggregate them into a unified collection that is easy to recompile and use.\footnote{The code is available at: \url{anonymised.url}}
+    \item Based on a recent Greek NLP survey \cite{bakagianni2024towards}, we extract publicly available Greek datasets that are (a) open-access and (b) permit derivatives, aggregate them into a unified collection that is easy to recompile and use, and provide an automated discovery component for identifying candidate datasets from newer Greek NLP literature.\footnote{The code is available at: \url{anonymised.url}}
     \item We classify the collected datasets according to their usability for benchmarking or pre-training.
     \item We benchmark open LLMs with manageable parameter counts and Greek-language capabilities across multiple NLP tasks, revealing task-specific strengths and weaknesses.
     % \llama is better in Named Entity Recognition (NER) and Summarization while \gpt is better in Grammatical Error Correction (GEC), Machine Translation (MT; el-jpn), Intent Classification and Part-of-Speech (POS) Tagging. The two models perform on par on Toxicity Detection and MT (el-en, el-fa).  
     % \item We reframe Authorship Attribution by evaluating LLMs in a 0-shot setting and hypothesising that high accuracy suggests potential inclusion of the authored texts in pre-training data. In lesser-resourced languages, which are not well supported as regards training data, our hypothesis is even likelier.
     % \item We introduce the first Text Clustering benchmark for Greek legal texts, demonstrating its value in organizing long, complex documents. Using the Summarize, Translate, and Embed (STE) methodology, we show improved clustering performance over a traditional baseline, offering a practical solution for navigating legal corpora in lesser-resourced settings.
 \end{itemize}
-%%%%%%%%%%%%
+
 \section{Related Work}
 \subsection{Greek NLP Resources and Models}
-Modern Greek NLP has a long tradition of task-specific resources and systems, including work on grammar checking, legal text processing, named entity recognition, sentiment analysis, and syntactic annotation \cite{gakis:2017,papaloukas2021,Bartziokas2020,Alexandridis2021Survey,prokopidis2017universal}. More recent surveys have shown, however, that these resources remain unevenly distributed across tasks and domains, and that availability, licensing, and reusability are recurring barriers for reproducible experimentation \cite{Nikiforos2021,bakagianni2024towards,papantoniou2024nlp}. This motivates our focus on datasets that are not only relevant to downstream Greek NLP, but also accessible and legally reusable.
+Modern Greek NLP has produced a sustained body of task-specific resources and systems over the past decades, including work on grammar checking, legal text processing, named entity recognition, sentiment analysis, and syntactic annotation \cite{gakis:2017,papaloukas2021,Bartziokas2020,Alexandridis2021Survey,prokopidis2017universal}. More recent surveys have shown, however, that these resources remain unevenly distributed across tasks and domains, and that availability, licensing, and reusability are recurring barriers for reproducible experimentation \cite{Nikiforos2021,bakagianni2024towards}. This motivates our focus on datasets that are not only relevant to downstream Greek NLP, but also accessible and legally reusable.
 
-Transformer-based models have also expanded the practical toolkit for Greek. Greek-specific pretrained models such as GreekBERT and GreekBART improved representation learning and sequence-to-sequence modelling for the language \cite{koutsikakis2020,evdaimon2023greekbart}, while recent open LLMs for Greek, such as Meltemi, indicate growing interest in language-specialised generative models \cite{voukoutis2024meltemi}. In parallel, multilingual and open instruction-tuned LLMs such as Llama, Gemma, Aya, Qwen, and Falcon provide broader coverage and are increasingly used through local serving frameworks \cite{grattafiori2024llama,team2024gemma,dang2024aya,yang2025qwen3,almazrouei2023falcon}. Our work complements these model-development efforts by evaluating manageable open models under a shared Greek benchmark protocol.
+
+Transformer-based models have also expanded the practical toolkit for Greek. Greek-specific pretrained models such as GreekBERT and GreekBART improved representation learning and sequence-to-sequence modelling for the language \cite{koutsikakis2020,evdaimon2023greekbart}, while recent open LLMs for Greek, such as Meltemi, indicate growing interest in language-specialised generative models \cite{voukoutis2024meltemi}. In parallel, multilingual and open instruction-tuned LLMs such as Llama, Gemma, Aya, Qwen, and Falcon provide broader coverage and are increasingly used through local serving frameworks \cite{grattafiori2024llama,team2024gemma,dang2024aya,yang2024qwen25,almazrouei2023falcon}. Our work complements these model-development efforts by evaluating manageable open models under a shared Greek benchmark protocol.
+
 
 \subsection{Benchmarking and Evaluation}
-Multi-task benchmarks such as GLUE and SuperGLUE established shared evaluation as a central mechanism for comparing general-purpose language understanding systems \cite{wang2019glue,wang2019superglue}. Similar efforts have since appeared for individual languages, domains, and multilingual settings, including legal and lower-resource evaluation suites \cite{chalkidis-etal-2022-lexglue,urbizu2022basqueglue,wilie-etal-2020-indonlu}. For foundation models and LLMs, broad evaluation frameworks such as HELM and the LM Evaluation Harness further emphasize reproducibility, task coverage, and transparent reporting \cite{bommasani2021foundation,liang2023helm,gao2023lmeval}.
+Multi-task benchmarks such as GLUE and SuperGLUE established shared evaluation as a central mechanism for comparing general-purpose language understanding systems \cite{wang2019glue,wang2019superglue}. Similar efforts have since appeared for individual languages, domains, and multilingual settings, including legal and lower-resource evaluation suites \cite{chalkidis-etal-2022-lexglue,urbizu2022basqueglue,wilie-etal-2020-indonlu}. For foundation models and LLMs, broad evaluation frameworks such as HELM and the LM Evaluation Harness further emphasize reproducibility, task coverage, and transparent reporting \cite{bommasani2023holistic,liang2023helm,gao2023lmeval}.
+
 
 Despite this progress, Greek LLM evaluation remains fragmented across datasets, task definitions, metrics, and execution environments. Existing Greek studies often target individual tasks or model families, making it difficult to compare open instruction-tuned LLMs across heterogeneous downstream settings. Our benchmark therefore prioritizes a reproducible evaluation pipeline over a new modelling method: it brings together properly licensed Greek datasets, standardizes task execution and reporting, and produces outputs that can be inspected, reproduced, and reused in subsequent work.
 
+
+%%%%%%%%%%%%
 \section{The Data: From Collection to Distillation}\label{sec:method}
 Based on a systematic literature review covering 142 research NLP studies for Greek from 2012 to 2023 \cite{bakagianni2024towards}, we extracted and analysed information on 94 publicly available Greek datasets. Most of these resources were monolingual (84\%), but bilingual and multilingual datasets were also present (i.e., with Greek being one of the languages). The most frequent domains were politics and news (20\%) while the most frequent task was sentiment analysis (33\%). 
 
@@ -119,7 +128,8 @@ Studies with publicly available datasets, serving as a reference point, tend to 
 The study of \citet{juola2013overview} is such an example, shown in Figure~\ref{fig:citation_ts} with a blue peak in 2013, concerning a shared task on authorship identification (hence, the citations) whose data lack a license (hence, the limitation). 
 
 \subsection{AIR Distillation} 
-We collected accessible, interoperable and re-usable (AIR)\footnote{To comply with the FAIR principles, datasets must have a unique and persistent digital identifier (commonly a Persistent Identifier/PID). A PID is a specific combination of numbers and letters that ensures datasets can be uniquely and sustainably accessed as digital objects over time. Merely providing a URL for accessibility does not make a dataset findable, as URLs can become obsolete or break if not properly maintained.} datasets pooled from a recent survey \cite{bakagianni2024towards}. We focused on the 14 Greek datasets that meet our criteria of being licensed, accessible, machine-actionable, and with no hidden costs. We excluded one \cite{fitsilis2021development} that was licensed under \href{https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en}{CC BY-NC-ND 4.0}, which does not allow derivatives and thus limits reusability. We also excluded one \cite{Zampieri2020} that shared tweets not via rehydration (i.e., only IDs shared), but as full texts.\footnote{Although it is possible that a company gained access to the texts (e.g., via firehose), releasing them with another license, a user should still be able to delete their content from all platforms. If not, then this dataset is not compliant with the rules. If so, then the dataset is not stable, harming reproducibility of experiments.} We also excluded a dataset of 100 sentences \cite{korre2021elerrant}, which is too small for our study. And we excluded the dataset of open-access e-books \cite{Barzokas2020}, because it comprises OCR artifacts.\footnote{Although typos and errors are not prohibited for experiments, we observe that the author names and the title was often injected in the main text, leading to data leaking for potential benchmarks.} Given these exclusions, we end up with ten datasets, presented in Table~\ref{tab:data}, which cover a variety of domains.
+We collected accessible, interoperable and re-usable (AIR)\footnote{To comply with the FAIR principles, datasets must have a unique and persistent digital identifier (commonly a Persistent Identifier/PID). A PID is a specific combination of numbers and letters that ensures datasets can be uniquely and sustainably accessed as digital objects over time. Merely providing a URL for accessibility does not make a dataset findable, as URLs can become obsolete or break if not properly maintained.} datasets pooled from a recent survey \cite{bakagianni2024towards}. We focused on the 14 Greek datasets that meet our criteria of being licensed, accessible, machine-actionable, and with no hidden costs. We excluded one \cite{fitsilis2021development} that was licensed under \href{https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en}{CC BY-NC-ND 4.0}, which does not allow derivatives and thus limits reusability. We also excluded one \cite{Zampieri2020} that shared tweets not via rehydration (i.e., only IDs shared), but as full texts.\footnote{Although it is possible that a company gained access to the texts (e.g., via firehose), releasing them with another license, a user should still be able to delete their content from all platforms. If not, then this dataset is not compliant with the rules. If so, then the dataset is not stable, harming reproducibility of experiments.} From the two resources released by \citet{korre2021elerrant}, we retained the 227-sentence Greek Native Corpus (GNC) for GEC, but excluded the 100-sentence Greek WikiEdits corpus (GWE), which is too small for our study. We also excluded the dataset of open-access e-books \cite{Barzokas2020}, because it comprises OCR artifacts.\footnote{Although typos and errors are not prohibited for experiments, we observe that the author names and the title was often injected in the main text, leading to data leaking for potential benchmarks.} Given these exclusions, we end up with ten datasets, presented in Table~\ref{tab:data}, which cover a variety of domains.
+
 
 \begin{table*}[ht]
   \caption{Greek datasets with their annotation type (AT) defined as manual (M), automatic (A), curated (C; metadata provided by the distributor), hybrid (H; manual and automatic), user-generated (U; from user-edits, not curated) or no (N). We include also the host, size, size unit, domain and license of each dataset.}
@@ -144,7 +154,7 @@ We collected accessible, interoperable and re-usable (AIR)\footnote{To comply wi
 \end{table*}
 
 \subsection{AIR Resources Suitable for RAG}\label{ssec:raw}
-Table~\ref{tab:data} comprises three datasets with no ground truth or whose ground truth is automatically extracted ({\color{red}A/N}; i.e., of doubted quality). Although excluded from our benchmark, these datasets are still possibly useful for retrieval-augmented generation (RAG) and other purposes (e.g., pre-training). These concern 1.28M political speeches, spanning from July 1989 to July 2020 \cite{dritsa2022greek}; Greek Wikipedia event pages with named entity recognition (NER) and linking; 101,857 (cleaned) websites with open content \cite{prokopidis2020neural}, including online archives of Greek newspapers from 2003 to 2020, and the Greek part of the W2C corpus \cite{majlivs2012language}. 
+Table~\ref{tab:data} comprises three datasets with no ground truth or whose ground truth is automatically extracted ({\color{red}A/N}; i.e., of uncertain quality). Although excluded from our benchmark, these datasets are still possibly useful for retrieval-augmented generation (RAG) and other purposes (e.g., pre-training). These concern 1.28M political speeches, spanning from July 1989 to July 2020 \cite{dritsa2022greek}; Greek Wikipedia event pages with named entity recognition (NER) and linking; 101,857 (cleaned) websites with open content \cite{prokopidis2020neural}, including online archives of Greek newspapers from 2003 to 2020, and the Greek part of the W2C corpus \cite{majlivs2012language}. 
 
 \subsubsection{Dataset statistics} 
 As shown in Table~\ref{tab:raw}, the text length (measured in characters) greatly varies between the datasets. The dataset with the shortest texts on average is that of \citet{papantoniou2023automating} and that with the lengthiest is that of \citet{prokopidis2020neural}. The dataset size (counted in number of files) also varies, starting from ten thousands \cite{papantoniou2023automating}, to one hundred thousands \cite{prokopidis2020neural}, to more than a million \cite{dritsa2022greek}. The aggregated text totals up to 1.4 billion characters and 211 million tokens (using white space split).
@@ -222,16 +232,21 @@ Summarization \cite{koniaris2023evaluation} & 300 & text & - & 18,771.3 & - \\
 
 \section{Benchmark Setup}
 \subsection{Tasks and Models}
-Our benchmark covers seven task families: GEC; intent classification; legal classification; machine translation; NER; POS tagging; summarization.
-We evaluate five open-source and instruction-tuned models, which could be served locally through Ollama; namely:
+
+Our benchmark covers seven task families: GEC, intent classification, legal classification, machine translation, NER, POS tagging, and summarization.
+
+We evaluate five open-weight, instruction-tuned models in the 7B--9B parameter range that are available for local inference through Ollama:
 \begin{itemize}
-    \item \texttt{qwen2.5:7b-instruct} \cite{yang2025qwen3};\footnote{\url{https://huggingface.co/Qwen/Qwen2.5-7B-Instruct}}
-    \item \texttt{llama3.1:8b-instruct} \cite{grattafiori2024llama};\footnote{https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct}
-    \item \texttt{aya-expanse:8b} \cite{dang2024aya};\footnote{\url{https://huggingface.co/CohereLabs/aya-expanse-8b}}
-    \item \texttt{gemma2:9b} \cite{team2024gemma};\footnote{\url{https://huggingface.co/google/gemma-2-9b}}
-    \item \texttt{falcon3:7b-instruct \cite{almazrouei2023falcon}}.\footnote{\url{https://huggingface.co/tiiuae/Falcon3-7B-Instruct}}
+\item \texttt{qwen2.5:7b-instruct} \cite{yang2024qwen25};\footnote{\url{https://huggingface.co/Qwen/Qwen2.5-7B-Instruct}}
+\item \texttt{llama3.1:8b-instruct} \cite{grattafiori2024llama};\footnote{\url{https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct}}
+\item \texttt{aya-expanse:8b} \cite{dang2024aya};\footnote{\url{https://huggingface.co/CohereLabs/aya-expanse-8b}}
+\item \texttt{gemma2:9b} \cite{team2024gemma};\footnote{\url{https://huggingface.co/google/gemma-2-9b}}
+\item \texttt{falcon3:7b-instruct} \cite{almazrouei2023falcon};\footnote{\url{https://huggingface.co/tiiuae/Falcon3-7B-Instruct}}
 \end{itemize}
 
+This set controls for model scale while maximizing architectural and training diversity. Llama 3.1 and Qwen2.5 provide long-context variants (128K), Falcon3 reports 32K context, and Aya Expanse reports 8K context.
+
+All models are evaluated under the same benchmark pipeline, prompts, dataset splits, and metrics, so observed differences mainly reflect model capability, multilingual transfer, and instruction-following quality rather than evaluation setup.
 
 \subsection{Deterministic Capped-Test Protocol}
 The full test sets are very uneven in size, with legal classification and machine translation being especially large. To keep evaluation tractable while preserving reproducibility, we use a deterministic capped-test profile that always takes the first instances in dataset order (as suggested by the dataset providers) instead of random samples. The resulting capped evaluation (Table~\ref{tab:downstream_stats}) contains:
@@ -246,8 +261,8 @@ The full test sets are very uneven in size, with legal classification and machin
 \end{itemize}
 This design keeps the smaller tasks intact while reducing the runtime burden of the largest tasks. It also supports exact reruns because the selected subset is deterministic. For machine translation, the benchmark now uses a shared data-wrapper path rather than a separate task-local split implementation, which eliminates an earlier source of inconsistency in language-specific counts.
 
-\subsection{Metrics}
-We report task-appropriate primary metrics. For GEC, the primary metric is GLEU \cite{napoles2015ground}; we also report exact match and edit-distance diagnostics (WER/CER) against reference and source text. For intent classification, legal classification, NER, and POS tagging, macro-F1 is the primary comparison metric, with accuracy as a supplementary metric; for NER we additionally report entity-level F1. For machine translation, BLEU is the primary metric, while chrF \cite{popovic2015chrf} and WER/CER are reported as supplementary diagnostics. For summarization, BERTScore-F1 \cite{zhang2019bertscore} is the primary metric, with ROUGE-1/2/L \cite{lin2004rouge} and WER/CER reported as supplementary overlap and string-distance diagnostics. Latency is reported as average per-instance generation time in seconds.
+\subsection{Metrics}\label{sec:metrics}
+We report task-appropriate primary metrics. For GEC, the primary metric is GLEU \cite{napoles2015ground}; we also report exact match and edit-distance diagnostics (WER/CER) against reference and source text. For intent classification, legal classification, NER, and POS tagging, macro-F1 is the primary comparison metric, with accuracy as a supplementary metric; for NER we additionally report entity-level F1. For machine translation we use BLEU \cite{papineni2002bleu} as the primary metric and retain chrF \cite{popovic2015chrf} and WER/CER as supplementary string-distance diagnostics. For summarization we use BERTScore-F1 \cite{zhang2019bertscore} as the primary semantic comparison metric and report WER/CER and ROUGE \cite{lin2004rouge} as supplementary overlap-based diagnostics. Latency is reported as average per-instance generation time in seconds.
 
 To compare models across heterogeneous metrics, we additionally compute a direction-aware normalized quality score per benchmark segment. Within each segment, the best model receives the highest normalized value and the worst model the lowest. These segment-normalized scores are then averaged to obtain an overall ranking. The main paper focuses on the primary metrics used for ranking, while the appendix reports additional prompt and winner-margin material.
 
@@ -255,17 +270,18 @@ To compare models across heterogeneous metrics, we additionally compute a direct
 %The benchmark pipeline was adjusted in several ways to make end-to-end runs stable and paper-ready. We added combined prediction exports so that the full suite produces unified CSV files across tasks. We also changed legal classification from opaque subject identifiers to coarse-grained human-readable volume labels, which avoids the degenerate all-zero behavior observed with raw numeric class IDs. For POS tagging, we added a fallback parser that tolerates \texttt{\_} head values in CoNLL-U files. At the backend level, we introduced retry and backoff logic around transient Ollama failures. Finally, we generated publication-oriented reports, tables, vector graphics, and appendix-ready per-task analyses directly from benchmark outputs.
 
 \section{Experimental Results}
-We analyse the experimental results by focusing on the best model per task, but also touching on the relationship between performance and efficiency. Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark segment. Figure~\ref{fig:model-quality-heatmap} visualizes normalized quality across segments, while Figure~\ref{fig:quality-vs-latency} shows the trade-off between quality and inference speed. Furthermore, we provide an analytical table per task (keeping corresponding figures in the Appendix).
+We analyse the experimental results by focusing on the best model per task, but also touching on the relationship between performance and efficiency. Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark segment. Figure~\ref{fig:model-quality-heatmap} visualizes normalized quality across segments, while Figure~\ref{fig:quality-vs-latency} shows the trade-off between quality and inference speed. Furthermore, we provide an analytical table per task.
+% (keeping corresponding figures in the Appendix).
 
 \subsection{Patterns across models}
 
-\subsubsection{The best model} The strongest overall model is \texttt{gemma2:9b}, ranking first on the normalized aggregate with an average quality score of 80.8 and winning intent classification, legal text classification, NER, POS, and two of the three machine translation segments. 
+\subsubsection{The best model} The strongest overall model is \texttt{gemma2:9b}, ranking first on the normalized aggregate with an average quality score of 84.4 and winning intent classification, legal text classification, NER, POS, and two of the three machine translation segments. 
 
 \subsubsection{The runner up complements the best}
-\texttt{llama3.1:8b-instruct} ranks second overall with an average normalized quality score of 62.5. It wins GEC and remains highly competitive in intent classification and summarization, but it trails \texttt{gemma2:9b} on legal text classification and the aggregate ranking.
+\texttt{llama3.1:8b-instruct} ranks second overall with an average normalized quality score of 53.8. It wins GEC and remains highly competitive in intent classification and summarization, but it trails \texttt{gemma2:9b} on legal text classification and the aggregate ranking.
 
-\subsubsection{Competitive in cross lingual tasks}
-Third is \texttt{qwen2.5:7b-instruct}, which is especially competitive on Persian machine translation and wins that segment. \texttt{aya-expanse:8b} ranks fourth overall, but remains a strong specialist in summarization and is the runner-up on legal text classification and English translation.
+\subsubsection{Competitive in cross-lingual tasks}
+\texttt{qwen2.5:7b-instruct} is third, which is especially competitive on Persian machine translation and wins that segment. \texttt{aya-expanse:8b} ranks fourth overall, but remains a strong specialist in summarization and is the runner-up on legal text classification and English translation.
 
 \subsubsection{The weakest model is not uniformly weak}
 The weakest model is \texttt{falcon3:7b-instruct}. This is often among the fastest models even when it lags in quality, which reinforces the value of reporting latency alongside task scores. 
@@ -282,7 +298,7 @@ The weakest model is \texttt{falcon3:7b-instruct}. This is often among the faste
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.84\textwidth]{\assetsdir/figures/quality_vs_latency.pdf}
+\includegraphics[width=\textwidth]{\assetsdir/figures/quality_vs_latency.pdf}
 \caption{Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family.}
 \Description{A scatter plot comparing average normalized quality and average latency. Higher points indicate better quality and points farther right indicate slower generation.}
 \label{fig:quality-vs-latency}
@@ -293,20 +309,22 @@ The weakest model is \texttt{falcon3:7b-instruct}. This is often among the faste
 Legal text classification remains a difficult benchmark component, although the refreshed coarse-grained setup raises the best macro-F1 to 0.126 with \texttt{gemma2:9b}.\footnote{We replaced opaque identifiers with coarse-grained volume labels.} This suggests that the task is still demanding under zero-shot prompting and may benefit from better label descriptions, exemplars, or task-specific fine-tuning. By contrast, intent classification is comparatively mature, with \texttt{gemma2:9b} reaching 0.737 macro-F1. 
 %The appendix confirms that the legal task is difficult under both accuracy and macro-F1, not only under the headline metric.
 
-\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. Using BLEU as the primary metric, \texttt{gemma2:9b} leads English and Japanese translation, while \texttt{qwen2.5:7b-instruct} is first on Persian (see Appendix metrics for chrF and WER/CER diagnostics). 
+\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. Using BLEU as the primary metric, \texttt{gemma2:9b} leads English and Japanese translation, while \texttt{qwen2.5:7b-instruct} is first on Persian. The supplementary chrF scores preserve the same winners across the three translation segments.
 
 \subsubsection{POS and NER} \texttt{gemma2:9b} leads on macro-F1 in POS and NER, but \texttt{llama3.1:8b-instruct} is better on Accuracy in NER (not POS), suggesting differences in minority-entity handling. 
 
 \subsubsection{Summarization} The winner is \texttt{aya-expanse:8b}, but only by a very small margin from \texttt{llama3.1:8b-instruct} (0.519 vs.\ 0.517), which is also better in WER. This suggests that the top two models are effectively near-tied semantically.
 
 \section{Discussion}
-The benchmark is useful because it combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. It is well suited for iterative comparison and paper-scale reporting, but it is not a substitute for full test-set evaluation when final archival numbers are required. Some metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal classification would benefit from richer label semantics. Even so, the appendix-level supplemental metrics already improve interpretability relative to a WER-only or macro-F1-only summary.
+The benchmark combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. Although well suited for iterative comparison, it is not a substitute for full test-set evaluation when final archival numbers are required. Specific metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal classification would benefit from richer label semantics. Even so, the supplemental metrics improve interpretability relative to a WER-only or macro-F1-only summary.
 
-Despite these caveats, the benchmark already exposes meaningful structure in model behavior. Some models offer strong general performance across multiple tasks, while others are better understood as specialists for translation or summarization. This kind of cross-task perspective is hard to obtain from isolated task runs and is exactly where a unified benchmark becomes valuable.
+Despite these caveats, the benchmark exposes meaningful structure in model behaviour. Some models offer strong general performance across multiple tasks, while others are better understood as specialists for translation or summarization. This kind of cross-task perspective is hard to obtain from isolated task runs and is exactly where a unified benchmark becomes valuable.
 
-\subsection{Automatic Dataset Mining and URL Recovery}
+\section{Evergreen Dataset Discovery}
 
-To support the continuous expansion of Greek NLP benchmarks, we implement an automated version of the search and screening protocol of \citet{bakagianni2024towards} over recent literature (2024--2026) retrieved from the \textit{ACL Anthology} and \textit{Semantic Scholar} (\(n=118\)).\footnote{The implementation is available in our GitHub repository, enabling reuse and continuous application of the protocol for future dataset discovery.} The objective is to provide a proof of concept for an \textit{evergreen} pipeline for identifying new Greek NLP datasets.
+Beyond our static benchmark, Greek NLP resources continue to evolve. To make the resource collection maintainable rather than fixed to the 2012--2023 survey, we implement a lightweight evergreen discovery pipeline for newly published work. This component is not used to define the benchmark scores reported above; instead, it demonstrates how the resource inventory can be updated as new datasets appear.
+
+To support the continuous expansion of Greek NLP benchmarks, we adapt the search and screening protocol of \citet{bakagianni2024towards} to recent literature (2024--2026) retrieved from the \textit{ACL Anthology} and \textit{Semantic Scholar} (\(n=118\)).\footnote{The implementation is available in our GitHub repository, enabling reuse and continuous application of the protocol for future dataset discovery.} The objective is to provide a proof of concept for an \textit{evergreen} pipeline for identifying new Greek NLP datasets.
 
 The screening process was applied in two stages. First, non--peer-reviewed publications were removed using rule-based filtering. The remaining exclusion criteria were then handled with a zero-shot LLM classifier. This process yielded 55 in-scope papers, of which 48 were identified as likely containing dataset references based on indications in the abstract that a dataset was introduced or released.
 
@@ -317,11 +335,13 @@ A manual audit on a dataset-annotated subset (\(n=18\)) showed high precision an
 Overall, the results indicate that automatic mining can effectively complement manual curation and support the systematic, continuous enrichment of Greek NLP resources.
 
 
-\section{Reproducibility and Artifact Structure}
-The repository includes the benchmark runner, combined CSV outputs, HTML task visualizations, report generation scripts, and publication-ready assets. The capped run used in this draft is stored under the repository's completed-run hierarchy, and the article-facing tables and vector figures are generated into a dedicated \texttt{article\_assets} subdirectory. This structure allows the manuscript to be regenerated directly from benchmark outputs without manual copy-paste into the paper.
+
+%\subsection{Huggingface Leaderboard}
+%To assist reproducibility, we provide a Huggingface leaderboard,\footnote{\url{https://huggingface.co/spaces/ipavlopoulos/greek-llm-leaderboard}} 
 
 \section{Conclusion}
-We presented a reproducible Greek NLP benchmark draft for open instruction-tuned LLMs and used it to compare five models across seven task families and nine benchmark segments. Under a deterministic capped-test protocol, \texttt{gemma2:9b} ranks first overall, while \texttt{llama3.1:8b-instruct}, \texttt{qwen2.5:7b-instruct}, and \texttt{aya-expanse:8b} emerge as specialists on GEC, Persian translation, and summarization respectively. The current pipeline is already useful for comparative evaluation, and it also provides a clean path from benchmark execution to publication assets.
+We presented a reproducible Greek NLP benchmark for open, instruction-tuned, edge-capable LLMs and used it to compare five models across seven task families and nine benchmark segments. Under a deterministic capped-test protocol, \texttt{gemma2:9b} ranks first overall, while \texttt{llama3.1:8b-instruct}, \texttt{qwen2.5:7b-instruct}, and \texttt{aya-expanse:8b} emerge as specialists on GEC, Persian translation, and summarization respectively. The current pipeline is already useful for comparative evaluation, and it also provides a clean path from benchmark execution to publication assets.
+Future work should extend the benchmark with richer label semantics for legal classification, stronger semantic metrics and human assessment for translation and summarization, and continuous dataset discovery to keep the Greek NLP resource collection up to date.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
@@ -345,187 +365,107 @@ Figure~\ref{fig:task-winner-margins} presents the gap between the best and secon
 % \input{\assetsdir/appendix_task_analysis.tex}
 
 \section{Prompt Templates}
-This appendix lists the system prompts and user-side task templates used in the benchmark. Concrete examples are instantiated by replacing angle-bracket placeholders with task-specific content at runtime.
 
-\subsection{GEC}
-\paragraph{System prompt}
-\begin{verbatim}
-You are a careful grammatical error correction system for Modern Greek.
-Correct the user's sentence while preserving its meaning.
-Return only the corrected Greek sentence and nothing else.
-\end{verbatim}
-\paragraph{Prompt template}
-\begin{verbatim}
-Diorthose to parakato elliniko keimeno grammatika kai orthografika.
-Kratise to idio noima.
+Tables~\ref{tab:gec-prompt}-\ref{tab:summ-prompt} list the system and user prompts templates used in the benchmark.
 
-Keimeno: <ORIGINAL_TEXT>
-Diorthomeno keimeno:
-\end{verbatim}
-
-\subsection{Intent Classification}
-\paragraph{System prompt}
-\begin{verbatim}
-You are a Greek intent classification system.
-Return only the intent label and nothing else.
-\end{verbatim}
-\paragraph{Prompt template}
-\begin{verbatim}
-Given a text, provide the intent of the text. Only the intent should be returned.
-Here is the list of possible intents: <LABEL_SPACE>
-
-Text: <TEXT>
-Intent:
-\end{verbatim}
-
-\subsection{Legal Classification}
-\paragraph{System prompt}
-\begin{verbatim}
-You are a Greek legal text classification system.
-Return only one label from the provided label set and nothing else.
-\end{verbatim}
-\paragraph{Prompt template}
-\begin{verbatim}
-Given the following Greek legal text, return only its coarse-grained legal volume label.
-Choose exactly one label from: <LABEL_SPACE>
-
-Text: <TEXT>
-Label:
-\end{verbatim}
-
-\subsection{Machine Translation}
-\paragraph{System prompt}
-\begin{verbatim}
-You are a translation system.
-Translate the user's text accurately.
-Return only the translation and nothing else.
-\end{verbatim}
-\paragraph{Prompt template}
-\begin{verbatim}
-Given a text in Greek, translate it to <TARGET_LANG>.
-Only the translation should be returned.
-
-Text: <SOURCE_TEXT>
-Translation:
-\end{verbatim}
-
-\subsection{Named Entity Recognition}
-\paragraph{System prompt}
-\begin{verbatim}
-You are a Greek named entity recognition system.
-Return only a Python-style list of tags and nothing else.
-\end{verbatim}
-\paragraph{Prompt template}
-\begin{verbatim}
-You are given a tokenized Greek sentence. Return only a Python-style list of
-NER tags, one tag per token.
-Use only these labels: <NER_LABEL_LIST>
-
-Tokens: <TOKEN_LIST>
-Tags:
-\end{verbatim}
-
-\subsection{POS Tagging}
-\paragraph{System prompt}
-\begin{verbatim}
-You are a Greek POS tagging system.
-Return only a Python-style list of tags and nothing else.
-\end{verbatim}
-\paragraph{Prompt template}
-\begin{verbatim}
-You are given a tokenized Greek sentence. Return only a Python-style list of
-POS tags, one tag per token.
-Use only these labels: <POS_LABEL_LIST>
-
-Tokens: <TOKEN_LIST>
-Tags:
-\end{verbatim}
-
-\subsection{Summarization}
-\paragraph{System prompt}
-\begin{verbatim}
-You are a Greek summarization system.
-Produce a concise summary in Greek and return only the summary.
-\end{verbatim}
-\paragraph{Prompt template}
-\begin{verbatim}
-Given a Greek legal text, provide its summary also in Greek.
-Only the summary should be returned.
-
-Text: <DOCUMENT_TEXT>
-Summary:
-\end{verbatim}
-
-\section{Prompt Templates}
-
-This appendix lists the system prompts and user prompt templates used in the benchmark. Angle-bracket placeholders denote task-specific values replaced at runtime.
-
-\begin{table*}[t]
-\caption{Prompt templates used for benchmark evaluation.}
+\begin{table}[ht!]
+\caption{Grammatical Error Correction (GEC)}
+\label{tab:gec-prompt}
 \small
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{tabularx}{\textwidth}{p{0.16\textwidth} p{0.38\textwidth} X}
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
 \toprule
-\textbf{Task} & \textbf{System Prompt} & \textbf{User Prompt Template} \\
+System & You are a careful grammatical error correction system for Modern Greek. Correct the user's sentence while preserving its meaning. Return only the corrected Greek sentence and nothing else. \\
 \midrule
-
-GEC &
-You are a careful grammatical error correction system for Modern Greek. Correct the user's sentence while preserving its meaning. Return only the corrected Greek sentence and nothing else. &
-Diorthose to parakato elliniko keimeno grammatika kai orthografika. Kratise to idio noima. \newline
-Keimeno: \texttt{<ORIGINAL\_TEXT>} \newline
-Diorthomeno keimeno: \\
-
-\midrule
-
-Intent Classification &
-You are a Greek intent classification system. Return only the intent label and nothing else. &
-Given a text, provide the intent of the text. Only the intent should be returned. \newline
-Here is the list of possible intents: \texttt{<LABEL\_SPACE>} \newline
-Text: \texttt{<TEXT>} \newline
-Intent: \\
-
-\midrule
-
-Legal Classification &
-You are a Greek legal text classification system. Return only one label from the provided label set and nothing else. &
-Given the following Greek legal text, return only its coarse-grained legal volume label. Choose exactly one label from: \texttt{<LABEL\_SPACE>} \newline
-Text: \texttt{<TEXT>} \newline
-Label: \\
-
-\midrule
-
-Machine Translation &
-You are a translation system. Translate the user's text accurately. Return only the translation and nothing else. &
-Given a text in Greek, translate it to \texttt{<TARGET\_LANG>}. Only the translation should be returned. \newline
-Text: \texttt{<SOURCE\_TEXT>} \newline
-Translation: \\
-
-\midrule
-
-Named Entity Recognition &
-You are a Greek named entity recognition system. Return only a Python-style list of tags and nothing else. &
-You are given a tokenized Greek sentence. Return only a Python-style list of NER tags, one tag per token. Use only these labels: \texttt{<NER\_LABEL\_LIST>} \newline
-Tokens: \texttt{<TOKEN\_LIST>} \newline
-Tags: \\
-
-\midrule
-
-POS Tagging &
-You are a Greek POS tagging system. Return only a Python-style list of tags and nothing else. &
-You are given a tokenized Greek sentence. Return only a Python-style list of POS tags, one tag per token. Use only these labels: \texttt{<POS\_LABEL\_LIST>} \newline
-Tokens: \texttt{<TOKEN\_LIST>} \newline
-Tags: \\
-
-\midrule
-
-Summarization &
-You are a Greek summarization system. Produce a concise summary in Greek and return only the summary. &
-Given a Greek legal text, provide its summary also in Greek. Only the summary should be returned. \newline
-Text: \texttt{<DOCUMENT\_TEXT>} \newline
-Summary: \\
-
+User & Correct the following Greek text grammatically and orthographically. Preserve the same meaning. \newline
+Text: \texttt{<ORIGINAL\_TEXT>} \newline
+Corrected text: \\
 \bottomrule
 \end{tabularx}
-\end{table*}
+\end{table}
+
+\begin{table}[ht!]
+\caption{Intent Classification.}
+\small
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
+\toprule
+System & You are a Greek intent classification system. Return only the intent label and nothing else. \\
+\midrule
+User & Given a text, provide the intent of the text. Only the intent should be returned. \newline
+Possible intents: \texttt{<LABEL\_SPACE>} \newline
+Text: \texttt{<TEXT>} \newline
+Intent: \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[ht!]
+\caption{Legal Classification.}
+\small
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
+\toprule
+System & You are a Greek legal text classification system. Return only one label from the provided label set and nothing else. \\
+\midrule
+User & Given the following Greek legal text, return only its coarse-grained legal volume label. Choose exactly one label from: \texttt{<LABEL\_SPACE>} \newline
+Text: \texttt{<TEXT>} \newline
+Label: \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[ht!]
+\caption{Machine Translation.}
+\small
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
+\toprule
+System & You are a translation system. Translate the user's text accurately. Return only the translation and nothing else. \\
+\midrule
+User & Given a text in Greek, translate it to \texttt{<TARGET\_LANG>}. Only the translation should be returned. \newline
+Text: \texttt{<SOURCE\_TEXT>} \newline
+Translation: \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[ht!]
+\caption{Named Entity Recognition.}
+\small
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
+\toprule
+System & You are a Greek named entity recognition system. Return only a Python-style list of tags and nothing else. \\
+\midrule
+User & You are given a tokenized Greek sentence. Return only a Python-style list of NER tags, one tag per token. Use only these labels: \texttt{<NER\_LABEL\_LIST>} \newline
+Tokens: \texttt{<TOKEN\_LIST>} \newline
+Tags: \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[ht!]
+\caption{POS Tagging.}
+\small
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
+\toprule
+System & You are a Greek POS tagging system. Return only a Python-style list of tags and nothing else. \\
+\midrule
+User & You are given a tokenized Greek sentence. Return only a Python-style list of POS tags, one tag per token. Use only these labels: \texttt{<POS\_LABEL\_LIST>} \newline
+Tokens: \texttt{<TOKEN\_LIST>} \newline
+Tags: \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[ht!]
+\caption{Summarization.}\label{tab:summ-prompt}
+\small
+\begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
+\toprule
+System & You are a Greek summarization system. Produce a concise summary in Greek and return only the summary. \\
+\midrule
+User & Given a Greek legal text, provide its summary also in Greek. Only the summary should be returned. \newline
+Text: \texttt{<DOCUMENT\_TEXT>} \newline
+Summary: \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
 \end{document}

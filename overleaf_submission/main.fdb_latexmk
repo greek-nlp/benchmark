@@ -1,15 +1,14 @@
 # Fdb version 4
-["bibtex main"] 1777319015.85363 "main.aux" "main.bbl" "main" 1777319017.52723 0
-  "./refs.bib" 1777224370 178843 d4f0c573054e9a54ed4a473af6bf414f ""
+["bibtex main"] 1777322628.04061 "main.aux" "main.bbl" "main" 1777322629.65826 0
+  "./refs.bib" 1777320940.12717 179182 362067fcab829844aff83176f8eb85f7 ""
   "/usr/local/texlive/2024/texmf-dist/bibtex/bst/acmart/ACM-Reference-Format.bst" 1680299675 90332 18dc4e5c9b5c2ddd337e9f97727d04f1 ""
-  "main.aux" 1777319017.15109 23252 36845f15f22f8b282c188f0ae333f4a7 "pdflatex"
+  "main.aux" 1777322629.2837 20680 80796c2d0beea3f5a2937c1560cf6b80 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1777319015.96991 "main.tex" "main.pdf" "main" 1777319017.52743 0
+["pdflatex"] 1777322628.20242 "main.tex" "main.pdf" "main" 1777322629.65844 0
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc" 1558214095 7693 0f2dce6d313c82989ec3a67fc24df2a0 ""
-  "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc" 1455745497 9446 fe5580ca6042a44427f18d450942e7d0 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1490131464 2921 8ca0eb0831f9bc5da080d3697cfe67bf ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc" 1490131464 2933 9ad527ce78d7c5fa0a642dead095f172 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/libertine/lbtn_7grukw.enc" 1490131464 2934 a4a9158faed2e9e89c771b4e3b7fc12f ""
@@ -27,7 +26,6 @@
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm" 1246382020 940 228d6584342e91276bf566bcf9716b83 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr9.tfm" 1136768653 1292 6b21b9c2c7bebb38aa2273f7ca0fb3af ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/inconsolata/t1-zi4r-4.tfm" 1558214095 1328 82f7955e88a105d8e5acd89cb6526b12 ""
-  "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/inconsolata/ts1-zi4r.tfm" 1455745497 1244 1f88f6a5e4b8ccb8b031aa94d34557d3 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1--base.tfm" 1490131464 1744 9486ddc64e90094bbb83f53a83b0e415 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/libertine/LinBiolinumT-tlf-t1.tfm" 1490131464 19548 768852037f39958c435d71846b8877ea ""
   "/usr/local/texlive/2024/texmf-dist/fonts/tfm/public/libertine/LinBiolinumTB-tlf-t1--base.tfm" 1490131464 1768 23aace73e6def3193d6e0453af90487b ""
@@ -164,7 +162,6 @@
   "/usr/local/texlive/2024/texmf-dist/tex/latex/hyperxmp/hyperxmp.sty" 1694549455 62128 e50ecae7fe0b6c43fca68cc9ddc55043 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/ifmtarg/ifmtarg.sty" 1525197427 318 019510c713feab56160631df4423d2aa ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/inconsolata/t1zi4.fd" 1516054831 1021 03341d1cf7f388bbac1915f944d5d128 ""
-  "/usr/local/texlive/2024/texmf-dist/tex/latex/inconsolata/ts1zi4.fd" 1516054831 862 b7bc66238166414888eb6bc81b3e9624 ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/inconsolata/zi4.sty" 1558214095 4319 14e5db0b68d045ed49e4ed232b58e93f ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/kvoptions/kvoptions.sty" 1655478651 22555 6d8e155cfef6d82c3d5c742fea7c992e ""
   "/usr/local/texlive/2024/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty" 1665067230 13815 760b0c02f691ea230f5359c4e1de23a7 ""
@@ -221,11 +218,11 @@
   "article_assets/figures/ppl_heatmap.pdf" 1777224372 16629 269b8ab2f7da9708371cd235d4dd1edc ""
   "article_assets/figures/quality_vs_latency.pdf" 1777235663.3368 26133 7631839e77212b94bf501108951f7230 ""
   "article_assets/figures/task_winners.pdf" 1777235663.33835 21854 9815c97685dc8da86f1fded1a474f462 ""
-  "article_assets/task_winners_table.tex" 1777238523.06513 5784 812c9f85b74386c354ac73bac07f56d7 ""
-  "main.aux" 1777319017.15109 23252 36845f15f22f8b282c188f0ae333f4a7 "pdflatex"
-  "main.bbl" 1777319015.96662 35004 35760804e21333d72946c07dd5a8bb3d "bibtex main"
-  "main.out" 1777319017.15244 5742 67026739c532546ba1055b39cb406e64 "pdflatex"
-  "main.tex" 1777318999.15418 47761 ff7f0848a9fd68451c2b8e49846c8c81 ""
+  "article_assets/task_winners_table.tex" 1777322575.71458 5784 2fc4f865bab2c0a21395c2576ff66bea ""
+  "main.aux" 1777322629.2837 20680 80796c2d0beea3f5a2937c1560cf6b80 "pdflatex"
+  "main.bbl" 1777322628.19831 31834 e4ec79d65012d90d24f7716eaba4c14b "bibtex main"
+  "main.out" 1777322629.28498 4095 99c3ab26fd371c3a8a3c833d45dcb8ec "pdflatex"
+  "main.tex" 1777322621.58969 45487 1fe0bdc5a8de815ad22dedd92a08a7aa ""
   (generated)
   "main.aux"
   "main.log"

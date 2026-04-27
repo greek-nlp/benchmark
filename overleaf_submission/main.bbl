@@ -114,64 +114,13 @@
 \showDOI{\tempurl}
 
 
-\bibitem[Bommasani et~al\mbox{.}(2021)]%
-        {bommasani2021foundation}
-\bibfield{author}{\bibinfo{person}{Rishi Bommasani}, \bibinfo{person}{Drew~A.
-  Hudson}, \bibinfo{person}{Ehsan Adeli}, \bibinfo{person}{Russ Altman},
-  \bibinfo{person}{Simran Arora}, \bibinfo{person}{Sydney von Arx},
-  \bibinfo{person}{Michael~S. Bernstein}, \bibinfo{person}{Jeannette Bohg},
-  \bibinfo{person}{Antoine Bosselut}, \bibinfo{person}{Emma Brunskill},
-  \bibinfo{person}{Erik Brynjolfsson}, \bibinfo{person}{Shyamal Buch},
-  \bibinfo{person}{Dallas Card}, \bibinfo{person}{Rodrigo Castellon},
-  \bibinfo{person}{Niladri Chatterji}, \bibinfo{person}{Annie Chen},
-  \bibinfo{person}{Kathleen Creel}, \bibinfo{person}{Jared Davis},
-  \bibinfo{person}{Dorottya Demszky}, \bibinfo{person}{Chris Donahue},
-  \bibinfo{person}{Moussa Doumbouya}, \bibinfo{person}{Esin Durmus},
-  \bibinfo{person}{Stefano Ermon}, \bibinfo{person}{John Etchemendy},
-  \bibinfo{person}{Judy Grossman}, \bibinfo{person}{Tatsunori~B. Hashimoto},
-  \bibinfo{person}{Peter Henderson}, \bibinfo{person}{John Hewitt},
-  \bibinfo{person}{Daniel~E. Ho}, \bibinfo{person}{Kyle Hong},
-  \bibinfo{person}{Kelvin Hsu}, \bibinfo{person}{Jing Huang},
-  \bibinfo{person}{Thomas Icard}, \bibinfo{person}{Saahil Jain},
-  \bibinfo{person}{Dan Jurafsky}, \bibinfo{person}{Pratyusha Kalluri},
-  \bibinfo{person}{Fereshte Khani}, \bibinfo{person}{Omar Khattab},
-  \bibinfo{person}{Pang~Wei Kohli}, \bibinfo{person}{Mark Krass},
-  \bibinfo{person}{Ranjay Krishna}, \bibinfo{person}{Rohit Kuditipudi},
-  \bibinfo{person}{Ananya Kumar}, \bibinfo{person}{Jure Leskovec},
-  \bibinfo{person}{Isin Levent}, \bibinfo{person}{Percy Liang},
-  \bibinfo{person}{Chaitanya Mandal}, \bibinfo{person}{Kathryn Ma},
-  \bibinfo{person}{Ali Malik}, \bibinfo{person}{Christopher~D. Manning},
-  \bibinfo{person}{Suvir Mirchandani}, \bibinfo{person}{Eric Mitchell},
-  \bibinfo{person}{Zanele Munyikwa}, \bibinfo{person}{Suraj Nair},
-  \bibinfo{person}{Deepak Narayanan}, \bibinfo{person}{Richard Ngo},
-  \bibinfo{person}{Julian Nyarko}, \bibinfo{person}{Giray Ogut},
-  \bibinfo{person}{Laurel Orr}, \bibinfo{person}{Isabel Papadimitriou},
-  \bibinfo{person}{Jeanne Park}, \bibinfo{person}{Chris Piech},
-  \bibinfo{person}{Eva Portelance}, \bibinfo{person}{Christopher Potts},
-  \bibinfo{person}{Aditi Raghunathan}, \bibinfo{person}{Rob Reich},
-  \bibinfo{person}{Hongyu Ren}, \bibinfo{person}{Frieda Rong},
-  \bibinfo{person}{Yusuf Roohani}, \bibinfo{person}{Camilo Ruiz},
-  \bibinfo{person}{Justin Ryan}, \bibinfo{person}{Christopher R{\'e}},
-  \bibinfo{person}{Dorsa Sadigh}, \bibinfo{person}{Shiori Sagawa},
-  \bibinfo{person}{Omid Salehi}, \bibinfo{person}{Karan Santhanam},
-  \bibinfo{person}{Shreya Sarkar}, \bibinfo{person}{Eli Schroeder},
-  \bibinfo{person}{Yash Sen}, \bibinfo{person}{Ananya Sharma},
-  \bibinfo{person}{Hao Shan}, \bibinfo{person}{Kyle Shanmugam},
-  \bibinfo{person}{Sharon Shen}, \bibinfo{person}{Avanika Song},
-  \bibinfo{person}{Krishna Srinivasan}, \bibinfo{person}{Alex Tamkin},
-  \bibinfo{person}{Rohan Taori}, \bibinfo{person}{Armin~W. Thomas},
-  \bibinfo{person}{Florian Tram{\`e}r}, \bibinfo{person}{Rose~E. Wang},
-  \bibinfo{person}{William Wang}, \bibinfo{person}{Bohan Wu},
-  \bibinfo{person}{Jiajun Wu}, \bibinfo{person}{Yuhuai Wu},
-  \bibinfo{person}{Cathy Xiong}, \bibinfo{person}{Yangsibo Xu},
-  \bibinfo{person}{Ziyi Yang}, \bibinfo{person}{Shun Zhang},
-  \bibinfo{person}{Jiajun Zhang}, \bibinfo{person}{Yufan Zhang},
-  \bibinfo{person}{Lucy Zheng}, \bibinfo{person}{Kaitlyn Zhou}, {and}
-  \bibinfo{person}{Percy Liang}.} \bibinfo{year}{2021}\natexlab{}.
-\newblock \showarticletitle{On the Opportunities and Risks of Foundation
-  Models}.
-\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2108.07258}}
-  (\bibinfo{year}{2021}).
+\bibitem[Bommasani et~al\mbox{.}(2023)]%
+        {bommasani2023holistic}
+\bibfield{author}{\bibinfo{person}{Rishi Bommasani}, \bibinfo{person}{Percy
+  Liang}, {and} \bibinfo{person}{Tony Lee}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Holistic {E}valuation of {L}anguage {M}odels}.
+\newblock \bibinfo{journal}{\emph{Annals of the New York Academy of Sciences}}
+  (\bibinfo{year}{2023}).
 \newblock
 
 
@@ -514,13 +463,15 @@
 \newblock
 
 
-\bibitem[Papantoniou and Tzitzikas(2024)]%
-        {papantoniou2024nlp}
-\bibfield{author}{\bibinfo{person}{Katerina Papantoniou} {and}
-  \bibinfo{person}{Yannis Tzitzikas}.} \bibinfo{year}{2024}\natexlab{}.
-\newblock \showarticletitle{NLP for The Greek Language: A Longer Survey}.
-\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2408.10962}}
-  (\bibinfo{year}{2024}).
+\bibitem[Papineni et~al\mbox{.}(2002)]%
+        {papineni2002bleu}
+\bibfield{author}{\bibinfo{person}{Kishore Papineni}, \bibinfo{person}{Salim
+  Roukos}, \bibinfo{person}{Todd Ward}, {and} \bibinfo{person}{Wei-Jing Zhu}.}
+  \bibinfo{year}{2002}\natexlab{}.
+\newblock \showarticletitle{Bleu: a method for automatic evaluation of machine
+  translation}. In \bibinfo{booktitle}{\emph{Proceedings of the 40th annual
+  meeting of the Association for Computational Linguistics}}.
+  \bibinfo{pages}{311--318}.
 \newblock
 
 
@@ -715,18 +666,21 @@
 \tempurl}
 
 
-\bibitem[Yang et~al\mbox{.}(2025)]%
-        {yang2025qwen3}
-\bibfield{author}{\bibinfo{person}{An Yang}, \bibinfo{person}{Anfeng Li},
-  \bibinfo{person}{Baosong Yang}, \bibinfo{person}{Beichen Zhang},
-  \bibinfo{person}{Binyuan Hui}, \bibinfo{person}{Bo Zheng},
-  \bibinfo{person}{Bowen Yu}, \bibinfo{person}{Chang Gao},
-  \bibinfo{person}{Chengen Huang}, \bibinfo{person}{Chenxu Lv},
-  {et~al\mbox{.}}} \bibinfo{year}{2025}\natexlab{}.
-\newblock \showarticletitle{Qwen3 technical report}.
-\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2505.09388}}
-  (\bibinfo{year}{2025}).
+\bibitem[Yang et~al\mbox{.}(2024)]%
+        {yang2024qwen25}
+\bibfield{author}{\bibinfo{person}{An Yang}, \bibinfo{person}{Baosong Yang},
+  \bibinfo{person}{Beichen Zhang}, \bibinfo{person}{Binyuan Hui},
+  \bibinfo{person}{Bo Zheng}, \bibinfo{person}{Bowen Yu},
+  \bibinfo{person}{Chengyuan Li}, \bibinfo{person}{Dayiheng Liu},
+  \bibinfo{person}{Fei Huang}, \bibinfo{person}{Haoran Wei}, {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Qwen2.5 Technical Report}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2412.15115}}
+  (\bibinfo{year}{2024}).
 \newblock
+\urldef\tempurl%
+\url{https://doi.org/10.48550/arXiv.2412.15115}
+\showDOI{\tempurl}
 
 
 \bibitem[Zampieri et~al\mbox{.}(2020)]%

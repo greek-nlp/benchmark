@@ -16,8 +16,8 @@ Warning--no number and no volume in almazrouei2023falcon
 Warning--page numbers missing in both pages and numpages fields in almazrouei2023falcon
 Warning--no number and no volume in bakagianni2024towards
 Warning--page numbers missing in both pages and numpages fields in bakagianni2024towards
-Warning--no number and no volume in bommasani2021foundation
-Warning--page numbers missing in both pages and numpages fields in bommasani2021foundation
+Warning--no number and no volume in bommasani2023holistic
+Warning--page numbers missing in both pages and numpages fields in bommasani2023holistic
 Warning--no number and no volume in dang2024aya
 Warning--page numbers missing in both pages and numpages fields in dang2024aya
 Warning--no number and no volume in evdaimon2023greekbart
@@ -45,8 +45,8 @@ Warning--empty publisher in nivre2016universal
 Warning--empty address in nivre2016universal
 Warning--empty publisher in papantoniou2023automating
 Warning--empty address in papantoniou2023automating
-Warning--no number and no volume in papantoniou2024nlp
-Warning--page numbers missing in both pages and numpages fields in papantoniou2024nlp
+Warning--empty publisher in papineni2002bleu
+Warning--empty address in papineni2002bleu
 Warning--empty publisher in popovic2015chrf
 Warning--empty address in popovic2015chrf
 Warning--empty publisher in pradhan2007ontonotes
@@ -67,50 +67,50 @@ Warning--page numbers missing in both pages and numpages fields in wang2019super
 Warning--empty publisher in wang2019glue
 Warning--empty address in wang2019glue
 Warning--page numbers missing in both pages and numpages fields in wang2019glue
-Warning--no number and no volume in yang2025qwen3
-Warning--page numbers missing in both pages and numpages fields in yang2025qwen3
+Warning--no number and no volume in yang2024qwen25
+Warning--page numbers missing in both pages and numpages fields in yang2024qwen25
 Warning--page numbers missing in both pages and numpages fields in Zampieri2020
 Warning--no number and no volume in zhang2019bertscore
 Warning--page numbers missing in both pages and numpages fields in zhang2019bertscore
 You've used 47 entries,
             5981 wiz_defined-function locations,
-            1757 strings with 33276 characters,
-and the built_in function-call counts, 66400 in all, are:
-= -- 8091
-> -- 3602
+            1760 strings with 31546 characters,
+and the built_in function-call counts, 61837 in all, are:
+= -- 7760
+> -- 2810
 < -- 0
-+ -- 1295
-- -- 1287
-* -- 5696
-:= -- 7163
++ -- 997
+- -- 985
+* -- 4921
+:= -- 6283
 add.period$ -- 233
 call.type$ -- 47
-change.case$ -- 577
+change.case$ -- 479
 chr.to.int$ -- 46
 cite$ -- 108
-duplicate$ -- 4920
-empty$ -- 3449
-format.name$ -- 1456
-if$ -- 15849
+duplicate$ -- 4963
+empty$ -- 3475
+format.name$ -- 1154
+if$ -- 15077
 int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 209
-newline$ -- 439
+missing$ -- 210
+newline$ -- 441
 num.names$ -- 332
-pop$ -- 2317
+pop$ -- 2234
 preamble$ -- 1
-purify$ -- 951
+purify$ -- 853
 quote$ -- 0
-skip$ -- 1747
+skip$ -- 1770
 stack$ -- 0
-substring$ -- 3773
-swap$ -- 477
+substring$ -- 3821
+swap$ -- 486
 text.length$ -- 19
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 1040
+type$ -- 1054
 warning$ -- 61
-while$ -- 255
+while$ -- 254
 width$ -- 0
-write$ -- 956
+write$ -- 959
 (There were 61 warnings)
