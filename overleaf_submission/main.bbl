@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{32}
+\begin{thebibliography}{47}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -36,6 +36,23 @@
 \providecommand\bibinfo[2]{#2}
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[Alexandridis et~al\mbox{.}(2021)]%
+        {Alexandridis2021Survey}
+\bibfield{author}{\bibinfo{person}{Georgios Alexandridis},
+  \bibinfo{person}{Iraklis Varlamis}, \bibinfo{person}{Konstantinos Korovesis},
+  \bibinfo{person}{George Caridakis}, {and} \bibinfo{person}{Panagiotis
+  Tsantilas}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{A Survey on Sentiment Analysis and Opinion Mining
+  in Greek Social Media}.
+\newblock \bibinfo{journal}{\emph{Information}} \bibinfo{volume}{12},
+  \bibinfo{number}{8} (\bibinfo{year}{2021}).
+\newblock
+\showISSN{2078-2489}
+\urldef\tempurl%
+\url{https://doi.org/10.3390/info12080331}
+\showDOI{\tempurl}
+
 
 \bibitem[Almazrouei et~al\mbox{.}(2023)]%
         {almazrouei2023falcon}
@@ -97,6 +114,67 @@
 \showDOI{\tempurl}
 
 
+\bibitem[Bommasani et~al\mbox{.}(2021)]%
+        {bommasani2021foundation}
+\bibfield{author}{\bibinfo{person}{Rishi Bommasani}, \bibinfo{person}{Drew~A.
+  Hudson}, \bibinfo{person}{Ehsan Adeli}, \bibinfo{person}{Russ Altman},
+  \bibinfo{person}{Simran Arora}, \bibinfo{person}{Sydney von Arx},
+  \bibinfo{person}{Michael~S. Bernstein}, \bibinfo{person}{Jeannette Bohg},
+  \bibinfo{person}{Antoine Bosselut}, \bibinfo{person}{Emma Brunskill},
+  \bibinfo{person}{Erik Brynjolfsson}, \bibinfo{person}{Shyamal Buch},
+  \bibinfo{person}{Dallas Card}, \bibinfo{person}{Rodrigo Castellon},
+  \bibinfo{person}{Niladri Chatterji}, \bibinfo{person}{Annie Chen},
+  \bibinfo{person}{Kathleen Creel}, \bibinfo{person}{Jared Davis},
+  \bibinfo{person}{Dorottya Demszky}, \bibinfo{person}{Chris Donahue},
+  \bibinfo{person}{Moussa Doumbouya}, \bibinfo{person}{Esin Durmus},
+  \bibinfo{person}{Stefano Ermon}, \bibinfo{person}{John Etchemendy},
+  \bibinfo{person}{Judy Grossman}, \bibinfo{person}{Tatsunori~B. Hashimoto},
+  \bibinfo{person}{Peter Henderson}, \bibinfo{person}{John Hewitt},
+  \bibinfo{person}{Daniel~E. Ho}, \bibinfo{person}{Kyle Hong},
+  \bibinfo{person}{Kelvin Hsu}, \bibinfo{person}{Jing Huang},
+  \bibinfo{person}{Thomas Icard}, \bibinfo{person}{Saahil Jain},
+  \bibinfo{person}{Dan Jurafsky}, \bibinfo{person}{Pratyusha Kalluri},
+  \bibinfo{person}{Fereshte Khani}, \bibinfo{person}{Omar Khattab},
+  \bibinfo{person}{Pang~Wei Kohli}, \bibinfo{person}{Mark Krass},
+  \bibinfo{person}{Ranjay Krishna}, \bibinfo{person}{Rohit Kuditipudi},
+  \bibinfo{person}{Ananya Kumar}, \bibinfo{person}{Jure Leskovec},
+  \bibinfo{person}{Isin Levent}, \bibinfo{person}{Percy Liang},
+  \bibinfo{person}{Chaitanya Mandal}, \bibinfo{person}{Kathryn Ma},
+  \bibinfo{person}{Ali Malik}, \bibinfo{person}{Christopher~D. Manning},
+  \bibinfo{person}{Suvir Mirchandani}, \bibinfo{person}{Eric Mitchell},
+  \bibinfo{person}{Zanele Munyikwa}, \bibinfo{person}{Suraj Nair},
+  \bibinfo{person}{Deepak Narayanan}, \bibinfo{person}{Richard Ngo},
+  \bibinfo{person}{Julian Nyarko}, \bibinfo{person}{Giray Ogut},
+  \bibinfo{person}{Laurel Orr}, \bibinfo{person}{Isabel Papadimitriou},
+  \bibinfo{person}{Jeanne Park}, \bibinfo{person}{Chris Piech},
+  \bibinfo{person}{Eva Portelance}, \bibinfo{person}{Christopher Potts},
+  \bibinfo{person}{Aditi Raghunathan}, \bibinfo{person}{Rob Reich},
+  \bibinfo{person}{Hongyu Ren}, \bibinfo{person}{Frieda Rong},
+  \bibinfo{person}{Yusuf Roohani}, \bibinfo{person}{Camilo Ruiz},
+  \bibinfo{person}{Justin Ryan}, \bibinfo{person}{Christopher R{\'e}},
+  \bibinfo{person}{Dorsa Sadigh}, \bibinfo{person}{Shiori Sagawa},
+  \bibinfo{person}{Omid Salehi}, \bibinfo{person}{Karan Santhanam},
+  \bibinfo{person}{Shreya Sarkar}, \bibinfo{person}{Eli Schroeder},
+  \bibinfo{person}{Yash Sen}, \bibinfo{person}{Ananya Sharma},
+  \bibinfo{person}{Hao Shan}, \bibinfo{person}{Kyle Shanmugam},
+  \bibinfo{person}{Sharon Shen}, \bibinfo{person}{Avanika Song},
+  \bibinfo{person}{Krishna Srinivasan}, \bibinfo{person}{Alex Tamkin},
+  \bibinfo{person}{Rohan Taori}, \bibinfo{person}{Armin~W. Thomas},
+  \bibinfo{person}{Florian Tram{\`e}r}, \bibinfo{person}{Rose~E. Wang},
+  \bibinfo{person}{William Wang}, \bibinfo{person}{Bohan Wu},
+  \bibinfo{person}{Jiajun Wu}, \bibinfo{person}{Yuhuai Wu},
+  \bibinfo{person}{Cathy Xiong}, \bibinfo{person}{Yangsibo Xu},
+  \bibinfo{person}{Ziyi Yang}, \bibinfo{person}{Shun Zhang},
+  \bibinfo{person}{Jiajun Zhang}, \bibinfo{person}{Yufan Zhang},
+  \bibinfo{person}{Lucy Zheng}, \bibinfo{person}{Kaitlyn Zhou}, {and}
+  \bibinfo{person}{Percy Liang}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{On the Opportunities and Risks of Foundation
+  Models}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2108.07258}}
+  (\bibinfo{year}{2021}).
+\newblock
+
+
 \bibitem[Brown et~al\mbox{.}(2020)]%
         {brown2020language}
 \bibfield{author}{\bibinfo{person}{Tom Brown}, \bibinfo{person}{Benjamin Mann},
@@ -110,6 +188,25 @@
   systems}}  \bibinfo{volume}{33} (\bibinfo{year}{2020}),
   \bibinfo{pages}{1877--1901}.
 \newblock
+
+
+\bibitem[Chalkidis et~al\mbox{.}(2022)]%
+        {chalkidis-etal-2022-lexglue}
+\bibfield{author}{\bibinfo{person}{Ilias Chalkidis}, \bibinfo{person}{Abhik
+  Jana}, \bibinfo{person}{Dirk Hartung}, \bibinfo{person}{Michael Bommarito},
+  \bibinfo{person}{Ion Androutsopoulos}, \bibinfo{person}{Daniel Katz}, {and}
+  \bibinfo{person}{Nikolaos Aletras}.} \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{{L}ex{GLUE}: A Benchmark Dataset for Legal Language
+  Understanding in {E}nglish}. In \bibinfo{booktitle}{\emph{Proceedings of the
+  60th Annual Meeting of the Association for Computational Linguistics (Volume
+  1: Long Papers)}}, \bibfield{editor}{\bibinfo{person}{Smaranda Muresan},
+  \bibinfo{person}{Preslav Nakov}, {and} \bibinfo{person}{Aline Villavicencio}}
+  (Eds.). \bibinfo{publisher}{Association for Computational Linguistics},
+  \bibinfo{address}{Dublin, Ireland}, \bibinfo{pages}{4310--4330}.
+\newblock
+\urldef\tempurl%
+\url{https://doi.org/10.18653/v1/2022.acl-long.297}
+\showDOI{\tempurl}
 
 
 \bibitem[Dang et~al\mbox{.}(2024)]%
@@ -140,6 +237,19 @@
 \newblock
 
 
+\bibitem[Evdaimon et~al\mbox{.}(2023)]%
+        {evdaimon2023greekbart}
+\bibfield{author}{\bibinfo{person}{Iakovos Evdaimon}, \bibinfo{person}{Hadi
+  Abdine}, \bibinfo{person}{Christos Xypolopoulos}, \bibinfo{person}{Stamatis
+  Outsios}, \bibinfo{person}{Michalis Vazirgiannis}, {and}
+  \bibinfo{person}{Giorgos Stamou}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{GreekBART: The First Pretrained Greek
+  Sequence-to-Sequence Model}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2304.00869}}
+  (\bibinfo{year}{2023}).
+\newblock
+
+
 \bibitem[Fitsilis and Mikros(2021)]%
         {fitsilis2021development}
 \bibfield{author}{\bibinfo{person}{Fotios Fitsilis} {and}
@@ -148,6 +258,53 @@
   parliamentary questions in the hellenic parliament}.
 \newblock \bibinfo{journal}{\emph{Journal of Open Humanities Data}}
   \bibinfo{volume}{7} (\bibinfo{year}{2021}).
+\newblock
+
+
+\bibitem[Gakis et~al\mbox{.}(2016)]%
+        {gakis:2017}
+\bibfield{author}{\bibinfo{person}{Panagiotis Gakis}, \bibinfo{person}{Christos
+  Panagiotakopoulos}, \bibinfo{person}{Kyriakos Sgarbas},
+  \bibinfo{person}{Christos Tsalidis}, {and} \bibinfo{person}{Vassilios
+  Verykios}.} \bibinfo{year}{2016}\natexlab{}.
+\newblock \showarticletitle{{Design and construction of the Greek grammar
+  checker}}.
+\newblock \bibinfo{journal}{\emph{Digital Scholarship in the Humanities}}
+  \bibinfo{volume}{32}, \bibinfo{number}{3} (\bibinfo{date}{07}
+  \bibinfo{year}{2016}), \bibinfo{pages}{554--576}.
+\newblock
+\showISSN{2055-7671}
+\urldef\tempurl%
+\url{https://doi.org/10.1093/llc/fqw025}
+\showDOI{\tempurl}
+\showeprint{https://academic.oup.com/dsh/article-pdf/32/3/554/19646879/fqw025.pdf}
+
+
+\bibitem[Gao et~al\mbox{.}(2023)]%
+        {gao2023lmeval}
+\bibfield{author}{\bibinfo{person}{Leo Gao}, \bibinfo{person}{Jonathan Tow},
+  \bibinfo{person}{Baber Abbasi}, \bibinfo{person}{Stella Biderman},
+  \bibinfo{person}{Sidney Black}, \bibinfo{person}{Guy Blasi},
+  \bibinfo{person}{Anthony Casey}, \bibinfo{person}{Nate Cheeseman},
+  \bibinfo{person}{Juan Ciro}, \bibinfo{person}{Sasha Crabtree},
+  \bibinfo{person}{Nicholas Currier}, \bibinfo{person}{Xingyu Dang},
+  \bibinfo{person}{Clementine Decoopman}, \bibinfo{person}{Chris Foster},
+  \bibinfo{person}{Raphael Gontijo~Lopes}, \bibinfo{person}{Huan He},
+  \bibinfo{person}{Kevin Hu}, \bibinfo{person}{Brandon Knight},
+  \bibinfo{person}{Jorge Larios}, \bibinfo{person}{Logan Li},
+  \bibinfo{person}{Xander Lin}, \bibinfo{person}{Shawn Miller},
+  \bibinfo{person}{Niklas Muennighoff}, \bibinfo{person}{Aryan Naeini},
+  \bibinfo{person}{Hyunwoo Nam}, \bibinfo{person}{Sam Pan},
+  \bibinfo{person}{Louis Schmid}, \bibinfo{person}{Hailey Schoelkopf},
+  \bibinfo{person}{Xiang Wang}, \bibinfo{person}{Albert Webson},
+  \bibinfo{person}{Mitchell Wortsman}, \bibinfo{person}{Yuxi Yao},
+  \bibinfo{person}{Stella Biderman}, \bibinfo{person}{Douwe Kiela},
+  \bibinfo{person}{Teven Le~Scao}, \bibinfo{person}{Colin Raffel},
+  \bibinfo{person}{Andy Zhou}, \bibinfo{person}{Dan Hendrycks},
+  {et~al\mbox{.}}} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{A Framework for Few-Shot Language Model
+  Evaluation}. In \bibinfo{booktitle}{\emph{Advances in Neural Information
+  Processing Systems Datasets and Benchmarks Track}}.
 \newblock
 
 
@@ -230,6 +387,41 @@
 \newblock
 
 
+\bibitem[Koutsikakis et~al\mbox{.}(2020)]%
+        {koutsikakis2020}
+\bibfield{author}{\bibinfo{person}{John Koutsikakis}, \bibinfo{person}{Ilias
+  Chalkidis}, \bibinfo{person}{Prodromos Malakasiotis}, {and}
+  \bibinfo{person}{Ion Androutsopoulos}.} \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{GREEK-BERT: The Greeks Visiting Sesame Street}. In
+  \bibinfo{booktitle}{\emph{11th Hellenic Conference on Artificial
+  Intelligence}} (Athens, Greece) \emph{(\bibinfo{series}{SETN 2020})}.
+  \bibinfo{publisher}{Association for Computing Machinery},
+  \bibinfo{address}{New York, NY, USA}, \bibinfo{pages}{110–117}.
+\newblock
+\showISBNx{9781450388788}
+\urldef\tempurl%
+\url{https://doi.org/10.1145/3411408.3411440}
+\showDOI{\tempurl}
+
+
+\bibitem[Liang et~al\mbox{.}(2023)]%
+        {liang2023helm}
+\bibfield{author}{\bibinfo{person}{Percy Liang}, \bibinfo{person}{Rishi
+  Bommasani}, \bibinfo{person}{Tony Lee}, \bibinfo{person}{Dimitris Tsipras},
+  \bibinfo{person}{Dilara Soylu}, \bibinfo{person}{Michihiro Yasunaga},
+  \bibinfo{person}{Yian Zhang}, \bibinfo{person}{Deepak Narayanan},
+  \bibinfo{person}{Yuhuai Wu}, \bibinfo{person}{Ananya Kumar},
+  \bibinfo{person}{Benjamin Newman}, \bibinfo{person}{Binhang Yuan},
+  \bibinfo{person}{Bonnie Yan}, \bibinfo{person}{Ce Zhang}, \bibinfo{person}{M.
+  Cosgrove}, \bibinfo{person}{Christopher~D. Manning},
+  \bibinfo{person}{Christopher R{\'e}}, {and} \bibinfo{person}{Tatsunori~B.
+  Hashimoto}.} \bibinfo{year}{2023}\natexlab{}.
+\newblock \showarticletitle{Holistic Evaluation of Language Models}.
+\newblock \bibinfo{journal}{\emph{Transactions on Machine Learning Research}}
+  (\bibinfo{year}{2023}).
+\newblock
+
+
 \bibitem[Lin(2004)]%
         {lin2004rouge}
 \bibfield{author}{\bibinfo{person}{Chin-Yew Lin}.}
@@ -262,6 +454,19 @@
   of the Association for Computational Linguistics and the 7th International
   Joint Conference on Natural Language Processing (Volume 2: Short Papers)}}.
   \bibinfo{pages}{588--593}.
+\newblock
+
+
+\bibitem[Nikiforos et~al\mbox{.}(2021)]%
+        {Nikiforos2021}
+\bibfield{author}{\bibinfo{person}{Maria~Nefeli Nikiforos},
+  \bibinfo{person}{Yorghos Voutos}, \bibinfo{person}{Anthi Drougani},
+  \bibinfo{person}{Phivos Mylonas}, {and} \bibinfo{person}{Katia~Lida
+  Kermanidis}.} \bibinfo{year}{2021}\natexlab{}.
+\newblock \showarticletitle{The Modern Greek Language on the Social Web: A
+  Survey of Data Sets and Mining Applications}.
+\newblock \bibinfo{journal}{\emph{Data}}  \bibinfo{volume}{6}
+  (\bibinfo{year}{2021}), \bibinfo{pages}{52}.
 \newblock
 
 
@@ -306,6 +511,16 @@
 \newblock \showarticletitle{Automating Benchmark Generation for Named Entity
   Recognition and Entity Linking}. In \bibinfo{booktitle}{\emph{European
   Semantic Web Conference}}. Springer, \bibinfo{pages}{143--148}.
+\newblock
+
+
+\bibitem[Papantoniou and Tzitzikas(2024)]%
+        {papantoniou2024nlp}
+\bibfield{author}{\bibinfo{person}{Katerina Papantoniou} {and}
+  \bibinfo{person}{Yannis Tzitzikas}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{NLP for The Greek Language: A Longer Survey}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2408.10962}}
+  (\bibinfo{year}{2024}).
 \newblock
 
 
@@ -420,6 +635,84 @@
 \newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2408.00118}}
   (\bibinfo{year}{2024}).
 \newblock
+
+
+\bibitem[Urbizu et~al\mbox{.}(2022)]%
+        {urbizu2022basqueglue}
+\bibfield{author}{\bibinfo{person}{Gorka Urbizu}, \bibinfo{person}{I{\~n}aki
+  San~Vicente}, \bibinfo{person}{Xabier Saralegi}, \bibinfo{person}{Rodrigo
+  Agerri}, {and} \bibinfo{person}{Aitor Soroa}.}
+  \bibinfo{year}{2022}\natexlab{}.
+\newblock \showarticletitle{BasqueGLUE: A natural language understanding
+  benchmark for Basque}. In \bibinfo{booktitle}{\emph{Proceedings of the
+  Thirteenth Language Resources and Evaluation Conference}}.
+  \bibinfo{pages}{1603--1612}.
+\newblock
+
+
+\bibitem[Voukoutis et~al\mbox{.}(2024)]%
+        {voukoutis2024meltemi}
+\bibfield{author}{\bibinfo{person}{Leon Voukoutis}, \bibinfo{person}{Dimitris
+  Roussis}, \bibinfo{person}{Georgios Paraskevopoulos},
+  \bibinfo{person}{Sokratis Sofianopoulos}, \bibinfo{person}{Prokopis
+  Prokopidis}, \bibinfo{person}{Vassilis Papavasileiou},
+  \bibinfo{person}{Athanasios Katsamanis}, \bibinfo{person}{Stelios Piperidis},
+  {and} \bibinfo{person}{Vassilis Katsouros}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Meltemi: The first open Large Language Model for
+  Greek}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2407.20743}}
+  (\bibinfo{year}{2024}).
+\newblock
+
+
+\bibitem[Wang et~al\mbox{.}(2019a)]%
+        {wang2019superglue}
+\bibfield{author}{\bibinfo{person}{Alex Wang}, \bibinfo{person}{Yada
+  Pruksachatkun}, \bibinfo{person}{Nikita Nangia}, \bibinfo{person}{Amanpreet
+  Singh}, \bibinfo{person}{Julian Michael}, \bibinfo{person}{Felix Hill},
+  \bibinfo{person}{Omer Levy}, {and} \bibinfo{person}{Samuel Bowman}.}
+  \bibinfo{year}{2019}\natexlab{a}.
+\newblock \showarticletitle{Superglue: A stickier benchmark for general-purpose
+  language understanding systems}.
+\newblock \bibinfo{journal}{\emph{Advances in neural information processing
+  systems}}  \bibinfo{volume}{32} (\bibinfo{year}{2019}).
+\newblock
+
+
+\bibitem[Wang et~al\mbox{.}(2019b)]%
+        {wang2019glue}
+\bibfield{author}{\bibinfo{person}{Alex Wang}, \bibinfo{person}{Amanpreet
+  Singh}, \bibinfo{person}{Julian Michael}, \bibinfo{person}{Felix Hill},
+  \bibinfo{person}{Omer Levy}, {and} \bibinfo{person}{Samuel~R Bowman}.}
+  \bibinfo{year}{2019}\natexlab{b}.
+\newblock \showarticletitle{Glue: A multi-task benchmark and analysis platform
+  for natural language understanding}. In \bibinfo{booktitle}{\emph{7th
+  International Conference on Learning Representations, ICLR 2019}}.
+\newblock
+
+
+\bibitem[Wilie et~al\mbox{.}(2020)]%
+        {wilie-etal-2020-indonlu}
+\bibfield{author}{\bibinfo{person}{Bryan Wilie}, \bibinfo{person}{Karissa
+  Vincentio}, \bibinfo{person}{Genta~Indra Winata}, \bibinfo{person}{Samuel
+  Cahyawijaya}, \bibinfo{person}{Xiaohong Li}, \bibinfo{person}{Zhi~Yuan Lim},
+  \bibinfo{person}{Sidik Soleman}, \bibinfo{person}{Rahmad Mahendra},
+  \bibinfo{person}{Pascale Fung}, \bibinfo{person}{Syafri Bahar}, {and}
+  \bibinfo{person}{Ayu Purwarianti}.} \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{{I}ndo{NLU}: Benchmark and Resources for Evaluating
+  {I}ndonesian Natural Language Understanding}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the 1st Conference of the
+  Asia-Pacific Chapter of the Association for Computational Linguistics and the
+  10th International Joint Conference on Natural Language Processing}},
+  \bibfield{editor}{\bibinfo{person}{Kam-Fai Wong}, \bibinfo{person}{Kevin
+  Knight}, {and} \bibinfo{person}{Hua Wu}} (Eds.).
+  \bibinfo{publisher}{Association for Computational Linguistics},
+  \bibinfo{address}{Suzhou, China}, \bibinfo{pages}{843--857}.
+\newblock
+\urldef\tempurl%
+\url{https://aclanthology.org/2020.aacl-main.85}
+\showURL{%
+\tempurl}
 
 
 \bibitem[Yang et~al\mbox{.}(2025)]%

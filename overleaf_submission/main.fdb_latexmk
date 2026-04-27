@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1777235480.71624 "main.aux" "main.bbl" "main" 1777235678.97174 0
+["bibtex main"] 1777319015.85363 "main.aux" "main.bbl" "main" 1777319017.52723 0
   "./refs.bib" 1777224370 178843 d4f0c573054e9a54ed4a473af6bf414f ""
   "/usr/local/texlive/2024/texmf-dist/bibtex/bst/acmart/ACM-Reference-Format.bst" 1680299675 90332 18dc4e5c9b5c2ddd337e9f97727d04f1 ""
-  "main.aux" 1777235678.59327 21243 9e6ce463a0e6536e1034b6ebf5bbf610 "pdflatex"
+  "main.aux" 1777319017.15109 23252 36845f15f22f8b282c188f0ae333f4a7 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1777235677.33292 "main.tex" "main.pdf" "main" 1777235678.97193 0
+["pdflatex"] 1777319015.96991 "main.tex" "main.pdf" "main" 1777319017.52743 0
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc" 1558214095 7693 0f2dce6d313c82989ec3a67fc24df2a0 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc" 1455745497 9446 fe5580ca6042a44427f18d450942e7d0 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1490131464 2921 8ca0eb0831f9bc5da080d3697cfe67bf ""
@@ -221,11 +221,11 @@
   "article_assets/figures/ppl_heatmap.pdf" 1777224372 16629 269b8ab2f7da9708371cd235d4dd1edc ""
   "article_assets/figures/quality_vs_latency.pdf" 1777235663.3368 26133 7631839e77212b94bf501108951f7230 ""
   "article_assets/figures/task_winners.pdf" 1777235663.33835 21854 9815c97685dc8da86f1fded1a474f462 ""
-  "article_assets/task_winners_table.tex" 1777235430.48644 5788 3a8c76fcd849016126ac505ed8079964 ""
-  "main.aux" 1777235678.59327 21243 9e6ce463a0e6536e1034b6ebf5bbf610 "pdflatex"
-  "main.bbl" 1777235480.83024 20283 35c0e4bbead5da767354cc7a4a72671a "bibtex main"
-  "main.out" 1777235678.59459 5157 d045788e15760fc05ce98ba2824055d6 "pdflatex"
-  "main.tex" 1777235470.39915 44960 4f67f292679bdc1164486ec195265c24 ""
+  "article_assets/task_winners_table.tex" 1777238523.06513 5784 812c9f85b74386c354ac73bac07f56d7 ""
+  "main.aux" 1777319017.15109 23252 36845f15f22f8b282c188f0ae333f4a7 "pdflatex"
+  "main.bbl" 1777319015.96662 35004 35760804e21333d72946c07dd5a8bb3d "bibtex main"
+  "main.out" 1777319017.15244 5742 67026739c532546ba1055b39cb406e64 "pdflatex"
+  "main.tex" 1777318999.15418 47761 ff7f0848a9fd68451c2b8e49846c8c81 ""
   (generated)
   "main.aux"
   "main.log"
