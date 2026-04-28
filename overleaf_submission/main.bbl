@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{47}
+\begin{thebibliography}{44}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -68,18 +68,6 @@
 \newblock
 
 
-\bibitem[Bakagianni et~al\mbox{.}(2024)]%
-        {bakagianni2024towards}
-\bibfield{author}{\bibinfo{person}{Juli Bakagianni}, \bibinfo{person}{Kanella
-  Pouli}, \bibinfo{person}{Maria Gavriilidou}, {and} \bibinfo{person}{John
-  Pavlopoulos}.} \bibinfo{year}{2024}\natexlab{}.
-\newblock \showarticletitle{Towards systematic monolingual nlp surveys: Gena of
-  greek nlp}.
-\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2407.09861}}
-  (\bibinfo{year}{2024}).
-\newblock
-
-
 \bibitem[Bartziokas et~al\mbox{.}(2020)]%
         {Bartziokas2020}
 \bibfield{author}{\bibinfo{person}{Nikos Bartziokas},
@@ -112,16 +100,6 @@
 \urldef\tempurl%
 \url{https://doi.org/10.1145/3411408.3411425}
 \showDOI{\tempurl}
-
-
-\bibitem[Bommasani et~al\mbox{.}(2023)]%
-        {bommasani2023holistic}
-\bibfield{author}{\bibinfo{person}{Rishi Bommasani}, \bibinfo{person}{Percy
-  Liang}, {and} \bibinfo{person}{Tony Lee}.} \bibinfo{year}{2023}\natexlab{}.
-\newblock \showarticletitle{Holistic {E}valuation of {L}anguage {M}odels}.
-\newblock \bibinfo{journal}{\emph{Annals of the New York Academy of Sciences}}
-  (\bibinfo{year}{2023}).
-\newblock
 
 
 \bibitem[Brown et~al\mbox{.}(2020)]%
@@ -460,18 +438,6 @@
 \newblock \showarticletitle{Automating Benchmark Generation for Named Entity
   Recognition and Entity Linking}. In \bibinfo{booktitle}{\emph{European
   Semantic Web Conference}}. Springer, \bibinfo{pages}{143--148}.
-\newblock
-
-
-\bibitem[Papineni et~al\mbox{.}(2002)]%
-        {papineni2002bleu}
-\bibfield{author}{\bibinfo{person}{Kishore Papineni}, \bibinfo{person}{Salim
-  Roukos}, \bibinfo{person}{Todd Ward}, {and} \bibinfo{person}{Wei-Jing Zhu}.}
-  \bibinfo{year}{2002}\natexlab{}.
-\newblock \showarticletitle{Bleu: a method for automatic evaluation of machine
-  translation}. In \bibinfo{booktitle}{\emph{Proceedings of the 40th annual
-  meeting of the Association for Computational Linguistics}}.
-  \bibinfo{pages}{311--318}.
 \newblock
 
 

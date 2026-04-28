@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import html
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -77,7 +78,11 @@ def run_task(
     dataset = _sample_dataset(dataset, sample_size=sample_size, random_state=random_state)
 
     records: list[dict[str, object]] = []
-    for model in models:
+    model_list = list(models)
+    total_generations = len(model_list) * len(dataset)
+    completed_generations = 0
+    progress_started_at = time.monotonic()
+    for model in model_list:
         for row in dataset.itertuples(index=False):
             example = row._asdict()
             result = backend.generate(
@@ -96,6 +101,16 @@ def run_task(
             }
             record.update(example)
             records.append(record)
+            completed_generations += 1
+            elapsed = time.monotonic() - progress_started_at
+            avg_seconds = elapsed / max(completed_generations, 1)
+            eta_seconds = avg_seconds * (total_generations - completed_generations)
+            print(
+                f"[{task_name}] {completed_generations}/{total_generations} "
+                f"model={model} last={result.latency_seconds:.1f}s "
+                f"avg={avg_seconds:.1f}s eta={eta_seconds / 60:.1f}m",
+                flush=True,
+            )
 
     raw = pd.DataFrame.from_records(records)
     summary = task.evaluate(raw)

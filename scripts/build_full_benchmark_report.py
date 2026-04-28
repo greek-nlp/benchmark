@@ -20,7 +20,7 @@ PRIMARY_METRIC_BY_TASK = {
     "gec": ("gleu_vs_reference", False),
     "intent_classification": ("macro_f1", False),
     "legal_classification": ("macro_f1", False),
-    "machine_translation": ("bleu", False),
+    "machine_translation": ("chrf", False),
     "ner": ("macro_f1", False),
     "pos": ("macro_f1", False),
     "summarization": ("bertscore_f1", False),

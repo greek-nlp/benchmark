@@ -18,6 +18,9 @@ def _load_dataset(*, data_csv: str, random_state: int, split: str = "test") -> p
     df["subset"] = df["subset"].astype(int)
     subset_map = {"train": 0, "validation": 1, "test": 2}
     filtered = df.loc[df["subset"] == subset_map[split]].drop(columns=["subset"]).reset_index(drop=True)
+    median_text_length = int(filtered["text"].fillna("").astype(str).str.len().median())
+    print(f"[summarization] truncating input texts to median test length: {median_text_length} characters", flush=True)
+    filtered["text"] = filtered["text"].fillna("").astype(str).str.slice(0, median_text_length)
     return filtered.rename(columns={"summary": "reference_summary"})
 
 

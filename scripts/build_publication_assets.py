@@ -188,7 +188,7 @@ def _write_figure_snippets(article_dir: Path) -> None:
 
 def _primary_metric_for_task(task_name: str) -> tuple[str, bool]:
     if task_name == "machine_translation":
-        return ("bleu", False)
+        return ("chrf", False)
     if task_name == "summarization":
         return ("bertscore_f1", False)
     if task_name == "gec":

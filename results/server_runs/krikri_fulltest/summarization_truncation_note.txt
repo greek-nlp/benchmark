@@ -1,0 +1,1 @@
+Krikri summarization rerun truncated only summarization:000000 from 117879 to 12000 characters.
