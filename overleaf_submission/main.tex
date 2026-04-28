@@ -71,7 +71,7 @@ Natural Language Processing (NLP) has advanced substantially with the rise of la
 
 This gap is compounded by the scarcity of open-access, high-quality language resources. In this context, high-quality resources refer to native, human-authored corpora, as opposed to synthetic or machine-translated data. Although synthetic and translated resources are often used to bridge data gaps, they can introduce ``translationese'', where the text inherits syntactic and stylistic constraints from the source language \cite{koppel2011translationese}, and may lack the lexical diversity and morphological nuance of original language use. Such resources are needed both for pre-training foundation models and for building gold-standard benchmarks for downstream tasks. Comprehensive surveys of NLP resources for lesser-resourced languages therefore do more than document digital readiness: they can also guide future research, reveal reusable datasets, and support the construction of new benchmarks. Our work focuses on one such language, Modern Greek.\footnote{In our study, the term "Greek" refers exclusively to Modern Greek (ISO 639-1: el), excluding previous stages of the language's history.}
 
-In this work, we ask two related research questions: \emph{which properly licensed Greek datasets can be used to train and/or assess LLMs on downstream NLP tasks, and how do open, instruction-tuned, edge-capable LLMs perform across the resulting Greek benchmark?}
+In this work, we ask two related research questions: \emph{which properly licensed Greek datasets can be used to train or evaluate LLMs on downstream NLP tasks, and how do open, instruction-tuned, edge-capable LLMs perform across the resulting Greek benchmark?}
 By addressing these questions, our work makes three contributions:
 \begin{itemize}
     \item Based on a recent Greek NLP survey \cite{bakagianni2025systematic}, we extract publicly available Greek datasets that are (a) open-access and (b) permit derivatives, aggregate them into a unified collection that is easy to recompile and use, and provide an automated discovery component for identifying candidate datasets from newer Greek NLP literature.\footnote{The code is available at: \url{anonymised.url}}
@@ -233,7 +233,7 @@ Summarization \cite{koniaris2023evaluation} & 300 & text & - & 18,771.3 & - \\
 \section{Benchmark Setup}
 \subsection{Tasks and Models}
 
-Our benchmark covers seven task families: GEC, intent classification, legal classification, machine translation, NER, POS tagging, and summarization.
+Our benchmark covers seven task families: GEC, intent classification, legal text classification, machine translation, NER, POS tagging, and summarization.
 
 We evaluate five open-weight, instruction-tuned models in the 7B--9B parameter range that are available for local inference through Ollama:
 \begin{itemize}
@@ -244,25 +244,25 @@ We evaluate five open-weight, instruction-tuned models in the 7B--9B parameter r
 \item \texttt{falcon3:7b-instruct} \cite{almazrouei2023falcon};\footnote{\url{https://huggingface.co/tiiuae/Falcon3-7B-Instruct}}
 \end{itemize}
 
-This set controls for model scale while maximizing architectural and training diversity. Llama 3.1 and Qwen2.5 provide long-context variants (128K), Falcon3 reports 32K context, and Aya Expanse reports 8K context.
+This set controls for model scale while maximizing architectural and training diversity. Llama 3.1 and Qwen2.5 provide long-context variants (128K),\footnote{An extension of Llama-3.1 is \href{https://huggingface.co/ilsp/Llama-Krikri-8B-Instruct}{Llama-Krikri-8B-Instruct}. Preliminary runs showed mixed task-level behavior, but we omit these results from the main comparison to keep the evaluation focused on distinct model families under the same capped protocol.} Falcon3 reports 32K context, and Aya Expanse reports 8K context.
 
 All models are evaluated under the same benchmark pipeline, prompts, dataset splits, and metrics, so observed differences mainly reflect model capability, multilingual transfer, and instruction-following quality rather than evaluation setup.
 
 \subsection{Deterministic Capped-Test Protocol}
-The full test sets are very uneven in size, with legal classification and machine translation being especially large. To keep evaluation tractable while preserving reproducibility, we use a deterministic capped-test profile that always takes the first instances in dataset order (as suggested by the dataset providers) instead of random samples. The resulting capped evaluation (Table~\ref{tab:downstream_stats}) contains:
+The full test sets are very uneven in size, with legal text classification and machine translation being especially large. To keep evaluation tractable while preserving reproducibility, we use a deterministic capped-test profile that always takes the first instances in dataset order (as suggested by the dataset providers) instead of random samples. The resulting capped evaluation (Table~\ref{tab:downstream_stats}) contains:
 \begin{itemize}[leftmargin=1.2em]
 \item GEC: 175 examples
-\item intent classification: 436 examples
-\item legal classification: 500 examples
-\item machine translation: 500 English pairs, 500 Persian pairs, and 500 Japanese pairs
+\item Intent Classification: 436 examples
+\item Legal Text Classification: 500 examples
+\item Machine Translation: 500 English pairs, 500 Persian pairs, and 500 Japanese pairs
 \item NER: 500 examples
-\item POS tagging: 456 examples
-\item summarization: 300 examples
+\item POS Tagging: 456 examples
+\item Summarization: 300 examples
 \end{itemize}
 This design keeps the smaller tasks intact while reducing the runtime burden of the largest tasks. It also supports exact reruns because the selected subset is deterministic. For machine translation, the benchmark now uses a shared data-wrapper path rather than a separate task-local split implementation, which eliminates an earlier source of inconsistency in language-specific counts.
 
 \subsection{Metrics}\label{sec:metrics}
-We report task-appropriate primary metrics. For GEC, the primary metric is GLEU \cite{napoles2015ground}; we also report exact match and edit-distance diagnostics (WER/CER) against reference and source text. For intent classification, legal classification, NER, and POS tagging, macro-F1 is the primary comparison metric, with accuracy as a supplementary metric; for NER we additionally report entity-level F1. For machine translation we use chrF \cite{popovic2015chrf} as the primary metric and retain WER/CER as supplementary string-distance diagnostics. For summarization we use BERTScore-F1 \cite{zhang2019bertscore} as the primary semantic comparison metric and report WER/CER and ROUGE \cite{lin2004rouge} as supplementary overlap-based diagnostics. Latency is reported as average per-instance generation time in seconds.
+We report task-appropriate primary metrics. For GEC, the primary metric is GLEU \cite{napoles2015ground}; we also report exact match and edit-distance diagnostics (WER/CER) against reference and source text. For intent classification, legal text classification, NER, and POS tagging, macro-F1 is the primary comparison metric, with accuracy as a supplementary metric; for NER we additionally report entity-level F1. For machine translation we use chrF \cite{popovic2015chrf} as the primary metric and retain WER/CER as supplementary string-distance diagnostics. For summarization we use BERTScore-F1 \cite{zhang2019bertscore} as the primary semantic comparison metric and report WER/CER and ROUGE \cite{lin2004rouge} as supplementary overlap-based diagnostics. Latency is reported as average per-instance generation time in seconds.
 
 To compare models across heterogeneous metrics, we additionally compute a direction-aware normalized quality score per benchmark segment. Within each segment, the best model receives the highest normalized value and the worst model the lowest. These segment-normalized scores are then averaged to obtain an overall ranking. The main paper focuses on the primary metrics used for ranking, while the appendix reports additional prompt and winner-margin material.
 
@@ -310,7 +310,9 @@ Legal text classification remains a difficult benchmark component. As shown in T
 
 By contrast, intent classification is comparatively more tractable. As reported in Table~\ref{tab:capped-task-winners} and Table~\ref{tab:appendix-intent-classification-analysis}, \texttt{gemma2:9b} achieves a macro-F1 score of 0.737, substantially outperforming other models on this task.
 
-\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. As summarized in Table~\ref{tab:capped-task-winners} and detailed in Table~\ref{tab:appendix-machine-translation-analysis}, using chrF as the primary metric, \texttt{gemma2:9b} leads English and Japanese translation, while \texttt{qwen2.5:7b-instruct} is first on Persian. Notably, its chrF score substantially exceeds the rest of the field despite weaker WER, highlighting differences between surface-form and character-level evaluation metrics.
+\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. As summarized in Table~\ref{tab:capped-task-winners} and detailed in Table~\ref{tab:appendix-machine-translation-analysis}, \texttt{gemma2:9b} achieves the highest chrF score for English and Japanese translation. Notably, its chrF score exceeds the rest of the field despite not achieving the best WER, indicating that chrF (character-level) and WER (word-level) capture different aspects of translation quality and can rank models differently.
+
+\texttt{qwen2.5:7b-instruct} clearly outperforms other models on Persian translation (Table~\ref{tab:appendix-machine-translation-analysis}), indicating that some models (notably Qwen) are better equipped to handle lower-resource or typologically distant language pairs such as Greek–Persian.
 
 \subsubsection{POS tagging and NER}
 As shown in Table~\ref{tab:capped-task-winners} and the detailed results in Tables~\ref{tab:appendix-pos-analysis} and \ref{tab:appendix-ner-analysis}, \texttt{gemma2:9b} leads on macro-F1 in both POS tagging and NER. However, \texttt{llama3.1:8b-instruct} achieves higher Accuracy in NER (but not in POS tagging), suggesting differences in handling minority entity classes and class imbalance.
@@ -318,14 +320,13 @@ As shown in Table~\ref{tab:capped-task-winners} and the detailed results in Tabl
 \subsubsection{Summarization} The winner is \texttt{aya-expanse:8b}, but only by a very small margin from \texttt{llama3.1:8b-instruct} (0.519 vs.\ 0.517), which is also better in WER. This suggests that the top two models are effectively near-tied semantically.
 
 \section{Discussion}
-The benchmark combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. Although well suited for iterative comparison, it is not a substitute for full test-set evaluation when final archival numbers are required. Specific metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal classification would benefit from richer label semantics. Even so, the supplemental metrics improve interpretability relative to a WER-only or macro-F1-only summary.
+The benchmark combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. Although well suited for iterative comparison, it is not a substitute for full test-set evaluation when final archival numbers are required. Specific metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal text classification would benefit from richer label semantics. Even so, the supplemental metrics improve interpretability relative to a WER-only or macro-F1-only summary.
 
 Despite these caveats, the benchmark exposes meaningful structure in model behaviour. Some models offer strong general performance across multiple tasks, while others are better understood as specialists for translation or summarization. This kind of cross-task perspective is hard to obtain from isolated task runs and is exactly where a unified benchmark becomes valuable.
 
 \section{Evergreen Dataset Discovery}
 
 Beyond our static benchmark, Greek NLP resources continue to evolve. To make the resource collection maintainable rather than fixed to the 2012--2023 survey, we implement a lightweight evergreen discovery pipeline for newly published work. This component is not used to define the benchmark scores reported above; instead, it demonstrates how the resource inventory can be updated as new datasets appear.
-
 To support the continuous expansion of Greek NLP benchmarks, we adapt the search and screening protocol of \citet{bakagianni2025systematic} to recent literature (2024--2026) retrieved from the \textit{ACL Anthology} and \textit{Semantic Scholar} (\(n=118\)).\footnote{The implementation is available in our GitHub repository, enabling reuse and continuous application of the protocol for future dataset discovery.} The objective is to provide a proof of concept for an \textit{evergreen} pipeline for identifying new Greek NLP datasets.
 
 The screening process was applied in two stages. First, non--peer-reviewed publications were removed using rule-based filtering. The remaining exclusion criteria were then handled with a zero-shot LLM classifier. This process yielded 55 in-scope papers, of which 48 were identified as likely containing dataset references based on indications in the abstract that a dataset was introduced or released.
@@ -343,7 +344,7 @@ Overall, the results indicate that automatic mining can effectively complement m
 
 \section{Conclusion}
 We presented a reproducible Greek NLP benchmark for open, instruction-tuned, edge-capable LLMs and used it to compare five models across seven task families and nine benchmark segments. Under a deterministic capped-test protocol, \texttt{gemma2:9b} ranks first overall, while \texttt{llama3.1:8b-instruct}, \texttt{qwen2.5:7b-instruct}, and \texttt{aya-expanse:8b} emerge as specialists on GEC, Persian translation, and summarization respectively. The current pipeline is already useful for comparative evaluation, and it also provides a clean path from benchmark execution to publication assets.
-Future work should extend the benchmark with richer label semantics for legal classification, stronger semantic metrics and human assessment for translation and summarization, and continuous dataset discovery to keep the Greek NLP resource collection up to date.
+Future work should extend the benchmark with richer label semantics for legal text classification, stronger semantic metrics and human assessment for translation and summarization, and continuous dataset discovery to keep the Greek NLP resource collection up to date.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
@@ -354,17 +355,17 @@ Future work should extend the benchmark with richer label semantics for legal cl
 
 % \input{\assetsdir/overall_ranking_table.tex}
 
-\section{Winner Margins by Segment}
-Figure~\ref{fig:task-winner-margins} presents the gap between the best and second-best model for each benchmark segment. The largest winner margins occur on NER and POS tagging.
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=0.5\textwidth]{\assetsdir/figures/task_winners.pdf}
-\caption{Normalized quality margin between the winning model and the runner-up for each benchmark segment. Large margins indicate clearer task-level separation between the top two models.}
-\Description{A horizontal bar chart showing the normalized quality gap between the best and second-best model for each benchmark segment. The largest winner margins occur on named entity recognition and part-of-speech tagging.}
-\label{fig:task-winner-margins}
-\end{figure}
+% \section{Winner Margins by Segment}
+% Figure~\ref{fig:task-winner-margins} presents the gap between the best and second-best model for each benchmark segment. The largest winner margins occur on NER and POS tagging.
+% \begin{figure}[ht!]
+% \centering
+% \includegraphics[width=0.5\textwidth]{\assetsdir/figures/task_winners.pdf}
+% \caption{Normalized quality margin between the winning model and the runner-up for each benchmark segment. Large margins indicate clearer task-level separation between the top two models.}
+% \Description{A horizontal bar chart showing the normalized quality gap between the best and second-best model for each benchmark segment. The largest winner margins occur on named entity recognition and part-of-speech tagging.}
+% \label{fig:task-winner-margins}
+% \end{figure}
 
-\input{\assetsdir/appendix_task_analysis.tex}
+% \input{\assetsdir/appendix_task_analysis.tex}
 
 \section{Prompt Templates}
 
@@ -401,7 +402,7 @@ Intent: \\
 \end{table}
 
 \begin{table}[ht!]
-\caption{Legal Classification.}
+\caption{Legal Text Classification.}
 \small
 \begin{tabularx}{\columnwidth}{p{0.22\columnwidth}X}
 \toprule

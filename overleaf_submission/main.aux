@@ -127,6 +127,7 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Patterns across tasks}{5}{subsection.5.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Text classification}{5}{subsubsection.5.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Translation}{5}{subsubsection.5.2.2}\protected@file@percent }
+\citation{bakagianni2025systematic}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300), using representative metrics per task.}}{6}{table.caption.12}\protected@file@percent }
 \newlabel{tab:capped-task-winners}{{4}{6}{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300), using representative metrics per task}{table.caption.12}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER.}}{6}{figure.caption.13}\protected@file@percent }
@@ -134,7 +135,6 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.3}POS tagging and NER}{6}{subsubsection.5.2.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.4}Summarization}{6}{subsubsection.5.2.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{6}{section.6}\protected@file@percent }
-\citation{bakagianni2025systematic}
 \bibstyle{ACM-Reference-Format}
 \bibdata{refs}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family.}}{7}{figure.caption.14}\protected@file@percent }
@@ -189,51 +189,17 @@
 \newlabel{tocindent-1}{0pt}
 \newlabel{tocindent0}{0pt}
 \newlabel{tocindent1}{6.30899pt}
-\newlabel{tocindent2}{12.21297pt}
+\newlabel{tocindent2}{12.41998pt}
 \newlabel{tocindent3}{18.198pt}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Winner Margins by Segment}{9}{appendix.A}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Normalized quality margin between the winning model and the runner-up for each benchmark segment. Large margins indicate clearer task-level separation between the top two models.}}{9}{figure.caption.17}\protected@file@percent }
-\newlabel{fig:task-winner-margins}{{7}{9}{Normalized quality margin between the winning model and the runner-up for each benchmark segment. Large margins indicate clearer task-level separation between the top two models}{figure.caption.17}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B}Per-Task Analysis}{9}{appendix.B}\protected@file@percent }
-\newlabel{sec:appendix-per-task-analysis}{{B}{9}{Per-Task Analysis}{appendix.B}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}GEC}{9}{subsection.B.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Intent Classification}{9}{subsection.B.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Legal Classification}{9}{subsection.B.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Machine Translation}{9}{subsection.B.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.5}NER}{9}{subsection.B.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.6}POS}{9}{subsection.B.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.7}Summarization}{9}{subsection.B.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C}Prompt Templates}{9}{appendix.C}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Per-model results for GEC.}}{10}{table.caption.18}\protected@file@percent }
-\newlabel{tab:appendix-gec-analysis}{{5}{10}{Per-model results for GEC}{table.caption.18}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Per-task comparison for GEC. Bars show the primary metric and annotations show average latency.}}{10}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:appendix-gec-analysis}{{8}{10}{Per-task comparison for GEC. Bars show the primary metric and annotations show average latency}{figure.caption.19}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Per-model results for Intent.}}{10}{table.caption.20}\protected@file@percent }
-\newlabel{tab:appendix-intent-classification-analysis}{{6}{10}{Per-model results for Intent}{table.caption.20}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Per-model results for Legal.}}{10}{table.caption.22}\protected@file@percent }
-\newlabel{tab:appendix-legal-classification-analysis}{{7}{10}{Per-model results for Legal}{table.caption.22}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Per-task comparison for Intent Classification. Bars show the primary metric and annotations show average latency.}}{11}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:appendix-intent-classification-analysis}{{9}{11}{Per-task comparison for Intent Classification. Bars show the primary metric and annotations show average latency}{figure.caption.21}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Per-task comparison for Legal Classification. Bars show the primary metric and annotations show average latency.}}{11}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:appendix-legal-classification-analysis}{{10}{11}{Per-task comparison for Legal Classification. Bars show the primary metric and annotations show average latency}{figure.caption.23}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Per-model results for Machine Translation.}}{12}{table.caption.24}\protected@file@percent }
-\newlabel{tab:appendix-machine-translation-analysis}{{8}{12}{Per-model results for Machine Translation}{table.caption.24}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Per-task comparison for Machine Translation. Bars show the primary metric and annotations show average latency.}}{12}{figure.caption.25}\protected@file@percent }
-\newlabel{fig:appendix-machine-translation-analysis}{{11}{12}{Per-task comparison for Machine Translation. Bars show the primary metric and annotations show average latency}{figure.caption.25}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Per-model results for NER.}}{12}{table.caption.26}\protected@file@percent }
-\newlabel{tab:appendix-ner-analysis}{{9}{12}{Per-model results for NER}{table.caption.26}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Per-model results for POS.}}{12}{table.caption.28}\protected@file@percent }
-\newlabel{tab:appendix-pos-analysis}{{10}{12}{Per-model results for POS}{table.caption.28}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Per-task comparison for NER. Bars show the primary metric and annotations show average latency.}}{13}{figure.caption.27}\protected@file@percent }
-\newlabel{fig:appendix-ner-analysis}{{12}{13}{Per-task comparison for NER. Bars show the primary metric and annotations show average latency}{figure.caption.27}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Per-task comparison for POS. Bars show the primary metric and annotations show average latency.}}{13}{figure.caption.29}\protected@file@percent }
-\newlabel{fig:appendix-pos-analysis}{{13}{13}{Per-task comparison for POS. Bars show the primary metric and annotations show average latency}{figure.caption.29}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Per-model results for Summ..}}{14}{table.caption.30}\protected@file@percent }
-\newlabel{tab:appendix-summarization-analysis}{{11}{14}{Per-model results for Summ.}{table.caption.30}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Per-task comparison for Summarization. Bars show the primary metric and annotations show average latency.}}{14}{figure.caption.31}\protected@file@percent }
-\newlabel{fig:appendix-summarization-analysis}{{14}{14}{Per-task comparison for Summarization. Bars show the primary metric and annotations show average latency}{figure.caption.31}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces POS Tagging.}}{15}{table.caption.37}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Summarization.}}{15}{table.caption.38}\protected@file@percent }
-\newlabel{tab:summ-prompt}{{18}{15}{Summarization}{table.caption.38}{}}
-\newlabel{TotPages}{{15}{15}{}{page.15}{}}
-\gdef \@abspage@last{15}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Legal Text Classification.}}{9}{table.caption.19}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Machine Translation.}}{9}{table.caption.20}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Named Entity Recognition.}}{9}{table.caption.21}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces POS Tagging.}}{9}{table.caption.22}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Summarization.}}{9}{table.caption.23}\protected@file@percent }
+\newlabel{tab:summ-prompt}{{11}{9}{Summarization}{table.caption.23}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Prompt Templates}{9}{appendix.A}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Grammatical Error Correction (GEC)}}{9}{table.caption.17}\protected@file@percent }
+\newlabel{tab:gec-prompt}{{5}{9}{Grammatical Error Correction (GEC)}{table.caption.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Intent Classification.}}{9}{table.caption.18}\protected@file@percent }
+\newlabel{TotPages}{{9}{9}{}{page.9}{}}
+\gdef \@abspage@last{9}
