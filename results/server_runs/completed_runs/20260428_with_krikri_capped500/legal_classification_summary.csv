@@ -1,0 +1,7 @@
+task,model,samples,accuracy,macro_f1,avg_latency_seconds
+legal_classification,gemma2:9b,500,0.346,0.1263091597727424,1.348972689469345
+legal_classification,aya-expanse:8b,500,0.292,0.0982484059805299,1.0697465413305909
+legal_classification,qwen2.5:7b-instruct,500,0.202,0.0511080784239869,1.4166997012766078
+legal_classification,llama3.1:8b-instruct,500,0.182,0.0761121124331486,0.9137702800696716
+legal_classification,falcon3:7b-instruct,500,0.122,0.0467149667780875,1.0136549264173955
+legal_classification,ilsp/Llama-Krikri-8B-Instruct:latest,500,0.218,0.1558109611519788,3.7072363043017686

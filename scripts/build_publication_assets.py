@@ -25,6 +25,7 @@ MODEL_LABELS = {
     "gemma2:9b": "Gemma2 9B",
     "aya-expanse:8b": "Aya Expanse 8B",
     "llama3.1:8b-instruct": "Llama 3.1 8B Instruct",
+    "ilsp/Llama-Krikri-8B-Instruct:latest": "Llama-Krikri 8B Instruct",
     "qwen2.5:7b-instruct": "Qwen2.5 7B Instruct",
     "falcon3:7b-instruct": "Falcon3 7B Instruct",
 }
@@ -117,7 +118,7 @@ def _write_overall_table(article_dir: Path, overall_table: pd.DataFrame, winner_
     latex_table = latex_table[["Model", "Rank", "Avg. Quality", "Avg. Latency (s)", "Segment Wins"]]
 
     lines = [
-        r"\begin{table}[t]",
+        r"\begin{table*}[t]",
         r"\centering",
         r"\caption{Overall ranking of the evaluated models across the nine benchmark segments in the deterministic capped benchmark run. Normalized quality is averaged over segment-level, direction-aware scores.}",
         r"\label{tab:capped-overall-ranking}",
@@ -130,7 +131,7 @@ def _write_overall_table(article_dir: Path, overall_table: pd.DataFrame, winner_
         lines.append(
             f"{row['Model']} & {row['Rank']} & {row['Avg. Quality']} & {row['Avg. Latency (s)']} & {row['Segment Wins']} \\\\"
         )
-    lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table}"])
+    lines.extend([r"\bottomrule", r"\end{tabular}", r"\end{table*}"])
     (article_dir / "overall_ranking_table.tex").write_text("\n".join(lines) + "\n", encoding="ascii")
 
 
@@ -443,9 +444,11 @@ def _plot_quality_latency_publication(combined: pd.DataFrame, figures_dir: Path,
         )
 
     ax.set_title("Quality vs Latency Trade-off", fontsize=15, pad=12)
-    ax.set_xlabel("Average latency (seconds)")
+    ax.set_xscale("log")
+    ax.set_xlabel("Average latency (seconds, log scale)")
     ax.set_ylabel("Average normalized quality")
     ax.grid(True, linestyle="--", alpha=0.25)
+    ax.grid(True, axis="x", which="minor", linestyle=":", alpha=0.16)
 
     model_handles = [
         Line2D([0], [0], marker="o", color="w", markerfacecolor=palette[model], markeredgecolor="#16324f", markersize=7, label=_pretty_model(model))

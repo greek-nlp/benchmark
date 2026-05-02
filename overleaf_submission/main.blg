@@ -6,7 +6,6 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
 Database file #1: refs.bib
-Warning--I didn't find a database entry for "bakagianni2025systematic"
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=200001) to 20 items from 10.
@@ -15,6 +14,8 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Warning--page numbers missing in both pages and numpages fields in Alexandridis2021Survey
 Warning--no number and no volume in almazrouei2023falcon
 Warning--page numbers missing in both pages and numpages fields in almazrouei2023falcon
+Warning--no number and no volume in bakagianni2025systematic
+Warning--page numbers missing in both pages and numpages fields in bakagianni2025systematic
 Warning--no number and no volume in dang2024aya
 Warning--page numbers missing in both pages and numpages fields in dang2024aya
 Warning--no number and no volume in evdaimon2023greekbart
@@ -67,45 +68,45 @@ Warning--page numbers missing in both pages and numpages fields in yang2024qwen2
 Warning--page numbers missing in both pages and numpages fields in Zampieri2020
 Warning--no number and no volume in zhang2019bertscore
 Warning--page numbers missing in both pages and numpages fields in zhang2019bertscore
-You've used 44 entries,
+You've used 45 entries,
             5981 wiz_defined-function locations,
-            1746 strings with 30958 characters,
-and the built_in function-call counts, 58513 in all, are:
-= -- 7300
-> -- 2701
+            1749 strings with 31130 characters,
+and the built_in function-call counts, 59570 in all, are:
+= -- 7465
+> -- 2740
 < -- 0
-+ -- 961
-- -- 952
-* -- 4686
-:= -- 5980
-add.period$ -- 218
-call.type$ -- 44
-change.case$ -- 456
-chr.to.int$ -- 43
-cite$ -- 99
-duplicate$ -- 4673
-empty$ -- 3268
-format.name$ -- 1109
-if$ -- 14218
++ -- 974
+- -- 964
+* -- 4764
+:= -- 6078
+add.period$ -- 223
+call.type$ -- 45
+change.case$ -- 464
+chr.to.int$ -- 44
+cite$ -- 102
+duplicate$ -- 4755
+empty$ -- 3328
+format.name$ -- 1125
+if$ -- 14500
 int.to.chr$ -- 3
 int.to.str$ -- 1
-missing$ -- 197
-newline$ -- 418
-num.names$ -- 311
-pop$ -- 2100
+missing$ -- 201
+newline$ -- 426
+num.names$ -- 318
+pop$ -- 2139
 preamble$ -- 1
-purify$ -- 806
+purify$ -- 822
 quote$ -- 0
-skip$ -- 1676
+skip$ -- 1699
 stack$ -- 0
-substring$ -- 3614
-swap$ -- 465
+substring$ -- 3668
+swap$ -- 469
 text.length$ -- 19
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 992
-warning$ -- 55
-while$ -- 242
+type$ -- 1008
+warning$ -- 57
+while$ -- 245
 width$ -- 0
-write$ -- 905
-(There were 56 warnings)
+write$ -- 923
+(There were 57 warnings)

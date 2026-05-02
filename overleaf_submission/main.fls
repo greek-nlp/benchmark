@@ -443,6 +443,10 @@ INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/libertine/LinLibertine
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/libertine/lbtn_ncsllp.enc
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/vf/public/libertine/LinLibertineT-tlf-sc-t1.vf
 INPUT /usr/local/texlive/2024/texmf-dist/fonts/tfm/public/libertine/LinLibertineT-tlf-sc-t1--base.tfm
+INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc
+INPUT ./article_assets/overall_ranking_table.tex
+INPUT ./article_assets/overall_ranking_table.tex
+INPUT article_assets/overall_ranking_table.tex
 INPUT ./article_assets/task_winners_table.tex
 INPUT ./article_assets/task_winners_table.tex
 INPUT article_assets/task_winners_table.tex
@@ -456,7 +460,6 @@ INPUT ./article_assets/figures/quality_vs_latency.pdf
 INPUT ./article_assets/figures/quality_vs_latency.pdf
 INPUT ./article_assets/figures/quality_vs_latency.pdf
 INPUT ./article_assets/figures/quality_vs_latency.pdf
-INPUT /usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc
 INPUT ./main.bbl
 INPUT ./main.bbl
 INPUT main.bbl

@@ -1,5 +1,10 @@
 from __future__ import annotations
 
+import os
+
+os.environ.setdefault("USE_TF", "0")
+os.environ.setdefault("TRANSFORMERS_NO_TF", "1")
+
 import pandas as pd
 from datasets import load_dataset
 
@@ -67,12 +72,30 @@ def _evaluate(raw: pd.DataFrame) -> pd.DataFrame:
         try:
             from bert_score import score as bertscore_score
             import torch
+            from transformers import AutoTokenizer
 
             device = "cuda" if torch.cuda.is_available() else "cpu"
+            bertscore_model = "nlpaueb/bert-base-greek-uncased-v1"
+            tokenizer = AutoTokenizer.from_pretrained(bertscore_model)
+            max_tokens = min(int(getattr(tokenizer, "model_max_length", 512) or 512), 512) - 2
+
+            def truncate_for_bertscore(texts: list[str]) -> list[str]:
+                truncated = []
+                for text in texts:
+                    token_ids = tokenizer.encode(
+                        text,
+                        add_special_tokens=False,
+                        truncation=True,
+                        max_length=max_tokens,
+                    )
+                    truncated.append(tokenizer.decode(token_ids, skip_special_tokens=True) or " ")
+                return truncated
+
             p_scores, r_scores, f1_scores = bertscore_score(
-                predictions,
-                references,
-                model_type="nlpaueb/bert-base-greek-uncased-v1",
+                truncate_for_bertscore(predictions),
+                truncate_for_bertscore(references),
+                model_type=bertscore_model,
+                num_layers=12,
                 lang="el",
                 verbose=False,
                 device=device,

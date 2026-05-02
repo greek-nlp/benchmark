@@ -235,18 +235,19 @@ Summarization \cite{koniaris2023evaluation} & 300 & text & - & 18,771.3 & - \\
 
 Our benchmark covers seven task families: GEC, intent classification, legal text classification, machine translation, NER, POS tagging, and summarization.
 
-We evaluate five open-weight, instruction-tuned models in the 7B--9B parameter range that are available for local inference through Ollama:
+We evaluate six open-weight, instruction-tuned models in the 7B--9B parameter range that are available for local inference:
 \begin{itemize}
 \item \texttt{qwen2.5:7b-instruct} \cite{yang2024qwen25};\footnote{\url{https://huggingface.co/Qwen/Qwen2.5-7B-Instruct}}
 \item \texttt{llama3.1:8b-instruct} \cite{grattafiori2024llama};\footnote{\url{https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct}}
+\item \texttt{Llama-Krikri-8B-Instruct};\footnote{\url{https://huggingface.co/ilsp/Llama-Krikri-8B-Instruct}}
 \item \texttt{aya-expanse:8b} \cite{dang2024aya};\footnote{\url{https://huggingface.co/CohereLabs/aya-expanse-8b}}
 \item \texttt{gemma2:9b} \cite{team2024gemma};\footnote{\url{https://huggingface.co/google/gemma-2-9b}}
 \item \texttt{falcon3:7b-instruct} \cite{almazrouei2023falcon};\footnote{\url{https://huggingface.co/tiiuae/Falcon3-7B-Instruct}}
 \end{itemize}
 
-This set controls for model scale while maximizing architectural and training diversity. Llama 3.1 and Qwen2.5 provide long-context variants (128K),\footnote{An extension of Llama-3.1 is \href{https://huggingface.co/ilsp/Llama-Krikri-8B-Instruct}{Llama-Krikri-8B-Instruct}. Preliminary runs showed mixed task-level behavior, but we omit these results from the main comparison to keep the evaluation focused on distinct model families under the same capped protocol.} Falcon3 reports 32K context, and Aya Expanse reports 8K context.
+This set controls for model scale while maximizing architectural and training diversity. Llama 3.1 and Qwen2.5 provide long-context variants (128K), Falcon3 reports 32K context, and Aya Expanse reports 8K context. We include Llama-Krikri as a Greek-specialized extension of Llama 3.1 to assess whether language-specific adaptation changes the task-level profile. For the summarization segment, the reported Llama-Krikri result uses its long-context configuration on the untruncated capped inputs.
 
-All models are evaluated under the same benchmark pipeline, prompts, dataset splits, and metrics, so observed differences mainly reflect model capability, multilingual transfer, and instruction-following quality rather than evaluation setup.
+All models are evaluated under the same benchmark prompts, dataset splits, and metrics, so observed differences mainly reflect model capability, multilingual transfer, and instruction-following quality. The only task-specific serving adjustment is the long-context Llama-Krikri summarization rerun noted above.
 
 \subsection{Deterministic Capped-Test Protocol}
 The full test sets are very uneven in size, with legal text classification and machine translation being especially large. To keep evaluation tractable while preserving reproducibility, we use a deterministic capped-test profile that always takes the first instances in dataset order (as suggested by the dataset providers) instead of random samples. The resulting capped evaluation (Table~\ref{tab:downstream_stats}) contains:
@@ -270,21 +271,26 @@ To compare models across heterogeneous metrics, we additionally compute a direct
 %The benchmark pipeline was adjusted in several ways to make end-to-end runs stable and paper-ready. We added combined prediction exports so that the full suite produces unified CSV files across tasks. We also changed legal classification from opaque subject identifiers to coarse-grained human-readable volume labels, which avoids the degenerate all-zero behavior observed with raw numeric class IDs. For POS tagging, we added a fallback parser that tolerates \texttt{\_} head values in CoNLL-U files. At the backend level, we introduced retry and backoff logic around transient Ollama failures. Finally, we generated publication-oriented reports, tables, vector graphics, and appendix-ready per-task analyses directly from benchmark outputs.
 
 \section{Experimental Results}
-We analyse the experimental results by focusing on the best model per task, but also touching on the relationship between performance and efficiency. Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark segment. Figure~\ref{fig:model-quality-heatmap} visualizes normalized quality across segments, while Figure~\ref{fig:quality-vs-latency} shows the trade-off between quality and inference speed. Furthermore, we provide an analytical table per task.
+We analyse the experimental results by focusing on the best model per task, but also touching on the relationship between performance and efficiency. Table~\ref{tab:capped-overall-ranking} reports the overall normalized ranking, and Table~\ref{tab:capped-task-winners} summarizes the best model in each benchmark segment. Figure~\ref{fig:model-quality-heatmap} visualizes normalized quality across segments, while Figure~\ref{fig:quality-vs-latency} shows the trade-off between quality and inference speed. Furthermore, we provide an analytical table per task.
 % (keeping corresponding figures in the Appendix).
 
 \subsection{Patterns across models}
 
-\subsubsection{The best model} The strongest overall model is \texttt{gemma2:9b}, ranking first on the normalized aggregate with an average quality score of 84.4 and winning intent classification, legal text classification, NER, POS tagging, and two of the three machine translation segments. 
+\subsubsection{The best model} The strongest overall model is \texttt{gemma2:9b}, ranking first on the normalized aggregate with an average quality score of 77.4 and winning intent classification, NER, POS tagging, and two of the three machine translation segments. 
 
 \subsubsection{The runner up complements the best}
-\texttt{llama3.1:8b-instruct} ranks second overall with an average normalized quality score of 53.8. It wins GEC and remains highly competitive in intent classification and summarization, but it trails \texttt{gemma2:9b} on legal text classification and the aggregate ranking.
+\texttt{llama3.1:8b-instruct} ranks second overall with an average normalized quality score of 60.6. It wins GEC and remains highly competitive in intent classification and summarization, but it trails \texttt{gemma2:9b} in the aggregate ranking.
+
+\subsubsection{Specialization matters}
+\texttt{Llama-Krikri-8B-Instruct} ranks third overall with an average normalized quality score of 51.8. It wins legal text classification and summarization, suggesting that Greek-specific adaptation helps on some Greek-heavy tasks, but its long-context summarization run makes it substantially slower than the other models.
 
 \subsubsection{Competitive in cross-lingual tasks}
-\texttt{qwen2.5:7b-instruct} is third, which is especially competitive on Persian machine translation and wins that segment. \texttt{aya-expanse:8b} ranks fourth overall, but remains a strong specialist in summarization and is the runner-up on legal text classification and English translation.
+\texttt{qwen2.5:7b-instruct} ranks fourth overall and is especially competitive on Persian machine translation, where it wins the segment. \texttt{aya-expanse:8b} ranks fifth overall, but remains a strong runner-up in summarization and in English and Japanese translation.
 
 \subsubsection{The weakest model is not uniformly weak}
 The weakest model is \texttt{falcon3:7b-instruct}. This is often among the fastest models even when it lags in quality, which reinforces the value of reporting latency alongside task scores. 
+
+\input{\assetsdir/overall_ranking_table.tex}
 
 \input{\assetsdir/task_winners_table.tex}
 
@@ -292,32 +298,32 @@ The weakest model is \texttt{falcon3:7b-instruct}. This is often among the faste
 \centering
 \includegraphics[width=0.95\textwidth]{\assetsdir/figures/model_quality_heatmap.pdf}
 \caption{Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER.}
-\Description{A heatmap of normalized quality scores for five models across nine benchmark segments. Gemma2 9B is strongest overall, Qwen2.5 7B Instruct is strongest on Persian translation, and Aya Expanse 8B is strongest on summarization.}
+\Description{A heatmap of normalized quality scores for six models across nine benchmark segments. Gemma2 9B is strongest overall, Qwen2.5 7B Instruct is strongest on Persian translation, and Llama-Krikri 8B Instruct is strongest on legal text classification and summarization.}
 \label{fig:model-quality-heatmap}
 \end{figure*}
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{\assetsdir/figures/quality_vs_latency.pdf}
-\caption{Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family.}
+\caption{Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family; the horizontal latency axis is log-scaled so slower long-context runs remain visible without compressing faster models.}
 \Description{A scatter plot comparing average normalized quality and average latency. Higher points indicate better quality and points farther right indicate slower generation.}
 \label{fig:quality-vs-latency}
 \end{figure*}
 
 \subsection{Patterns across tasks}
 \subsubsection{Text classification}
-Legal text classification remains a difficult benchmark component. As shown in Table~\ref{tab:capped-task-winners} and the detailed results in Table~\ref{tab:appendix-legal-classification-analysis}, the refreshed coarse-grained setup raises the best macro-F1 to 0.126 with \texttt{gemma2:9b}.\footnote{We replaced opaque identifiers with coarse-grained volume labels.} This suggests that the task is still demanding under zero-shot prompting and may benefit from better label descriptions, exemplars, or task-specific fine-tuning. 
+Legal text classification remains a difficult benchmark component. As shown in Table~\ref{tab:capped-task-winners}, the best macro-F1 is 0.156 with \texttt{Llama-Krikri-8B-Instruct}, followed by 0.126 with \texttt{gemma2:9b}.\footnote{We replaced opaque identifiers with coarse-grained volume labels.} This suggests that the task is still demanding under zero-shot prompting and may benefit from better label descriptions, exemplars, or task-specific fine-tuning. 
 
-By contrast, intent classification is comparatively more tractable. As reported in Table~\ref{tab:capped-task-winners} and Table~\ref{tab:appendix-intent-classification-analysis}, \texttt{gemma2:9b} achieves a macro-F1 score of 0.737, substantially outperforming other models on this task.
+By contrast, intent classification is comparatively more tractable. As reported in Table~\ref{tab:capped-task-winners}, \texttt{gemma2:9b} achieves a macro-F1 score of 0.737, substantially outperforming other models on this task.
 
-\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. As summarized in Table~\ref{tab:capped-task-winners} and detailed in Table~\ref{tab:appendix-machine-translation-analysis}, \texttt{gemma2:9b} achieves the highest chrF score for English and Japanese translation. Notably, its chrF score exceeds the rest of the field despite not achieving the best WER, indicating that chrF (character-level) and WER (word-level) capture different aspects of translation quality and can rank models differently.
+\subsubsection{Translation} The capped profile evaluates 500 examples per target language, which is enough to separate models consistently while keeping runtime manageable. As summarized in Table~\ref{tab:capped-task-winners}, \texttt{gemma2:9b} achieves the highest chrF score for English and Japanese translation. Notably, its chrF score exceeds the rest of the field despite not achieving the best WER, indicating that chrF (character-level) and WER (word-level) capture different aspects of translation quality and can rank models differently.
 
-\texttt{qwen2.5:7b-instruct} clearly outperforms other models on Persian translation (Table~\ref{tab:appendix-machine-translation-analysis}), indicating that some models (notably Qwen) are better equipped to handle lower-resource or typologically distant language pairs such as Greek–Persian.
+\texttt{qwen2.5:7b-instruct} clearly outperforms other models on Persian translation, indicating that some models (notably Qwen) are better equipped to handle lower-resource or typologically distant language pairs such as Greek–Persian.
 
 \subsubsection{POS tagging and NER}
-As shown in Table~\ref{tab:capped-task-winners} and the detailed results in Tables~\ref{tab:appendix-pos-analysis} and \ref{tab:appendix-ner-analysis}, \texttt{gemma2:9b} leads on macro-F1 in both POS tagging and NER. However, \texttt{llama3.1:8b-instruct} achieves higher Accuracy in NER (but not in POS tagging), suggesting differences in handling minority entity classes and class imbalance.
+As shown in Table~\ref{tab:capped-task-winners}, \texttt{gemma2:9b} leads on macro-F1 in both POS tagging and NER. However, \texttt{llama3.1:8b-instruct} achieves higher Accuracy in NER (but not in POS tagging), suggesting differences in handling minority entity classes and class imbalance.
 
-\subsubsection{Summarization} The winner is \texttt{aya-expanse:8b}, but only by a very small margin from \texttt{llama3.1:8b-instruct} (0.519 vs.\ 0.517), which is also better in WER. This suggests that the top two models are effectively near-tied semantically.
+\subsubsection{Summarization} The winner is \texttt{Llama-Krikri-8B-Instruct}, with a BERTScore-F1 of 0.540, followed by \texttt{aya-expanse:8b} (0.519) and \texttt{llama3.1:8b-instruct} (0.517). This indicates a semantic-quality gain for the Greek-specialized model, especially when it is allowed to use the untruncated long legal inputs, although its average summarization latency rises to 47.1 seconds per example.
 
 \section{Discussion}
 The benchmark combines multiple Greek NLP settings in a single reproducible workflow, but the current evaluation still has limitations. The capped protocol is intentionally pragmatic rather than exhaustive. Although well suited for iterative comparison, it is not a substitute for full test-set evaluation when final archival numbers are required. Specific metric choices are also provisional. In particular, summarization and machine translation would benefit from stronger semantic metrics and human assessment, while legal text classification would benefit from richer label semantics. Even so, the supplemental metrics improve interpretability relative to a WER-only or macro-F1-only summary.
@@ -343,17 +349,13 @@ Overall, the results indicate that automatic mining can effectively complement m
 %To assist reproducibility, we provide a Huggingface leaderboard,\footnote{\url{https://huggingface.co/spaces/ipavlopoulos/greek-llm-leaderboard}} 
 
 \section{Conclusion}
-We presented a reproducible Greek NLP benchmark for open, instruction-tuned, edge-capable LLMs and used it to compare five models across seven task families and nine benchmark segments. Under a deterministic capped-test protocol, \texttt{gemma2:9b} ranks first overall, while \texttt{llama3.1:8b-instruct}, \texttt{qwen2.5:7b-instruct}, and \texttt{aya-expanse:8b} emerge as specialists on GEC, Persian translation, and summarization respectively. The current pipeline is already useful for comparative evaluation, and it also provides a clean path from benchmark execution to publication assets.
+We presented a reproducible Greek NLP benchmark for open, instruction-tuned, edge-capable LLMs and used it to compare six models across seven task families and nine benchmark segments. Under a deterministic capped-test protocol, \texttt{gemma2:9b} ranks first overall, while \texttt{llama3.1:8b-instruct}, \texttt{qwen2.5:7b-instruct}, and \texttt{Llama-Krikri-8B-Instruct} emerge as specialists on GEC, Persian translation, and Greek-heavy legal classification and summarization respectively. The current pipeline is already useful for comparative evaluation, and it also provides a clean path from benchmark execution to publication assets.
 Future work should extend the benchmark with richer label semantics for legal text classification, stronger semantic metrics and human assessment for translation and summarization, and continuous dataset discovery to keep the Greek NLP resource collection up to date.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
 
 \appendix
-% \section{Overall Ranking Table}
-% Table~\ref{tab:capped-overall-ranking} reports the overall model ranking induced by the normalized segment scores.
-
-% \input{\assetsdir/overall_ranking_table.tex}
 
 % \section{Winner Margins by Segment}
 % Figure~\ref{fig:task-winner-margins} presents the gap between the best and second-best model for each benchmark segment. The largest winner margins occur on NER and POS tagging.

@@ -1,2 +1,2 @@
 task,model,samples,wer_vs_reference,cer_vs_reference,rouge_1,rouge_2,rouge_l,bertscore_precision,bertscore_recall,bertscore_f1,avg_latency_seconds
-summarization,ilsp/Llama-Krikri-8B-Instruct:latest,300,191.45604391164437,158.07423798115659,,,,,,,34.58672557220794
+summarization,ilsp/Llama-Krikri-8B-Instruct:latest,300,191.45604391164437,157.6162354888979,0.12433793463424682,0.0624067324592164,0.11310163196720412,0.5147913098335266,0.556853175163269,0.5326319336891174,34.58672557220794

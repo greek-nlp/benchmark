@@ -1,0 +1,48 @@
+# Full Benchmark Report
+
+This report summarizes the benchmark run captured in `results/server_runs/completed_runs/20260428_with_krikri_capped500/`.
+
+## Run Status
+
+- Completed task segments: `GEC`, `Intent Classification`, `Legal Classification`, `Machine Translation (ENG)`, `Machine Translation (FAS)`, `Machine Translation (JPN)`, `NER`, `POS`, `Summarization`
+- Incomplete tasks: none
+
+## Overall Model Ranking
+
+| rank | model | tasks_completed | avg_normalized_quality | median_normalized_quality | avg_latency_seconds |
+| --- | --- | --- | --- | --- | --- |
+| 1 | gemma2:9b | 9 | 77.503 | 100.000 | 1.502 |
+| 2 | llama3.1:8b-instruct | 9 | 60.648 | 75.978 | 1.159 |
+| 3 | qwen2.5:7b-instruct | 9 | 49.093 | 46.711 | 1.395 |
+| 4 | ilsp/Llama-Krikri-8B-Instruct:latest | 9 | 48.527 | 29.935 | 11.963 |
+| 5 | aya-expanse:8b | 9 | 47.575 | 47.237 | 1.143 |
+| 6 | falcon3:7b-instruct | 9 | 15.839 | 6.556 | 1.337 |
+
+## Best Model Per Task Segment
+
+| task_segment | primary_metric | winner | winner_value | winner_quality_score | runner_up | runner_up_value | runner_up_quality_score | quality_margin | margin | fastest_model | fastest_latency_seconds | samples | note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| GEC | gleu_vs_reference | llama3.1:8b-instruct | 0.796 | 100.000 | gemma2:9b | 0.784 | 94.171 | 5.829 | 0.012 | aya-expanse:8b | 0.772 | 175 | Winner was within 10% of the fastest model. |
+| Intent Classification | macro_f1 | gemma2:9b | 0.737 | 100.000 | llama3.1:8b-instruct | 0.707 | 92.771 | 7.229 | 0.030 | falcon3:7b-instruct | 0.188 | 436 |  |
+| Legal Classification | macro_f1 | ilsp/Llama-Krikri-8B-Instruct:latest | 0.156 | 100.000 | gemma2:9b | 0.126 | 72.958 | 27.042 | 0.030 | llama3.1:8b-instruct | 0.914 | 500 |  |
+| Machine Translation (ENG) | chrf | gemma2:9b | 61.781 | 100.000 | ilsp/Llama-Krikri-8B-Instruct:latest | 61.666 | 99.092 | 0.908 | 0.115 | falcon3:7b-instruct | 0.431 | 500 |  |
+| Machine Translation (FAS) | chrf | qwen2.5:7b-instruct | 18.325 | 100.000 | ilsp/Llama-Krikri-8B-Instruct:latest | 3.527 | 9.029 | 90.971 | 14.798 | falcon3:7b-instruct | 0.416 | 500 |  |
+| Machine Translation (JPN) | chrf | gemma2:9b | 16.726 | 100.000 | aya-expanse:8b | 16.533 | 97.534 | 2.466 | 0.193 | qwen2.5:7b-instruct | 0.558 | 500 |  |
+| NER | macro_f1 | gemma2:9b | 0.122 | 100.000 | qwen2.5:7b-instruct | 0.095 | 34.561 | 65.439 | 0.027 | llama3.1:8b-instruct | 1.097 | 500 |  |
+| POS | macro_f1 | gemma2:9b | 0.486 | 100.000 | falcon3:7b-instruct | 0.332 | 49.698 | 50.302 | 0.154 | aya-expanse:8b | 0.993 | 456 |  |
+| Summarization | bertscore_f1 | ilsp/Llama-Krikri-8B-Instruct:latest | 0.540 | 100.000 | aya-expanse:8b | 0.519 | 88.414 | 11.586 | 0.021 | falcon3:7b-instruct | 4.135 | 300 |  |
+
+## Diagrams
+
+![Best model by task segment](charts/task_winners.png)
+
+![Model quality heatmap](charts/model_quality_heatmap.png)
+
+![Quality versus latency](charts/quality_vs_latency.png)
+
+## Takeaways
+
+- `gemma2:9b` ranks first overall on the normalized quality aggregate for this run.
+- Legal classification is now coarse-grained (`Volume N` labels), which avoids the previous all-zero opaque-ID setup, though the task remains difficult.
+- POS tagging completed after switching the UD loader to a parser that tolerates `_` head values in the CoNLL-U files.
+- Summarization remains the slowest task family in this sample and is currently scored with edit-distance metrics in the summary table.

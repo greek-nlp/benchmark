@@ -93,6 +93,7 @@
 \citation{prokopidis-2016-parallel}
 \citation{koniaris2023evaluation}
 \citation{yang2024qwen25}
+\citation{grattafiori2024llama}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Greek datasets with their annotation type (AT) defined as manual (M), automatic (A), curated (C; metadata provided by the distributor), hybrid (H; manual and automatic), user-generated (U; from user-edits, not curated) or no (N). We include also the host, size, size unit, domain and license of each dataset.}}{4}{table.caption.8}\protected@file@percent }
 \newlabel{tab:data}{{1}{4}{Greek datasets with their annotation type (AT) defined as manual (M), automatic (A), curated (C; metadata provided by the distributor), hybrid (H; manual and automatic), user-generated (U; from user-edits, not curated) or no (N). We include also the host, size, size unit, domain and license of each dataset}{table.caption.8}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces AIR datasets for RAG (not in the benchmark) with min, max, mean length in characters and size in documents.}}{4}{table.caption.9}\protected@file@percent }
@@ -107,7 +108,6 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.7}Summarization}{4}{subsubsection.3.4.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4}Benchmark Setup}{4}{section.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Tasks and Models}{4}{subsection.4.1}\protected@file@percent }
-\citation{grattafiori2024llama}
 \citation{dang2024aya}
 \citation{team2024gemma}
 \citation{almazrouei2023falcon}
@@ -122,84 +122,83 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Patterns across models}{5}{subsection.5.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.1}The best model}{5}{subsubsection.5.1.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.2}The runner up complements the best}{5}{subsubsection.5.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.3}Competitive in cross-lingual tasks}{5}{subsubsection.5.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.4}The weakest model is not uniformly weak}{5}{subsubsection.5.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.3}Specialization matters}{5}{subsubsection.5.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.4}Competitive in cross-lingual tasks}{5}{subsubsection.5.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.5}The weakest model is not uniformly weak}{5}{subsubsection.5.1.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Patterns across tasks}{5}{subsection.5.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Text classification}{5}{subsubsection.5.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Translation}{5}{subsubsection.5.2.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Overall ranking of the evaluated models across the nine benchmark segments in the deterministic capped benchmark run. Normalized quality is averaged over segment-level, direction-aware scores.}}{6}{table.caption.12}\protected@file@percent }
+\newlabel{tab:capped-overall-ranking}{{4}{6}{Overall ranking of the evaluated models across the nine benchmark segments in the deterministic capped benchmark run. Normalized quality is averaged over segment-level, direction-aware scores}{table.caption.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300), using representative metrics per task.}}{6}{table.caption.13}\protected@file@percent }
+\newlabel{tab:capped-task-winners}{{5}{6}{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300), using representative metrics per task}{table.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER.}}{6}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:model-quality-heatmap}{{5}{6}{Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER}{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Translation}{6}{subsubsection.5.2.2}\protected@file@percent }
 \citation{bakagianni2025systematic}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300), using representative metrics per task.}}{6}{table.caption.12}\protected@file@percent }
-\newlabel{tab:capped-task-winners}{{4}{6}{Best-performing model per benchmark segment on the deterministic capped evaluation run (GEC=175, Intent=436, Legal=500, MT(ENG=500, FAS=500, JPN=500), NER=500, POS=456, Summarization=300), using representative metrics per task}{table.caption.12}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER.}}{6}{figure.caption.13}\protected@file@percent }
-\newlabel{fig:model-quality-heatmap}{{5}{6}{Normalized quality heatmap across the nine benchmark segments. Scores are normalized within each segment so that higher is always better, even when the underlying metric is lower-is-better such as WER}{figure.caption.13}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.3}POS tagging and NER}{6}{subsubsection.5.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.4}Summarization}{6}{subsubsection.5.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{6}{section.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family; the horizontal latency axis is log-scaled so slower long-context runs remain visible without compressing faster models.}}{7}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:quality-vs-latency}{{6}{7}{Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family; the horizontal latency axis is log-scaled so slower long-context runs remain visible without compressing faster models}{figure.caption.15}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.3}POS tagging and NER}{7}{subsubsection.5.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.4}Summarization}{7}{subsubsection.5.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{7}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Evergreen Dataset Discovery}{7}{section.7}\protected@file@percent }
 \bibstyle{ACM-Reference-Format}
 \bibdata{refs}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family.}}{7}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:quality-vs-latency}{{6}{7}{Quality-latency trade-off across models and task families. Each point corresponds to one model-task pair after averaging within the task family}{figure.caption.14}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Evergreen Dataset Discovery}{7}{section.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{7}{section.8}\protected@file@percent }
 \bibcite{Alexandridis2021Survey}{{1}{2021}{{Alexandridis et~al\mbox  {.}}}{{}}}
 \bibcite{almazrouei2023falcon}{{2}{2023}{{Almazrouei et~al\mbox  {.}}}{{}}}
-\bibcite{Bartziokas2020}{{3}{2020}{{Bartziokas et~al\mbox  {.}}}{{}}}
-\bibcite{Barzokas2020}{{4}{2020}{{Barzokas et~al\mbox  {.}}}{{}}}
-\bibcite{brown2020language}{{5}{2020}{{Brown et~al\mbox  {.}}}{{}}}
-\bibcite{chalkidis-etal-2022-lexglue}{{6}{2022}{{Chalkidis et~al\mbox  {.}}}{{}}}
-\bibcite{dang2024aya}{{7}{2024}{{Dang et~al\mbox  {.}}}{{}}}
-\bibcite{dritsa2022greek}{{8}{2022}{{Dritsa et~al\mbox  {.}}}{{}}}
-\bibcite{evdaimon2023greekbart}{{9}{2023}{{Evdaimon et~al\mbox  {.}}}{{}}}
-\bibcite{fitsilis2021development}{{10}{2021}{{Fitsilis and Mikros}}{{}}}
-\bibcite{gakis:2017}{{11}{2016}{{Gakis et~al\mbox  {.}}}{{}}}
-\bibcite{gao2023lmeval}{{12}{2023}{{Gao et~al\mbox  {.}}}{{}}}
-\bibcite{GIATSOGLOU2017}{{13}{2017}{{Giatsoglou et~al\mbox  {.}}}{{}}}
-\bibcite{grattafiori2024llama}{{14}{2024}{{Grattafiori et~al\mbox  {.}}}{{}}}
-\bibcite{juola2013overview}{{15}{2013}{{Juola and Stamatatos}}{{}}}
-\bibcite{koniaris2023evaluation}{{16}{2023}{{Koniaris et~al\mbox  {.}}}{{}}}
-\bibcite{koppel2011translationese}{{17}{2011}{{Koppel and Ordan}}{{}}}
-\bibcite{korre2021elerrant}{{18}{2021}{{Korre et~al\mbox  {.}}}{{}}}
-\bibcite{koutsikakis2020}{{19}{2020}{{Koutsikakis et~al\mbox  {.}}}{{}}}
-\bibcite{liang2023helm}{{20}{2023}{{Liang et~al\mbox  {.}}}{{}}}
-\bibcite{lin2004rouge}{{21}{2004}{{Lin}}{{}}}
-\bibcite{majlivs2012language}{{22}{2012}{{Majli{\v {s}} and {\v {Z}}abokrtsk{\`y}}}{{}}}
-\bibcite{napoles2015ground}{{23}{2015}{{Napoles et~al\mbox  {.}}}{{}}}
-\bibcite{Nikiforos2021}{{24}{2021}{{Nikiforos et~al\mbox  {.}}}{{}}}
-\bibcite{nivre2016universal}{{25}{2016}{{Nivre et~al\mbox  {.}}}{{}}}
-\bibcite{papaloukas2021}{{26}{2021}{{Papaloukas et~al\mbox  {.}}}{{}}}
-\bibcite{papantoniou2023automating}{{27}{2023}{{Papantoniou et~al\mbox  {.}}}{{}}}
-\bibcite{pavlopoulos2023computational}{{28}{2023}{{Pavlopoulos and Konstantinidou}}{{}}}
-\bibcite{popovic2015chrf}{{29}{2015}{{Popovi{\'c}}}{{}}}
-\bibcite{pradhan2007ontonotes}{{30}{2007}{{Pradhan et~al\mbox  {.}}}{{}}}
-\bibcite{prokopidis2017universal}{{31}{2017}{{Prokopidis and Papageorgiou}}{{}}}
-\bibcite{prokopidis-2016-parallel}{{32}{2016}{{Prokopidis et~al\mbox  {.}}}{{}}}
-\bibcite{prokopidis2020neural}{{33}{2020}{{Prokopidis and Piperidis}}{{}}}
-\bibcite{rizou2023efficient}{{34}{2023}{{Rizou et~al\mbox  {.}}}{{}}}
-\bibcite{sang2003introduction}{{35}{2003}{{Sang and De~Meulder}}{{}}}
-\bibcite{team2024gemma}{{36}{2024}{{Team et~al\mbox  {.}}}{{}}}
-\bibcite{urbizu2022basqueglue}{{37}{2022}{{Urbizu et~al\mbox  {.}}}{{}}}
-\bibcite{voukoutis2024meltemi}{{38}{2024}{{Voukoutis et~al\mbox  {.}}}{{}}}
-\@writefile{toc}{\contentsline {section}{References}{8}{section*.16}\protected@file@percent }
-\bibcite{wang2019superglue}{{39}{2019a}{{Wang et~al\mbox  {.}}}{{}}}
-\bibcite{wang2019glue}{{40}{2019b}{{Wang et~al\mbox  {.}}}{{}}}
-\bibcite{wilie-etal-2020-indonlu}{{41}{2020}{{Wilie et~al\mbox  {.}}}{{}}}
-\bibcite{yang2024qwen25}{{42}{2024}{{Yang et~al\mbox  {.}}}{{}}}
-\bibcite{Zampieri2020}{{43}{2020}{{Zampieri et~al\mbox  {.}}}{{}}}
-\bibcite{zhang2019bertscore}{{44}{2019}{{Zhang et~al\mbox  {.}}}{{}}}
+\bibcite{bakagianni2025systematic}{{3}{2024}{{Bakagianni et~al\mbox  {.}}}{{}}}
+\bibcite{Bartziokas2020}{{4}{2020}{{Bartziokas et~al\mbox  {.}}}{{}}}
+\bibcite{Barzokas2020}{{5}{2020}{{Barzokas et~al\mbox  {.}}}{{}}}
+\bibcite{brown2020language}{{6}{2020}{{Brown et~al\mbox  {.}}}{{}}}
+\bibcite{chalkidis-etal-2022-lexglue}{{7}{2022}{{Chalkidis et~al\mbox  {.}}}{{}}}
+\bibcite{dang2024aya}{{8}{2024}{{Dang et~al\mbox  {.}}}{{}}}
+\bibcite{dritsa2022greek}{{9}{2022}{{Dritsa et~al\mbox  {.}}}{{}}}
+\bibcite{evdaimon2023greekbart}{{10}{2023}{{Evdaimon et~al\mbox  {.}}}{{}}}
+\bibcite{fitsilis2021development}{{11}{2021}{{Fitsilis and Mikros}}{{}}}
+\bibcite{gakis:2017}{{12}{2016}{{Gakis et~al\mbox  {.}}}{{}}}
+\bibcite{gao2023lmeval}{{13}{2023}{{Gao et~al\mbox  {.}}}{{}}}
+\bibcite{GIATSOGLOU2017}{{14}{2017}{{Giatsoglou et~al\mbox  {.}}}{{}}}
+\bibcite{grattafiori2024llama}{{15}{2024}{{Grattafiori et~al\mbox  {.}}}{{}}}
+\bibcite{juola2013overview}{{16}{2013}{{Juola and Stamatatos}}{{}}}
+\bibcite{koniaris2023evaluation}{{17}{2023}{{Koniaris et~al\mbox  {.}}}{{}}}
+\bibcite{koppel2011translationese}{{18}{2011}{{Koppel and Ordan}}{{}}}
+\bibcite{korre2021elerrant}{{19}{2021}{{Korre et~al\mbox  {.}}}{{}}}
+\bibcite{koutsikakis2020}{{20}{2020}{{Koutsikakis et~al\mbox  {.}}}{{}}}
+\bibcite{liang2023helm}{{21}{2023}{{Liang et~al\mbox  {.}}}{{}}}
+\bibcite{lin2004rouge}{{22}{2004}{{Lin}}{{}}}
+\bibcite{majlivs2012language}{{23}{2012}{{Majli{\v {s}} and {\v {Z}}abokrtsk{\`y}}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{8}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.17}\protected@file@percent }
+\bibcite{napoles2015ground}{{24}{2015}{{Napoles et~al\mbox  {.}}}{{}}}
+\bibcite{Nikiforos2021}{{25}{2021}{{Nikiforos et~al\mbox  {.}}}{{}}}
+\bibcite{nivre2016universal}{{26}{2016}{{Nivre et~al\mbox  {.}}}{{}}}
+\bibcite{papaloukas2021}{{27}{2021}{{Papaloukas et~al\mbox  {.}}}{{}}}
+\bibcite{papantoniou2023automating}{{28}{2023}{{Papantoniou et~al\mbox  {.}}}{{}}}
+\bibcite{pavlopoulos2023computational}{{29}{2023}{{Pavlopoulos and Konstantinidou}}{{}}}
+\bibcite{popovic2015chrf}{{30}{2015}{{Popovi{\'c}}}{{}}}
+\bibcite{pradhan2007ontonotes}{{31}{2007}{{Pradhan et~al\mbox  {.}}}{{}}}
+\bibcite{prokopidis2017universal}{{32}{2017}{{Prokopidis and Papageorgiou}}{{}}}
+\bibcite{prokopidis-2016-parallel}{{33}{2016}{{Prokopidis et~al\mbox  {.}}}{{}}}
+\bibcite{prokopidis2020neural}{{34}{2020}{{Prokopidis and Piperidis}}{{}}}
+\bibcite{rizou2023efficient}{{35}{2023}{{Rizou et~al\mbox  {.}}}{{}}}
+\bibcite{sang2003introduction}{{36}{2003}{{Sang and De~Meulder}}{{}}}
+\bibcite{team2024gemma}{{37}{2024}{{Team et~al\mbox  {.}}}{{}}}
+\bibcite{urbizu2022basqueglue}{{38}{2022}{{Urbizu et~al\mbox  {.}}}{{}}}
+\bibcite{voukoutis2024meltemi}{{39}{2024}{{Voukoutis et~al\mbox  {.}}}{{}}}
+\bibcite{wang2019superglue}{{40}{2019a}{{Wang et~al\mbox  {.}}}{{}}}
+\bibcite{wang2019glue}{{41}{2019b}{{Wang et~al\mbox  {.}}}{{}}}
+\bibcite{wilie-etal-2020-indonlu}{{42}{2020}{{Wilie et~al\mbox  {.}}}{{}}}
+\bibcite{yang2024qwen25}{{43}{2024}{{Yang et~al\mbox  {.}}}{{}}}
+\bibcite{Zampieri2020}{{44}{2020}{{Zampieri et~al\mbox  {.}}}{{}}}
+\bibcite{zhang2019bertscore}{{45}{2019}{{Zhang et~al\mbox  {.}}}{{}}}
 \newlabel{tocindent-1}{0pt}
 \newlabel{tocindent0}{0pt}
 \newlabel{tocindent1}{6.30899pt}
 \newlabel{tocindent2}{12.41998pt}
 \newlabel{tocindent3}{18.198pt}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Legal Text Classification.}}{9}{table.caption.19}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Machine Translation.}}{9}{table.caption.20}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Named Entity Recognition.}}{9}{table.caption.21}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces POS Tagging.}}{9}{table.caption.22}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Summarization.}}{9}{table.caption.23}\protected@file@percent }
-\newlabel{tab:summ-prompt}{{11}{9}{Summarization}{table.caption.23}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {A}Prompt Templates}{9}{appendix.A}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Grammatical Error Correction (GEC)}}{9}{table.caption.17}\protected@file@percent }
-\newlabel{tab:gec-prompt}{{5}{9}{Grammatical Error Correction (GEC)}{table.caption.17}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Intent Classification.}}{9}{table.caption.18}\protected@file@percent }
-\newlabel{TotPages}{{9}{9}{}{page.9}{}}
-\gdef \@abspage@last{9}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Grammatical Error Correction (GEC)}}{9}{table.caption.18}\protected@file@percent }
+\newlabel{tab:gec-prompt}{{6}{9}{Grammatical Error Correction (GEC)}{table.caption.18}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Intent Classification.}}{9}{table.caption.19}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Legal Text Classification.}}{9}{table.caption.20}\protected@file@percent }
+\newlabel{TotPages}{{11}{11}{}{page.11}{}}
+\gdef \@abspage@last{11}

@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{44}
+\begin{thebibliography}{45}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -65,6 +65,18 @@
 \newblock \showarticletitle{The falcon series of open language models}.
 \newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2311.16867}}
   (\bibinfo{year}{2023}).
+\newblock
+
+
+\bibitem[Bakagianni et~al\mbox{.}(2024)]%
+        {bakagianni2025systematic}
+\bibfield{author}{\bibinfo{person}{Juli Bakagianni}, \bibinfo{person}{Kanella
+  Pouli}, \bibinfo{person}{Maria Gavriilidou}, {and} \bibinfo{person}{John
+  Pavlopoulos}.} \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Towards systematic monolingual nlp surveys: Gena of
+  greek nlp}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2407.09861}}
+  (\bibinfo{year}{2024}).
 \newblock
 
 

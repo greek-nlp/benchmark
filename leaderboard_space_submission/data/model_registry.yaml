@@ -15,6 +15,14 @@ models:
     provider: Meta
     chat_template_family: llama
 
+  - display_name: Llama-Krikri 8B Instruct
+    ollama_name: ilsp/Llama-Krikri-8B-Instruct:latest
+    huggingface_model_id: ilsp/Llama-Krikri-8B-Instruct
+    parameter_scale: 8B
+    license: llama3.1
+    provider: ILSP / Athena RC
+    chat_template_family: llama
+
   - display_name: Aya Expanse 8B
     ollama_name: aya-expanse:8b
     huggingface_model_id: CohereForAI/aya-expanse-8b
