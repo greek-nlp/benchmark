@@ -247,7 +247,7 @@ def _write_appendix_task_table(task_name: str, df: pd.DataFrame, tables_dir: Pat
     lines = [
         r"\begin{table*}[t]",
         r"\centering",
-        rf"\caption{{Per-model results for {_pretty_segment(TASK_LABELS.get(task_name, task_name.replace('_', ' ').title()))}.}}",
+        rf"\caption{{Per-model results for {TASK_LABELS.get(task_name, task_name.replace('_', ' ').title())}.}}",
         rf"\label{{tab:appendix-{task_name.replace('_', '-')}-analysis}}",
         rf"\begin{{tabular}}{{{align}}}",
         r"\toprule",

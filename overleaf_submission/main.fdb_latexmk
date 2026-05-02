@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1777746522.46381 "main.aux" "main.bbl" "main" 1777746524.04658 0
+["bibtex main"] 1777750161.01963 "main.aux" "main.bbl" "main" 1777750162.53713 0
   "./refs.bib" 1777405926.82313 175234 b3b47b324c968d97e0e6f7b139220d29 ""
   "/usr/local/texlive/2024/texmf-dist/bibtex/bst/acmart/ACM-Reference-Format.bst" 1680299675 90332 18dc4e5c9b5c2ddd337e9f97727d04f1 ""
-  "main.aux" 1777746523.69038 18908 78be550568567665a17bcb0823a1c00e "pdflatex"
+  "main.aux" 1777750162.16365 18382 b73fd14e5a5ea8960394b6fa02098576 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1777746522.58159 "main.tex" "main.pdf" "main" 1777746524.04675 0
+["pdflatex"] 1777750161.13997 "main.tex" "main.pdf" "main" 1777750162.53729 0
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc" 1558214095 7693 0f2dce6d313c82989ec3a67fc24df2a0 ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/libertine/lbtn_25tcsq.enc" 1490131464 2921 8ca0eb0831f9bc5da080d3697cfe67bf ""
   "/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/libertine/lbtn_76gpa5.enc" 1490131464 2933 9ad527ce78d7c5fa0a642dead095f172 ""
@@ -214,15 +214,15 @@
   "article_assets/figures/av_acc_pairs.png" 1777224372 21468 19787b71be160923923fc4637f66cfbf ""
   "article_assets/figures/citation_ts.pdf" 1777224372 19285 7ee30e9f924842a7e2735da976165e8a ""
   "article_assets/figures/citations_noliers.pdf" 1777224372 10872 9c08232cb73ac26475de1c7757f0a27a ""
-  "article_assets/figures/model_quality_heatmap.pdf" 1777746515.95425 25117 f278b876f6fc83833842cf26a1b7b1ec ""
+  "article_assets/figures/model_quality_heatmap.pdf" 1777748718.58494 25216 d95c1b216307e79d4da9b5139d740e5a ""
   "article_assets/figures/ppl_heatmap.pdf" 1777224372 16629 269b8ab2f7da9708371cd235d4dd1edc ""
-  "article_assets/figures/quality_vs_latency.pdf" 1777746515.95478 27381 5edb56de4f2c57818a21c6f578523a47 ""
-  "article_assets/overall_ranking_table.tex" 1777746515.95187 675 315b229c09d278c84ad28cef5b82c039 ""
-  "article_assets/task_winners_table.tex" 1777746515.96448 829 adcf619fca96d38633a528b613f7bf6b ""
-  "main.aux" 1777746523.69038 18908 78be550568567665a17bcb0823a1c00e "pdflatex"
-  "main.bbl" 1777746522.57843 30902 5ed82a775a567d2d740469303a5a109c "bibtex main"
-  "main.out" 1777746523.69157 3903 8c33687ab8a4289f57f3740dfdecac4a "pdflatex"
-  "main.tex" 1777746473.85637 47058 4abe0e2009ecd0b70f25222cbcbe96b7 ""
+  "article_assets/figures/quality_vs_latency.pdf" 1777748718.58545 27657 8d00bbd442a7756b069f242d10af6d75 ""
+  "article_assets/overall_ranking_table.tex" 1777748718.58244 675 d8ba66af9efbe473c5526916ca34200d ""
+  "article_assets/task_winners_table.tex" 1777748718.59249 829 adcf619fca96d38633a528b613f7bf6b ""
+  "main.aux" 1777750162.16365 18382 b73fd14e5a5ea8960394b6fa02098576 "pdflatex"
+  "main.bbl" 1777750161.13681 30902 5ed82a775a567d2d740469303a5a109c "bibtex main"
+  "main.out" 1777750162.16484 3903 8c33687ab8a4289f57f3740dfdecac4a "pdflatex"
+  "main.tex" 1777750155.27848 47856 5d099bb01018cd5f853be381a7132286 ""
   (generated)
   "main.aux"
   "main.log"
